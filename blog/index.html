@@ -3,33 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anil's Blog</title>
-    <!-- Link Bootstrap 5 CSS -->
+    <title>Anil's Blog | Thoughts on Tech & Life</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Link custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --accent: #f72585;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 5rem 0;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .blog-card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+            background: white;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .card-text {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+        
+        .post-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .post-meta i {
+            margin-right: 5px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: #e9ecef;
+            color: var(--dark);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tag-tech {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .tag-life {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .btn-read {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 500;
+            border: none;
+        }
+        
+        .btn-read:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container py-5">
-        <h1 class="text-center mb-5">My Daily Blog</h1>
-
-        <!-- Blog Post List -->
-        <div class="blog-post">
-            <h2><a href="posts/post1.html">My First Blog Post</a></h2>
-            <p class="text-muted">Published: July 20, 2023</p>
-            <p>This is a summary of my first blog post. Click the title to read more.</p>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Anil Maharjan</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        <div class="blog-post">
-            <h2><a href="posts/post2.html">Second Blog Post</a></h2>
-            <p class="text-muted">Published: July 21, 2023</p>
-            <p>Another interesting post about my experiences.</p>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">My Thoughts & Stories</h1>
+            <p class="hero-subtitle">Sharing my journey through technology, programming, and daily life experiences</p>
         </div>
+    </section>
 
-        <!-- Add more posts here -->
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <!-- Blog Posts Column -->
+            <div class="col-lg-8">
+                <!-- Featured Post -->
+                <div class="blog-card">
+                    <img src="https://source.unsplash.com/random/800x400/?technology" class="card-img-top" alt="Featured Post">
+                    <div class="card-body">
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar-alt"></i> July 25, 2023</span>
+                            <span class="ms-3"><i class="far fa-clock"></i> 5 min read</span>
+                        </div>
+                        <h2 class="card-title">Getting Started with Web Development</h2>
+                        <div class="mb-3">
+                            <span class="tag tag-tech">Technology</span>
+                            <span class="tag tag-tech">Web Dev</span>
+                        </div>
+                        <p class="card-text">A comprehensive guide for beginners who want to start their journey in web development. Learn about HTML, CSS, JavaScript and the essential tools every developer should know.</p>
+                        <a href="posts/post1.html" class="btn btn-read">Read More →</a>
+                    </div>
+                </div>
+
+                <!-- Post 2 -->
+                <div class="blog-card">
+                    <div class="card-body">
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar-alt"></i> July 22, 2023</span>
+                            <span class="ms-3"><i class="far fa-clock"></i> 3 min read</span>
+                        </div>
+                        <h2 class="card-title">My Experience with GitHub Pages</h2>
+                        <div class="mb-3">
+                            <span class="tag tag-tech">GitHub</span>
+                            <span class="tag tag-tech">Web Hosting</span>
+                        </div>
+                        <p class="card-text">How I built my personal website using GitHub Pages and the lessons I learned along the way. A simple yet powerful solution for hosting static websites.</p>
+                        <a href="posts/post2.html" class="btn btn-read">Read More →</a>
+                    </div>
+                </div>
+
+                <!-- Post 3 -->
+                <div class="blog-card">
+                    <img src="https://source.unsplash.com/random/800x400/?coding" class="card-img-top" alt="Post 3">
+                    <div class="card-body">
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar-alt"></i> July 18, 2023</span>
+                            <span class="ms-3"><i class="far fa-clock"></i> 7 min read</span>
+                        </div>
+                        <h2 class="card-title">JavaScript Tips for Beginners</h2>
+                        <div class="mb-3">
+                            <span class="tag tag-tech">JavaScript</span>
+                            <span class="tag tag-tech">Programming</span>
+                        </div>
+                        <p class="card-text">Essential JavaScript concepts that every beginner should master. From variables and functions to closures and promises, this post covers the fundamentals.</p>
+                        <a href="posts/post3.html" class="btn btn-read">Read More →</a>
+                    </div>
+                </div>
+
+                <!-- Post 4 -->
+                <div class="blog-card">
+                    <div class="card-body">
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar-alt"></i> July 15, 2023</span>
+                            <span class="ms-3"><i class="far fa-clock"></i> 4 min read</span>
+                        </div>
+                        <h2 class="card-title">Why I Started Blogging</h2>
+                        <div class="mb-3">
+                            <span class="tag tag-life">Personal</span>
+                            <span class="tag tag-life">Motivation</span>
+                        </div>
+                        <p class="card-text">Sharing my reasons for starting this blog and what I hope to achieve through writing. Reflections on learning in public and building an online presence.</p>
+                        <a href="posts/post4.html" class="btn btn-read">Read More →</a>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Blog pagination" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Sidebar Column -->
+            <div class="col-lg-4">
+                <!-- About Widget -->
+                <div class="sidebar">
+                    <h3 class="sidebar-title">About Me</h3>
+                    <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Profile" width="100%">
+                    <p>Hello! I'm Anil Maharjan, a web developer passionate about creating beautiful, functional websites. This is where I share my thoughts and experiences.</p>
+                    <a href="../index.html#about" class="btn btn-outline-primary w-100">More About Me</a>
+                </div>
+
+                <!-- Categories Widget -->
+                <div class="sidebar">
+                    <h3 class="sidebar-title">Categories</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="#" class="text-decoration-none d-flex justify-content-between align-items-center">
+                                <span>Technology <span class="badge bg-primary ms-2">4</span></span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-decoration-none d-flex justify-content-between align-items-center">
+                                <span>Programming <span class="badge bg-primary ms-2">3</span></span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-decoration-none d-flex justify-content-between align-items-center">
+                                <span>Personal <span class="badge bg-primary ms-2">1</span></span>
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Popular Posts Widget -->
+                <div class="sidebar">
+                    <h3 class="sidebar-title">Popular Posts</h3>
+                    <div class="mb-3">
+                        <a href="#" class="text-decoration-none">Getting Started with Web Development</a>
+                        <div class="text-muted small">July 25, 2023</div>
+                    </div>
+                    <div class="mb-3">
+                        <a href="#" class="text-decoration-none">JavaScript Tips for Beginners</a>
+                        <div class="text-muted small">July 18, 2023</div>
+                    </div>
+                    <div class="mb-3">
+                        <a href="#" class="text-decoration-none">My Experience with GitHub Pages</a>
+                        <div class="text-muted small">July 22, 2023</div>
+                    </div>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div class="sidebar">
+                    <h3 class="sidebar-title">Newsletter</h3>
+                    <p>Subscribe to get notified about new posts</p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Your email address">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Bootstrap JS (optional) -->
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <div class="social-icons mb-4">
+                <a href="#" class="text-white mx-2"><i class="fab fa-github fa-lg"></i></a>
+                <a href="#" class="text-white mx-2"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-white mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
+                <a href="#" class="text-white mx-2"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+            <p class="mb-2">© 2023 Anil Maharjan. All rights reserved.</p>
+            <p class="mb-0">Built with Bootstrap 5 and ❤️</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
