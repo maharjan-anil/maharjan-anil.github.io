@@ -161,6 +161,28 @@
                 font-size: 2.5rem;
             }
         }
+        /* Nepalipatro Widget Styling */
+#np_widget_wiz1 {
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+#np_widget_wiz1 .npw-month-sm-header {
+    background-color: var(--primary);
+    color: white;
+}
+
+#np_widget_wiz1 .npw-dayname {
+    color: var(--dark);
+    font-weight: bold;
+}
+
+#np_widget_wiz1 .npw-today {
+    background-color: var(--accent);
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -288,6 +310,13 @@
 
             <!-- Sidebar Column -->
             <div class="col-lg-4">
+               <!-- Nepalipatro Widget -->
+            <div class="sidebar mb-4">
+                <h3 class="sidebar-title">Nepali Calendar</h3>
+                <div class="text-center">
+                    <div id="np_widget_wiz1" widget="month-sm" style="width: 100%;"></div>
+                </div>
+            </div>
                 <!-- About Widget -->
                 <div class="sidebar">
                     <h3 class="sidebar-title">About Me</h3>
@@ -295,7 +324,13 @@
                     <p>Hello! I'm Anil Maharjan, a web developer passionate about creating beautiful, functional websites. This is where I share my thoughts and experiences.</p>
                     <a href="../index.html#about" class="btn btn-outline-primary w-100">More About Me</a>
                 </div>
-
+               <!-- Nepalipatro Widget -->
+                <div class="sidebar mb-4">
+                    <h3 class="sidebar-title">Nepali Calendar</h3>
+                    <div class="text-center">
+                        <div id="np_widget_wiz1" widget="month-sm" style="width: 100%;"></div>
+                    </div>
+                </div>
                 <!-- Categories Widget -->
                 <div class="sidebar">
                     <h3 class="sidebar-title">Categories</h3>
@@ -369,5 +404,7 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Nepalipatro Widget Script -->
+    <script async src="https://nepalipatro.com.np/np-widgets/nepalipatro.js" id="wiz1"></script>
 </body>
 </html>
