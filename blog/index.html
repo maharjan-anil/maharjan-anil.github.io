@@ -183,6 +183,18 @@
     background-color: var(--accent);
     color: white;
 }
+        /* Date Converter Widget Styling */
+.sidebar iframe {
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+}
+
+/* Adjust widget colors to match your theme */
+.sidebar .sidebar-title {
+    color: var(--primary);
+    margin-bottom: 15px;
+}
     </style>
 </head>
 <body>
@@ -310,7 +322,7 @@
 
             <!-- Sidebar Column -->
             <div class="col-lg-4">
-                               <!-- About Widget -->
+                <!-- About Widget -->
                 <div class="sidebar">
                     <h3 class="sidebar-title">About Me</h3>
                     <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Profile" width="100%">
@@ -323,6 +335,20 @@
                 <h3 class="sidebar-title">Nepali Calendar</h3>
                 <div class="text-center">
                     <div id="np_widget_wiz1" widget="month-sm" style="width: 100%;"></div>
+                </div>
+            </div>
+                
+       <!-- Date Converter Widget -->
+            <div class="sidebar mb-4">
+                <h3 class="sidebar-title">Date Converter</h3>
+                <div class="text-center">
+                <iframe 
+                    src="https://www.ashesh.com.np/linkdate-converter.php?h_color=999999&b_color=CFE4B1&api=221196o223" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    style="border:none; overflow:hidden; width:100%; height:400px;" 
+                    allowtransparency="true">
+                </iframe>
                 </div>
             </div>
                 
