@@ -3,361 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anil Maharjan | 2D Explainer Video Animator</title>
+    <title>Anil Maharjan | Welcome</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --text-color: #333;
+            --text-light: #777;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            scroll-behavior: smooth;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            overflow-x: hidden;
         }
         
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        h1, h2, h3, h4, h5 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
         }
         
-        .hero {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        /* Header Styles */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
             padding: 100px 0;
-        }
-        
-        .profile-img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .section-title {
             position: relative;
-            display: inline-block;
-            margin-bottom: 30px;
+            overflow: hidden;
         }
         
-        .section-title:after {
-            content: '';
+        .hero-section::before {
+            content: "";
             position: absolute;
-            width: 50%;
-            height: 3px;
-            background: var(--primary-color);
-            bottom: -10px;
+            top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.2;
         }
         
-        .skill-item {
-            margin-bottom: 15px;
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
         
-        .skill-name {
-            margin-bottom: 5px;
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
-        .progress {
-            height: 10px;
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
         }
         
-        .portfolio-item {
+        .hero-subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
             margin-bottom: 30px;
-            transition: transform 0.3s;
+            opacity: 0.9;
         }
         
-        .portfolio-item:hover {
-            transform: translateY(-5px);
+        /* Main Content */
+        .content-section {
+            padding: 100px 0;
+            background-color: white;
         }
         
-        .contact-info i {
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
+        .welcome-card {
+            background: white;
+            border-radius: 15px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-top: 5px solid var(--accent-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .welcome-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        
+        .welcome-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 25px;
+        }
+        
+        .welcome-message {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .thank-you-message {
+            font-size: 1.4rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        .footer-section {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 50px 0;
             text-align: center;
-            background: var(--primary-color);
+        }
+        
+        .social-links {
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            line-height: 45px;
+            background-color: rgba(255,255,255,0.1);
             color: white;
             border-radius: 50%;
-            margin-right: 10px;
+            margin: 0 8px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
         }
         
-        footer {
-            background: var(--secondary-color);
-            color: white;
-            padding: 20px 0;
+        .social-icon:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-5px);
+            text-decoration: none;
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* Animation for text */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .delay-1 {
+            animation-delay: 0.3s;
+        }
+        
+        .delay-2 {
+            animation-delay: 0.6s;
+        }
+        
+        .delay-3 {
+            animation-delay: 0.9s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 70px 0;
+            }
+            
+            .content-section {
+                padding: 70px 0;
+            }
+            
+            .welcome-card {
+                padding: 30px;
+            }
+            
+            .welcome-message {
+                font-size: 1.5rem;
+            }
+            
+            .thank-you-message {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* Custom animations */
+        .pulse-effect {
+            animation: pulse 1s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .bounce-effect {
+            animation: bounce 1s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
         }
     </style>
 </head>
-<body data-bs-spy="scroll" data-bs-target=".navbar">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+<body>
+    <!-- Header/Hero Section -->
+    <header class="hero-section">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Anil Maharjan</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#skills">Skills</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="blog/index.html">Blog</a>
-                    </li>
-                   </ul>
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center hero-content">
+                    <h1 class="hero-title fade-in"><span class="text-warning">Anil Maharjan</span></h1>
+                    <p class="hero-subtitle fade-in delay-1">Welcome to My Website!</p>
+                    <div class="mt-4 fade-in delay-2">
+                        <a href="#content" class="btn btn-light btn-lg px-4 py-3 shadow-sm bounce-effect">
+                            <i class="fas fa-arrow-down me-2"></i> Explore
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero d-flex align-items-center">
-        <div class="container text-center">
-            <img src="https://via.placeholder.com/200" alt="Anil Maharjan" class="profile-img rounded-circle mb-4">
-            <h1 class="display-4 fw-bold mb-3">Anil Maharjan</h1>
-            <h2 class="h4 text-muted mb-4">2D Explainer Video Animator</h2>
-            <p class="lead mb-4">Creating engaging animations that simplify complex ideas</p>
-            <a href="#contact" class="btn btn-primary btn-lg px-4">Hire Me</a>
-            <!-- Add this new button for your blog -->
-            <a href="blog/index.html" class="btn btn-outline-primary btn-lg px-4">Visit My Blog</a>
+    <!-- Main Content Section -->
+    <section id="content" class="content-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="welcome-card text-center">
+                        <div class="welcome-icon fade-in">
+                            <i class="fas fa-hand-wave"></i>
+                        </div>
+                        <h2 class="welcome-message fade-in delay-1">
+                            Welcome to my Website!
+                        </h2>
+                        <div class="thank-you-message fade-in delay-2">
+                            <p>Thank you for visiting! I'm delighted to have you here.</p>
+                            <p class="mt-3">If you'd like to connect or learn more, please don't hesitate to reach out through any of the social links below.</p>
+                        </div>
+                        <div class="mt-4 fade-in delay-3">
+                            <button id="changeColorBtn" class="btn btn-primary btn-lg px-4 py-2 me-3">
+                                <i class="fas fa-palette me-2"></i> Change Theme
+                            </button>
+                            <button id="pulseBtn" class="btn btn-outline-primary btn-lg px-4 py-2">
+                                <i class="fas fa-heart me-2"></i> Send Appreciation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-5">
+    <!-- Footer Section -->
+    <footer class="footer-section">
         <div class="container">
-            <h2 class="section-title">About Me</h2>
             <div class="row">
-                <div class="col-lg-6">
-                    <p class="lead">Hello! I'm Anil Maharjan, a professional 2D explainer video animator based in Nepal.</p>
-                    <p>With over 10 years of experience in animation, I specialize in creating engaging explainer videos that help businesses communicate their ideas effectively. My animations simplify complex concepts and make them easy to understand for any audience.</p>
-                    <p>I'm passionate about storytelling through animation and always strive to deliver high-quality work that exceeds my clients' expectations.</p>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Personal Information</h5>
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><strong>Name:</strong> Anil Maharjan</li>
-                                <li class="mb-2"><strong>Location:</strong> Nepal</li>
-                                <li class="mb-2"><strong>Email:</strong> anilmaharjan@live.com</li>
-                                <li class="mb-2"><strong>Phone:</strong> +977 98XXXXXXX</li>
-                                <li class="mb-2"><strong>Freelance:</strong> Available</li>
-                            </ul>
-                            <div class="social-icons mt-4">
-                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-twitter"></i></a>
-                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-linkedin-in"></i></a>
-                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
+                <div class="col-lg-8 mx-auto">
+                    <h3 class="mb-4">Connect With Me</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-icon" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                    <div class="copyright">
+                        <p>&copy; <span id="currentYear"></span> Anil Maharjan. All Rights Reserved.</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="py-5 bg-light">
-        <div class="container">
-            <h2 class="section-title">My Skills</h2>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="skill-item">
-                        <div class="skill-name d-flex justify-content-between">
-                            <span>Adobe After Effects</span>
-                            <span>95%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 95%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name d-flex justify-content-between">
-                            <span>Adobe Illustrator</span>
-                            <span>90%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name d-flex justify-content-between">
-                            <span>Character Animation</span>
-                            <span>85%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 85%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="skill-item">
-                        <div class="skill-name d-flex justify-content-between">
-                            <span>Motion Graphics</span>
-                            <span>88%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 88%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name d-flex justify-content-between">
-                            <span>Storyboarding</span>
-                            <span>80%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 80%"></div>
-                        </div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-name d-flex justify-content-between">
-                            <span>Script Writing</span>
-                            <span>75%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 75%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="py-5">
-        <div class="container">
-            <h2 class="section-title">My Work</h2>
-            <div class="row">
-                <div class="col-md-4 portfolio-item">
-                    <div class="card shadow-sm">
-                        <img src="https://via.placeholder.com/400x225" class="card-img-top" alt="Project 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Tech Explainer Video</h5>
-                            <p class="card-text">Animated explainer for a SaaS product.</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">View Project</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 portfolio-item">
-                    <div class="card shadow-sm">
-                        <img src="https://via.placeholder.com/400x225" class="card-img-top" alt="Project 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Educational Animation</h5>
-                            <p class="card-text">Science concept animation for e-learning.</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">View Project</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 portfolio-item">
-                    <div class="card shadow-sm">
-                        <img src="https://via.placeholder.com/400x225" class="card-img-top" alt="Project 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Product Demo Video</h5>
-                            <p class="card-text">Animation showcasing product features.</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">View Project</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-5 bg-light">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="row">
-                <div class="col-lg-5 mb-4">
-                    <div class="contact-info d-flex align-items-start mb-4">
-                        <i class="fas fa-map-marker-alt mt-1"></i>
-                        <div>
-                            <h5>Location</h5>
-                            <p>Kathmandu, Nepal</p>
-                        </div>
-                    </div>
-                    <div class="contact-info d-flex align-items-start mb-4">
-                        <i class="fas fa-envelope mt-1"></i>
-                        <div>
-                            <h5>Email</h5>
-                            <p>anil@example.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-info d-flex align-items-start mb-4">
-                        <i class="fas fa-phone-alt mt-1"></i>
-                        <div>
-                            <h5>Phone</h5>
-                            <p>+977 98XXXXXXX</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <form>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <input type="text" class="form-control" placeholder="Your Name" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <input type="email" class="form-control" placeholder="Your Email" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Subject">
-                        </div>
-                        <div class="mb-3">
-                            <textarea class="form-control" rows="5" placeholder="Message" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="text-center">
-        <div class="container">
-            <p class="mb-0">&copy; 2023 Anil Maharjan. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Theme color changer
+        const colorBtn = document.getElementById('changeColorBtn');
+        let colorIndex = 0;
+        const colorThemes = [
+            {primary: '#4a6fa5', secondary: '#166088', accent: '#ff6b6b'},
+            {primary: '#2a9d8f', secondary: '#264653', accent: '#e9c46a'},
+            {primary: '#9d4edd', secondary: '#560bad', accent: '#f72585'},
+            {primary: '#f3722c', secondary: '#f8961e', accent: '#90be6d'}
+        ];
+        
+        colorBtn.addEventListener('click', function() {
+            const root = document.documentElement;
+            colorIndex = (colorIndex + 1) % colorThemes.length;
+            const theme = colorThemes[colorIndex];
+            
+            root.style.setProperty('--primary-color', theme.primary);
+            root.style.setProperty('--secondary-color', theme.secondary);
+            root.style.setProperty('--accent-color', theme.accent);
+            
+            // Add pulse effect to button
+            this.classList.add('pulse-effect');
+            setTimeout(() => {
+                this.classList.remove('pulse-effect');
+            }, 1000);
+            
+            // Update button text
+            const themeNames = ['Blue', 'Green', 'Purple', 'Orange'];
+            colorBtn.innerHTML = `<i class="fas fa-palette me-2"></i> ${themeNames[colorIndex]} Theme`;
         });
-
-        // Navbar background change on scroll
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('bg-white', 'shadow-sm');
-            } else {
-                navbar.classList.remove('bg-white', 'shadow-sm');
+        
+        // Pulse animation for appreciation button
+        const pulseBtn = document.getElementById('pulseBtn');
+        pulseBtn.addEventListener('click', function() {
+            // Create a temporary feedback message
+            const feedback = document.createElement('div');
+            feedback.className = 'position-fixed top-0 start-0 w-100 text-center p-3';
+            feedback.style.zIndex = '1050';
+            feedback.style.backgroundColor = 'rgba(255, 107, 107, 0.9)';
+            feedback.style.color = 'white';
+            feedback.style.fontWeight = 'bold';
+            feedback.innerHTML = '<i class="fas fa-heart me-2"></i> Thank you for your appreciation!';
+            document.body.appendChild(feedback);
+            
+            // Remove the message after 3 seconds
+            setTimeout(() => {
+                feedback.remove();
+            }, 3000);
+            
+            // Add pulse animation to the button
+            pulseBtn.classList.add('pulse-effect');
+            setTimeout(() => {
+                pulseBtn.classList.remove('pulse-effect');
+            }, 1000);
+            
+            // Add bounce effect to welcome icon
+            document.querySelector('.welcome-icon').classList.add('bounce-effect');
+            setTimeout(() => {
+                document.querySelector('.welcome-icon').classList.remove('bounce-effect');
+            }, 1000);
+        });
+        
+        // Animate elements on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.fade-in');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.animationPlayState = 'running';
+                }
+            });
+        }
+        
+        // Initialize animations
+        window.addEventListener('load', () => {
+            // Set initial animation state
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.style.animationPlayState = 'paused';
+            });
+            
+            // Run once on load
+            setTimeout(animateOnScroll, 500);
+            
+            // Add bounce effect to explore button
+            const exploreBtn = document.querySelector('.bounce-effect');
+            if (exploreBtn) {
+                setTimeout(() => {
+                    exploreBtn.classList.remove('bounce-effect');
+                }, 2000);
             }
+        });
+        
+        // Run on scroll
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
     </script>
 </body>
