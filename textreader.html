@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Text Reader — Save to Cloud</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    #text-area {
+      width: 100%;
+      min-height: 200px;
+      padding: 16px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      background: white;
+      resize: vertical;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 14px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .btn-copy { background: #28a745; }
+    .btn-print { background: #6c757d; }
+    .btn-read { background: #17a2b8; }
+    .btn-share { background: #ffc107; color: #212529; }
+    .btn-cloud { background: #4285F4; }
+    button:hover { opacity: 0.9; }
+
+    /* Reading View Popup */
+    #reading-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    #reading-content {
+      background: white;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px 25px 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    #reading-text {
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .popup-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #close-popup {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #aaa;
+    }
+    #close-popup:hover {
+      color: #333;
+    }
+
+    /* Print */
+    #print-output { display: none; }
+    @media print {
+      body * { visibility: hidden; }
+      #print-output {
+        display: block !important;
+        visibility: visible;
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%;
+        padding: 20px;
+        font-family: serif;
+        font-size: 14pt;
+        white-space: pre-wrap;
+        line-height: 1.6;
+      }
+    }
+
+    /* Alert */
+    #alert {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      display: none;
+      z-index: 3000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>Text Reader — Save to Cloud</h1>
+  <textarea id="text-area" placeholder="Paste your text here..."></textarea>
+  <div class="controls">
+    <button class="btn-copy" onclick="copyText()">Copy</button>
+    <button class="btn-print" onclick="printText()">Print</button>
+    <button class="btn-read" onclick="openReadingView()">Reading View</button>
+    <button class="btn-share" onclick="openShareMenu()">Share</button>
+    <button class="btn-cloud" onclick="saveToCloud()">Save to Cloud</button>
+  </div>
+
+  <pre id="print-output"></pre>
+
+  <!-- Reading Popup -->
+  <div id="reading-popup">
+    <div id="reading-content">
+      <button id="close-popup" onclick="closeReadingView()">&times;</button>
+      <div id="reading-text"></div>
+      <div class="popup-controls">
+        <button class="btn-copy" onclick="copyFromPopup()">Copy</button>
+        <button class="btn-print" onclick="printFromPopup()">Print</button>
+        <button class="btn-share" onclick="openShareMenu()">Share</button>
+        <button class="btn-cloud" onclick="saveToCloud()">Save to Cloud</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="alert"></div>
+
+  <script>
+    // ✅ Your live URLs — no trailing spaces
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6E1K_WKQS9TzmiOynQ4GsqUNxDBlFlZfPh4bDZ_HCPmXdr9QXInl02omMaFznO4aDig/exec";
+    const PAGE_BASE_URL = "https://maharjanil.github.io/textreader/";
+
+    const textarea = document.getElementById('text-area');
+    const readingPopup = document.getElementById('reading-popup');
+    const readingText = document.getElementById('reading-text');
+    const printOutput = document.getElementById('print-output');
+    const alertBox = document.getElementById('alert');
+    let shareMenuElem = null;
+
+    // Load text from cloud if URL has an ID (e.g., #abc123)
+    window.addEventListener('load', async () => {
+      const id = window.location.hash.substring(1);
+      if (id && /^[a-zA-Z0-9]{6,10}$/.test(id)) {
+        try {
+          const res = await fetch(`${GOOGLE_SCRIPT_URL}?id=${id}`);
+          const text = await res.text();
+          if (text && !text.includes("Not found") && !text.includes("ID required")) {
+            textarea.value = text;
+            showReadingOnLoad(text);
+          } else {
+            showAlert("Text not found or link expired.");
+          }
+        } catch (e) {
+          showAlert("Failed to load from cloud.");
+        }
+      }
+    });
+
+    // ✅ CORRECTLY FORMATTED POST REQUEST (critical for Google Apps Script)
+    async function saveToCloud() {
+      const text = textarea.value.trim();
+      if (!text) return showAlert("Enter text to save.");
+
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: "text=" + encodeURIComponent(text),
+        });
+
+        const fullLink = await response.text();
+        if (fullLink.startsWith("http")) {
+          await navigator.clipboard.writeText(fullLink);
+          showAlert("✅ Cloud link copied! Share it to view anytime.");
+        } else {
+          showAlert("⚠️ Save failed: " + fullLink);
+        }
+      } catch (err) {
+        showAlert("❌ Network error: " + err.message);
+      }
+    }
+
+    // === Copy ===
+    async function copyText() {
+      const text = textarea.value.trim();
+      if (!text) return showAlert("Nothing to copy!");
+      try {
+        await navigator.clipboard.writeText(text);
+        showAlert("Copied!");
+      } catch (e) {
+        fallbackCopy(text);
+      }
+    }
+    function copyFromPopup() { copyText(); }
+
+    function fallbackCopy(text) {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.style.position = 'fixed';
+      el.style.opacity = '0';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showAlert("Copied (fallback).");
+    }
+
+    // === Print ===
+    function printText() {
+      printOutput.textContent = textarea.value;
+      printOutput.style.display = 'block';
+      window.print();
+      printOutput.style.display = 'none';
+    }
+    function printFromPopup() { printText(); }
+
+    // === Reading View ===
+    function openReadingView() {
+      const text = textarea.value.trim();
+      if (!text) return showAlert("Enter text first.");
+      readingText.textContent = text;
+      readingPopup.style.display = 'flex';
+    }
+    function closeReadingView() {
+      readingPopup.style.display = 'none';
+    }
+    function showReadingOnLoad(text) {
+      readingText.textContent = text;
+      readingPopup.style.display = 'flex';
+    }
+
+    // === Share Menu ===
+    function openShareMenu() {
+      const text = textarea.value.trim();
+      if (!text) return showAlert("Enter text to share.");
+      if (!shareMenuElem) createShareMenu();
+      shareMenuElem.style.display = 'flex';
+    }
+
+    function createShareMenu() {
+      shareMenuElem = document.createElement('div');
+      shareMenuElem.id = 'share-menu';
+      shareMenuElem.innerHTML = `
+        <div style="background:white; padding:25px; border-radius:12px; max-width:300px; width:80%;">
+          <h3 style="margin:0;text-align:center;">Share via</h3>
+          <div style="display:flex;flex-direction:column;gap:12px;margin:15px 0;">
+            <button style="background:#25D366;color:white;border:none;padding:10px;border-radius:6px;" onclick="shareTo('whatsapp')"> WhatsApp </button>
+            <button style="background:#7360F2;color:white;border:none;padding:10px;border-radius:6px;" onclick="shareTo('viber')"> Viber </button>
+            <button style="background:#0088CC;color:white;border:none;padding:10px;border-radius:6px;" onclick="shareTo('telegram')"> Telegram </button>
+          </div>
+          <button style="width:100%;background:#6c757d;color:white;border:none;padding:10px;border-radius:6px;" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
+        </div>
+      `;
+      Object.assign(shareMenuElem.style, {
+        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+        background: 'rgba(0,0,0,0.6)', zIndex: 2000,
+        display: 'none', justifyContent: 'center', alignItems: 'center'
+      });
+      document.body.appendChild(shareMenuElem);
+    }
+
+    function shareTo(app) {
+      const text = textarea.value.trim();
+      const encoded = encodeURIComponent(text);
+      let url = '';
+      switch(app) {
+        case 'whatsapp':
+          url = `https://wa.me/?text=${encoded}`;
+          break;
+        case 'viber':
+          url = `viber://forward?text=${encoded}`;
+          if (!navigator.userAgent.includes('Mobile')) {
+            copyText();
+            showAlert("Viber works best on mobile. Text copied!");
+          }
+          break;
+        case 'telegram':
+          url = `https://t.me/share/url?url=&text=${encoded}`;
+          break;
+      }
+      if (url) window.open(url, '_blank');
+      if (shareMenuElem) shareMenuElem.style.display = 'none';
+    }
+
+    // === Utility ===
+    function showAlert(msg) {
+      alertBox.textContent = msg;
+      alertBox.style.display = 'block';
+      setTimeout(() => alertBox.style.display = 'none', 3000);
+    }
+
+    // Close popups with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (readingPopup.style.display === 'flex') closeReadingView();
+        if (shareMenuElem && shareMenuElem.style.display === 'flex') {
+          shareMenuElem.style.display = 'none';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
