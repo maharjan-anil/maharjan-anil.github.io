@@ -525,35 +525,56 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
-        // Theme Toggle Functionality
+        // Theme Toggle Functionality - SHARED ACROSS PAGES
         const html = document.getElementById('htmlRoot');
         const toggleBtn = document.getElementById('themeToggle');
         const icon = toggleBtn.querySelector('i');
 
-        // Detect system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+        // Function to apply theme
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            // Update icon
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+            // Save to localStorage
+            localStorage.setItem('theme', theme);
+            
+            // Dispatch event for other pages to listen to
+            window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
+        }
 
-        // Apply theme
-        html.setAttribute('data-theme', savedTheme);
-        icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        // Function to get current theme
+        function getCurrentTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+        }
+
+        // Initialize theme on page load
+        applyTheme(getCurrentTheme());
 
         // Toggle on click
-        toggleBtn.addEventListener('click', () => {
-            const current = html.getAttribute('data-theme');
-            const newTheme = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        });
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                const current = html.getAttribute('data-theme');
+                const newTheme = current === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+        }
 
         // Simple animation trigger on load
         window.addEventListener('load', function() {
             // Add a slight delay to ensure CSS animations trigger properly
             setTimeout(function() {
-                document.querySelector('.welcome-title').style.opacity = '1';
-                document.querySelector('.thank-you-message').style.opacity = '1';
-                document.querySelector('.tools-link-container').style.opacity = '1';
+                if (document.querySelector('.welcome-title')) {
+                    document.querySelector('.welcome-title').style.opacity = '1';
+                }
+                if (document.querySelector('.thank-you-message')) {
+                    document.querySelector('.thank-you-message').style.opacity = '1';
+                }
+                if (document.querySelector('.tools-link-container')) {
+                    document.querySelector('.tools-link-container').style.opacity = '1';
+                }
             }, 100);
         });
         
