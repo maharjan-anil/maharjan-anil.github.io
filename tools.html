@@ -1,373 +1,678 @@
 <!DOCTYPE html>
 <html lang="en" id="htmlRoot">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nepal Live Tools </title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root {
-      --bg-body: #f9fbfd;
-      --bg-card: #ffffff;
-      --text-primary: #1e293b;
-      --text-secondary: #64748b;
-      --border-color: #e2e8f0;
-      --shadow: rgba(0,0,0,0.06);
-      --shadow-hover: rgba(0,0,0,0.12);
-    }
-
-    [data-theme="dark"] {
-      --bg-body: #121826;
-      --bg-card: #1e293b;
-      --text-primary: #f1f5f9;
-      --text-secondary: #cbd5e1;
-      --border-color: #334155;
-      --shadow: rgba(0,0,0,0.2);
-      --shadow-hover: rgba(0,0,0,0.3);
-    }
-
-    body {
-      background: var(--bg-body);
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      padding: 2rem 1rem;
-      color: var(--text-primary);
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-    .header h1 {
-      font-weight: 800;
-      color: var(--text-primary);
-      font-size: 2rem;
-    }
-    .header p {
-      color: var(--text-secondary);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: none;
-      border: none;
-      color: var(--text-primary);
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .theme-toggle:hover {
-      transform: scale(1.15);
-    }
-
-    .cards-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.4rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .rate-card {
-      background: var(--bg-card);
-      border-radius: 16px;
-      padding: 1.4rem 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px var(--shadow);
-      border: 1px solid var(--border-color);
-    }
-
-    .rate-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px var(--shadow-hover);
-    }
-
-    /* Accent top borders */
-    .rate-card.gold { border-top: 4px solid #0077e5; }
-    .rate-card.forex { border-top: 4px solid #38b45e; }
-    .rate-card.fuel { border-top: 4px solid #d1d5db; }
-    .rate-card.veg { border-top: 4px solid #519122; }
-    .rate-card.date { border-top: 4px solid #21ADE2; }
-    .rate-card.weather { border-top: 4px solid #00a2e2; }
-    .rate-card.unicode { border-top: 4px solid #8b5cf6; }
-    .rate-card.panchang { border-top: 4px solid #c0c0c0; }
-
-    .rate-card i {
-      font-size: 2rem;
-      margin-bottom: 0.8rem;
-      display: block;
-    }
-    .gold i { color: #0077e5; }
-    .forex i { color: #38b45e; }
-    .fuel i { color: #6b7280; }
-    .veg i { color: #519122; }
-    .date i { color: #21ADE2; }
-    .weather i { color: #00a2e2; }
-    .unicode i { color: #8b5cf6; }
-    .panchang i { color: #555; }
-
-    [data-theme="dark"] .panchang i { color: #aaa; }
-    [data-theme="dark"] .fuel i { color: #bbb; }
-
-    .rate-card h3 {
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0.4rem 0 0;
-      font-size: 0.95rem;
-      line-height: 1.3;
-    }
-
-    /* Modal styling */
-    .modal-content {
-      border-radius: 14px;
-      border: none;
-      background: var(--bg-card);
-      color: var(--text-primary);
-    }
-    .modal-header {
-      padding: 1rem 1.5rem;
-      border: none;
-      color: white;
-      font-weight: 600;
-    }
-    .modal-body {
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .attribution {
-      font-size: 0.8rem;
-      margin-top: 0.7rem;
-      display: block;
-      text-align: left;
-      color: var(--text-secondary);
-      width: 100%;
-    }
-    .attribution a {
-      color: #4f46e5;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    [data-theme="dark"] .attribution a {
-      color: #a5b4fc;
-    }
-    .attribution a:hover {
-      text-decoration: underline;
-    }
-
-    .modal-header.gold { background-color: #0077e5; }
-    .modal-header.forex { background-color: #38b45e; }
-    .modal-header.fuel { background-color: #d1d5db; color: #1f2937; }
-    [data-theme="dark"] .modal-header.fuel { color: #1f2937; background-color: #4b5563; }
-    .modal-header.veg { background-color: #519122; }
-    .modal-header.date { background-color: #21ADE2; }
-    .modal-header.weather { background-color: #00a2e2; }
-    .modal-header.unicode { background-color: #8b5cf6; }
-    .modal-header.panchang { background-color: #e6e5e2; color: #333; }
-    [data-theme="dark"] .modal-header.panchang { background-color: #334155; color: #e2e8f0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools | Anil Maharjan</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4ECDC4;
+            --name-color: #ff6b35;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --text-color: #333;
+            --text-light: #777;
+            --card-bg: #ffffff;
+            --body-bg: #f9f9f9;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #5a8fd8;
+            --secondary-color: #2a7bc8;
+            --accent-color: #4ECDC4;
+            --name-color: #ff8c5a;
+            --light-color: #2d3748;
+            --dark-color: #1a202c;
+            --text-color: #e2e8f0;
+            --text-light: #a0aec0;
+            --card-bg: #2d3748;
+            --body-bg: #1a202c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--body-bg);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        /* Navigation */
+        .navbar-custom {
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-brand {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            text-decoration: none;
+        }
+        
+        .nav-brand span {
+            color: var(--name-color);
+        }
+        
+        .nav-link-custom {
+            color: var(--text-color) !important;
+            font-weight: 500;
+            padding: 8px 20px !important;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link-custom:hover {
+            background-color: var(--primary-color);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background-color: var(--name-color);
+            color: white !important;
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotate(30deg);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.2;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            color: white;
+        }
+        
+        .page-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Tools Section */
+        .tools-section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--name-color);
+            border-radius: 2px;
+        }
+        
+        .tool-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-top: 5px solid var(--accent-color);
+            transition: all 0.3s ease;
+            height: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            height: 80px;
+            width: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            color: white;
+        }
+        
+        .gold .tool-icon { background-color: #FFD700; }
+        .forex .tool-icon { background-color: #38b45e; }
+        .fuel .tool-icon { background-color: #dc3545; }
+        .veg .tool-icon { background-color: #519122; }
+        .date .tool-icon { background-color: #21ADE2; }
+        .weather .tool-icon { background-color: #00a2e2; }
+        .unicode .tool-icon { background-color: #9d4edd; }
+        .panchang .tool-icon { background-color: #e6b800; }
+        
+        .tool-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .tool-description {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 1rem;
+        }
+        
+        .tool-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .tool-btn:hover {
+            background-color: var(--name-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Modal Header Colors */
+        .modal-header.gold { background-color: #FFD700; color: #333; }
+        .modal-header.forex { background-color: #38b45e; color: white; }
+        .modal-header.fuel { background-color: #dc3545; color: white; }
+        .modal-header.veg { background-color: #519122; color: white; }
+        .modal-header.date { background-color: #21ADE2; color: white; }
+        .modal-header.weather { background-color: #00a2e2; color: white; }
+        .modal-header.unicode { background-color: #9d4edd; color: white; }
+        .modal-header.panchang { background-color: #e6b800; color: #333; }
+        
+        /* Footer */
+        .footer-section {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .copyright {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .home-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .home-link:hover {
+            color: var(--name-color);
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .page-title {
+                font-size: 2.8rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 80px 0 50px;
+            }
+            
+            .page-title {
+                font-size: 2.2rem;
+            }
+            
+            .page-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .tools-section {
+                padding: 60px 0;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 40px;
+            }
+            
+            .tool-card {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .nav-brand {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand nav-brand" href="index.html">Anil <span>Maharjan</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom active" href="tools.html">Tools</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<!-- Dark/Light Toggle -->
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-  <i class="fas fa-moon"></i>
-</button>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto hero-content">
+                    <h1 class="page-title">Useful Tools</h1>
+                    <p class="page-subtitle">Access various handy tools including currency converters, weather information, date converters and more for Nepal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="container">
-  <div class="header">
-    <h1>Nepal Live Tools </h1>
-    <p class="text-muted">Tap any card to view</p>
-  </div>
+    <!-- Tools Section -->
+    <section class="tools-section">
+        <div class="container">
+            <h2 class="section-title">Available Tools</h2>
+            
+            <div class="row">
+                <!-- Gold & Silver -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card gold">
+                        <div class="tool-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <h3 class="tool-title">Gold & Silver Price</h3>
+                        <p class="tool-description">Current gold and silver prices in Nepal</p>
+                        <button class="tool-btn" id="goldOption">Open Tool</button>
+                    </div>
+                </div>
+                
+                <!-- Forex -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card forex">
+                        <div class="tool-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3 class="tool-title">Foreign Exchange Rates</h3>
+                        <p class="tool-description">Live foreign exchange rates in Nepal</p>
+                        <button class="tool-btn" id="forexOption">Open Tool</button>
+                    </div>
+                </div>
+                
+                <!-- Fuel -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card fuel">
+                        <div class="tool-icon">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <h3 class="tool-title">Nepal Fuel Rates</h3>
+                        <p class="tool-description">Current fuel prices in Nepal</p>
+                        <button class="tool-btn" id="fuelOption">Open Tool</button>
+                    </div>
+                </div>
+                
+                <!-- Vegetables -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card veg">
+                        <div class="tool-icon">
+                            <i class="fas fa-carrot"></i>
+                        </div>
+                        <h3 class="tool-title">Fruits & Vegetables</h3>
+                        <p class="tool-description">Market rates for fruits and vegetables</p>
+                        <button class="tool-btn" id="vegOption">Open Tool</button>
+                    </div>
+                </div>
+                
+                <!-- Date Converter -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card date">
+                        <div class="tool-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3 class="tool-title">Date Converter</h3>
+                        <p class="tool-description">Convert between BS and AD dates</p>
+                        <button class="tool-btn" id="dateOption">Open Tool</button>
+                    </div>
+                </div>
+                
+                <!-- Weather -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card weather">
+                        <div class="tool-icon">
+                            <i class="fas fa-cloud-sun"></i>
+                        </div>
+                        <h3 class="tool-title">Weather Observation</h3>
+                        <p class="tool-description">Current weather conditions in Nepal</p>
+                        <button class="tool-btn" id="weatherOption">Open Tool</button>
+                    </div>
+                </div>
+                
+                <!-- Unicode -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card unicode">
+                        <div class="tool-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <h3 class="tool-title">Nepali Unicode</h3>
+                        <p class="tool-description">Convert to Nepali Unicode text</p>
+                        <button class="tool-btn" id="unicodeOption">Open Tool</button>
+                    </div>
+                </div>
+                
+                <!-- Panchang -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="tool-card panchang">
+                        <div class="tool-icon">
+                            <i class="fas fa-star-and-crescent"></i>
+                        </div>
+                        <h3 class="tool-title">Nepali Panchang</h3>
+                        <p class="tool-description">Traditional Nepali calendar information</p>
+                        <button class="tool-btn" id="panchangOption">Open Tool</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <div class="cards-container">
-    <div class="rate-card gold" id="goldOption"><i class="fas fa-coins"></i><h3>Gold & Silver</h3></div>
-    <div class="rate-card forex" id="forexOption"><i class="fas fa-exchange-alt"></i><h3>Foreign Currency</h3></div>
-    <div class="rate-card fuel" id="fuelOption"><i class="fas fa-gas-pump"></i><h3>Fuel Rates</h3></div>
-    <div class="rate-card veg" id="vegOption"><i class="fas fa-carrot"></i><h3>Fruits & Vegetables</h3></div>
-    <div class="rate-card date" id="dateOption"><i class="fas fa-calendar-alt"></i><h3>Date Converter</h3></div>
-    <div class="rate-card weather" id="weatherOption"><i class="fas fa-cloud-sun"></i><h3>Nepal Weather</h3></div>
-    <div class="rate-card unicode" id="unicodeOption"><i class="fas fa-language"></i><h3>Nepali Unicode</h3></div>
-    <div class="rate-card panchang" id="panchangOption"><i class="fas fa-moon"></i><h3>Nepali Panchang</h3></div>
-  </div>
-</div>
+    <!-- === MODALS === -->
 
-<!-- === MODALS === -->
-
-<!-- Gold -->
-<div class="modal fade" id="goldModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header gold">
-        <h5 class="modal-title">Gold & Silver Price</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Gold -->
+    <div class="modal fade" id="goldModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header gold">
+            <h5 class="modal-title">Gold & Silver Price</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/gold/widget.php?api=621113p553&header_color=0077e5" frameborder="0" scrolling="yes" style="border:none;width:100%;height:265px;border-radius:5px;" allowtransparency="true"></iframe>
+          </div>
+        </div>
       </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/gold/widget.php?api=621113p553&header_color=0077e5" frameborder="0" scrolling="yes" style="border:none;width:100%;height:265px;border-radius:5px;" allowtransparency="true"></iframe>
+    </div>
+
+    <!-- Forex -->
+    <div class="modal fade" id="forexModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header forex">
+            <h5 class="modal-title">Foreign Exchange Rates</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/forex/widget2.php?api=621117p597&header_color=38b45e&background_color=faf8ee&header_title=Nepal%20Exchange%20Rates" frameborder="0" scrolling="yes" style="border:none;width:100%;height:383px;border-radius:5px;" allowtransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fuel -->
+    <div class="modal fade" id="fuelModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header fuel">
+            <h5 class="modal-title">Nepal Fuel Rates</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/fuel/widget.php?api=641110p120&title=Nepal%20Fuel%20Rates&header_color=dedede&header_text_color=303030" frameborder="0" scrolling="yes" style="border:none;width:100%;height:275px;border-radius:5px;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,0.3) transparent;" allowtransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Veg -->
+    <div class="modal fade" id="vegModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header veg">
+            <h5 class="modal-title">Fruits & Vegetables Rates</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/vegetable/widget.php?api=641115p195&header_color=519122" frameborder="0" scrolling="yes" style="border:none;width:100%;height:265px;border-radius:5px;" allowtransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date -->
+    <div class="modal fade" id="dateModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header date">
+            <h5 class="modal-title">Date Converter (BS ↔ AD)</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/linkdate-converter.php?h_color=21ADE2&b_color=CFE4B1&api=641117p214" frameborder="0" scrolling="no" style="border:none;width:100%;height:186px;" allowtransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weather -->
+    <div class="modal fade" id="weatherModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header weather">
+            <h5 class="modal-title">Nepal Weather Observation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/weather/widget.php?title=Nepal   Weather Observation&header_color=00a2e2&api=641112p367" frameborder="0" scrolling="Yes" style="border:none;width:100%;height:383px;border-radius:5px;" allowtransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unicode -->
+    <div class="modal fade" id="unicodeModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header unicode">
+            <h5 class="modal-title">Nepali Unicode Converter</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/linknepali-unicode3.php?api=641111p353" width="100%" height="400" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panchang -->
+    <div class="modal fade" id="panchangModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header panchang">
+            <h5 class="modal-title">Nepali Panchang</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <iframe src="https://www.ashesh.com.np/panchang/widget.php?header_title=Nepali   Panchang&header_color=e6e5e2&api=641113p383" frameborder="0" scrolling="no" style="border:none;width:100%;height:365px;border-radius:5px;" allowtransparency="true"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="copyright">
+                        <p>&copy; <span id="currentYear"></span> Anil Maharjan | 
+                           <a href="index.html" class="home-link">Back to Home</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
         
-      </div>
-    </div>
-  </div>
-</div>
+        // Theme Toggle
+        const html = document.getElementById('htmlRoot');
+        const toggleBtn = document.getElementById('themeToggle');
+        const icon = toggleBtn.querySelector('i');
 
-<!-- Forex -->
-<div class="modal fade" id="forexModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header forex">
-        <h5 class="modal-title">Foreign Exchange Rates</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/forex/widget2.php?api=621117p597&header_color=38b45e&background_color=faf8ee&header_title=Nepal%20Exchange%20Rates" frameborder="0" scrolling="yes" style="border:none;width:100%;height:383px;border-radius:5px;" allowtransparency="true"></iframe>
+        // Detect system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+
+        // Apply theme
+        html.setAttribute('data-theme', savedTheme);
+        icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+        // Toggle on click
+        toggleBtn.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Open modals
+        const open = (id) => new bootstrap.Modal(document.getElementById(id)).show();
+        document.getElementById('goldOption').addEventListener('click', () => open('goldModal'));
+        document.getElementById('forexOption').addEventListener('click', () => open('forexModal'));
+        document.getElementById('fuelOption').addEventListener('click', () => open('fuelModal'));
+        document.getElementById('vegOption').addEventListener('click', () => open('vegModal'));
+        document.getElementById('dateOption').addEventListener('click', () => open('dateModal'));
+        document.getElementById('weatherOption').addEventListener('click', () => open('weatherModal'));
+        document.getElementById('unicodeOption').addEventListener('click', () => open('unicodeModal'));
+        document.getElementById('panchangOption').addEventListener('click', () => open('panchangModal'));
+
+        // Set active navigation link
+        const currentPage = window.location.pathname.split('/').pop();
+        const navLinks = document.querySelectorAll('.nav-link-custom');
         
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Fuel -->
-<div class="modal fade" id="fuelModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header fuel">
-        <h5 class="modal-title">Nepal Fuel Rates</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/fuel/widget.php?api=641110p120&title=Nepal%20Fuel%20Rates&header_color=dedede&header_text_color=303030" frameborder="0" scrolling="yes" style="border:none;width:100%;height:275px;border-radius:5px;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,0.3) transparent;" allowtransparency="true"></iframe>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Veg -->
-<div class="modal fade" id="vegModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header veg">
-        <h5 class="modal-title">Fruits & Vegetables Rates</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/vegetable/widget.php?api=641115p195&header_color=519122" frameborder="0" scrolling="yes" style="border:none;width:100%;height:265px;border-radius:5px;" allowtransparency="true"></iframe>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Date -->
-<div class="modal fade" id="dateModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header date">
-        <h5 class="modal-title">Date Converter (BS ↔ AD)</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/linkdate-converter.php?h_color=21ADE2&b_color=CFE4B1&api=641117p214" frameborder="0" scrolling="no" style="border:none;width:100%;height:186px;" allowtransparency="true"></iframe>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Weather -->
-<div class="modal fade" id="weatherModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header weather">
-        <h5 class="modal-title">Nepal Weather Observation</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/weather/widget.php?title=Nepal   Weather Observation&header_color=00a2e2&api=641112p367" frameborder="0" scrolling="Yes" style="border:none;width:100%;height:383px;border-radius:5px;" allowtransparency="true"></iframe>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Unicode -->
-<div class="modal fade" id="unicodeModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header unicode">
-        <h5 class="modal-title">Nepali Unicode Converter</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/linknepali-unicode3.php?api=641111p353" width="100%" height="400" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Panchang -->
-<div class="modal fade" id="panchangModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header panchang">
-        <h5 class="modal-title">Nepali Panchang</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center">
-        <iframe src="https://www.ashesh.com.np/panchang/widget.php?header_title=Nepali   Panchang&header_color=e6e5e2&api=641113p383" frameborder="0" scrolling="no" style="border:none;width:100%;height:365px;border-radius:5px;" allowtransparency="true"></iframe>
-              </div>
-    </div>
-  </div>
-</div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // Theme Toggle
-  const html = document.getElementById('htmlRoot');
-  const toggleBtn = document.getElementById('themeToggle');
-  const icon = toggleBtn.querySelector('i');
-
-  // Detect system preference
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
-
-  // Apply theme
-  html.setAttribute('data-theme', savedTheme);
-  icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-
-  // Toggle on click
-  toggleBtn.addEventListener('click', () => {
-    const current = html.getAttribute('data-theme');
-    const newTheme = current === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-  });
-
-  // Open modals
-  const open = (id) => new bootstrap.Modal(document.getElementById(id)).show();
-  document.getElementById('goldOption').addEventListener('click', () => open('goldModal'));
-  document.getElementById('forexOption').addEventListener('click', () => open('forexModal'));
-  document.getElementById('fuelOption').addEventListener('click', () => open('fuelModal'));
-  document.getElementById('vegOption').addEventListener('click', () => open('vegModal'));
-  document.getElementById('dateOption').addEventListener('click', () => open('dateModal'));
-  document.getElementById('weatherOption').addEventListener('click', () => open('weatherModal'));
-  document.getElementById('unicodeOption').addEventListener('click', () => open('unicodeModal'));
-  document.getElementById('panchangOption').addEventListener('click', () => open('panchangModal'));
-</script>
-
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
