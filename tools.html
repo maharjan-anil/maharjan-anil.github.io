@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,6 +20,21 @@
             --dark-color: #343a40;
             --text-color: #333;
             --text-light: #777;
+            --card-bg: #ffffff;
+            --body-bg: #f9f9f9;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #5a8fd8;
+            --secondary-color: #2a7bc8;
+            --accent-color: #4ECDC4;
+            --name-color: #ff8c5a;
+            --light-color: #2d3748;
+            --dark-color: #1a202c;
+            --text-color: #e2e8f0;
+            --text-light: #a0aec0;
+            --card-bg: #2d3748;
+            --body-bg: #1a202c;
         }
         
         * {
@@ -32,8 +47,9 @@
             font-family: 'Open Sans', sans-serif;
             color: var(--text-color);
             line-height: 1.6;
-            background-color: #f9f9f9;
+            background-color: var(--body-bg);
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         h1, h2, h3, h4, h5 {
@@ -43,12 +59,13 @@
         
         /* Navigation */
         .navbar-custom {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: var(--card-bg);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
         }
         
         .nav-brand {
@@ -64,7 +81,7 @@
         }
         
         .nav-link-custom {
-            color: var(--dark-color) !important;
+            color: var(--text-color) !important;
             font-weight: 500;
             padding: 8px 20px !important;
             margin: 0 5px;
@@ -152,7 +169,7 @@
         }
         
         .tool-card {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
@@ -237,6 +254,7 @@
             color: white;
             padding: 40px 0;
             text-align: center;
+            transition: background-color 0.3s ease;
         }
         
         .copyright {
@@ -585,6 +603,32 @@
     <script>
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Theme System - SHARED WITH HOME PAGE
+        const html = document.getElementById('htmlRoot');
+        
+        // Function to apply theme
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            // Save to localStorage
+            localStorage.setItem('theme', theme);
+        }
+
+        // Function to get current theme
+        function getCurrentTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+        }
+
+        // Initialize theme on page load
+        applyTheme(getCurrentTheme());
+
+        // Listen for theme changes from home page
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'theme') {
+                applyTheme(e.newValue);
+            }
+        });
         
         // Open modals
         const open = (id) => new bootstrap.Modal(document.getElementById(id)).show();
