@@ -6,14 +6,13 @@
     <title>Anil Maharjan</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #4a6fa5;
             --secondary-color: #166088;
+            --name-color: #ff6b35; /* Changed name color to orange */
             --accent-color: #ff6b6b;
             --light-color: #f8f9fa;
             --dark-color: #343a40;
@@ -33,6 +32,9 @@
             line-height: 1.6;
             background-color: #f9f9f9;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         
         h1, h2, h3, h4, h5 {
@@ -44,9 +46,12 @@
         .hero-section {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 100px 0;
+            padding: 150px 0;
             position: relative;
             overflow: hidden;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
         }
         
         .hero-section::before {
@@ -63,219 +68,175 @@
         .hero-content {
             position: relative;
             z-index: 2;
+            text-align: center;
+            width: 100%;
         }
         
-        .hero-title {
-            font-size: 3.5rem;
+        .name-title {
+            font-size: 4.5rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            color: var(--name-color); /* Applied the custom name color */
+            letter-spacing: 1px;
+            animation: fadeInDown 1.5s ease forwards;
         }
         
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
+        .welcome-title {
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 60px;
+            opacity: 0.95;
+            color: #f8f9fa;
+            animation: fadeInUp 1.8s ease forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
         }
         
-        .hero-subtitle {
-            font-size: 1.8rem;
-            font-weight: 300;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        /* Main Content */
-        .content-section {
-            padding: 100px 0;
+        .thank-you-section {
+            padding: 80px 0;
             background-color: white;
-        }
-        
-        .welcome-card {
-            background: white;
-            border-radius: 15px;
-            padding: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border-top: 5px solid var(--accent-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .welcome-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-        }
-        
-        .welcome-icon {
-            font-size: 3rem;
-            color: var(--accent-color);
-            margin-bottom: 25px;
-        }
-        
-        .welcome-message {
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            font-weight: 500;
-            margin-bottom: 30px;
-            line-height: 1.4;
+            text-align: center;
         }
         
         .thank-you-message {
-            font-size: 1.4rem;
-            color: var(--text-light);
-            line-height: 1.6;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease forwards;
+            animation-delay: 0.5s;
+            opacity: 0;
         }
         
         /* Footer */
         .footer-section {
             background-color: var(--dark-color);
             color: white;
-            padding: 50px 0;
+            padding: 30px 0;
             text-align: center;
         }
         
-        .social-links {
-            margin-top: 20px;
-        }
-        
-        .social-icon {
-            display: inline-block;
-            width: 45px;
-            height: 45px;
-            line-height: 45px;
-            background-color: rgba(255,255,255,0.1);
-            color: white;
-            border-radius: 50%;
-            margin: 0 8px;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-        
-        .social-icon:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-5px);
-            text-decoration: none;
-        }
-        
         .copyright {
-            margin-top: 30px;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
         }
         
-        /* Animation for text */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 1s ease forwards;
-        }
-        
-        .delay-1 {
-            animation-delay: 0.3s;
-        }
-        
-        .delay-2 {
-            animation-delay: 0.6s;
-        }
-        
-        .delay-3 {
-            animation-delay: 0.9s;
-        }
-        
-        @keyframes fadeInUp {
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
         
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Name color hover effect */
+        .name-title:hover {
+            color: #ff8c5a; /* Lighter orange on hover */
+            text-shadow: 3px 3px 12px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+        
         /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .name-title {
+                font-size: 3.8rem;
+            }
+            
+            .welcome-title {
+                font-size: 2.4rem;
+            }
+            
+            .thank-you-message {
+                font-size: 2rem;
+            }
+        }
+        
         @media (max-width: 768px) {
             .hero-section {
-                padding: 70px 0;
+                padding: 100px 0;
             }
             
-            .content-section {
-                padding: 70px 0;
+            .name-title {
+                font-size: 2.8rem;
+                margin-bottom: 30px;
             }
             
-            .welcome-card {
-                padding: 30px;
+            .welcome-title {
+                font-size: 1.8rem;
+                margin-bottom: 40px;
             }
             
-            .welcome-message {
+            .thank-you-section {
+                padding: 60px 0;
+            }
+            
+            .thank-you-message {
+                font-size: 1.6rem;
+                padding: 0 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .name-title {
+                font-size: 2.2rem;
+            }
+            
+            .welcome-title {
                 font-size: 1.5rem;
             }
             
             .thank-you-message {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
             }
-        }
-        
-        /* Custom animations */
-        .pulse-effect {
-            animation: pulse 1s ease;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .bounce-effect {
-            animation: bounce 1s ease;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
         }
     </style>
 </head>
 <body>
-    <!-- Header/Hero Section -->
-    <header class="hero-section">
+    <!-- Main Content Section -->
+    <main class="hero-section">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center hero-content">
-                    <h1 class="hero-title fade-in"><span class="text-warning">Anil Maharjan</span></h1>
-                    <p class="hero-subtitle fade-in delay-1">Welcome to My Website!</p>
-                    <div class="mt-4 fade-in delay-2">
-                        <a href="#content" class="btn btn-light btn-lg px-4 py-3 shadow-sm bounce-effect">
-                            <i class="fas fa-arrow-down me-2"></i> Explore
-                        </a>
-                    </div>
+            <div class="row">
+                <div class="col-lg-10 mx-auto hero-content">
+                    <h1 class="name-title">Anil Maharjan</h1>
+                    <h2 class="welcome-title">Welcome to my Website!</h2>
                 </div>
             </div>
         </div>
-    </header>
+    </main>
 
-    <!-- Main Content Section -->
-    <section id="content" class="content-section">
+    <!-- Thank You Section -->
+    <section class="thank-you-section">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="welcome-card text-center">
-                        <div class="welcome-icon fade-in">
-                            <i class="fas fa-hand-wave"></i>
-                        </div>
-                        <h2 class="welcome-message fade-in delay-1">
-                            Welcome to my Website!
-                        </h2>
-                        <div class="thank-you-message fade-in delay-2">
-                            <p>Thank you for visiting! I'm delighted to have you here.</p>
-                            <p class="mt-3">If you'd like to connect or learn more, please don't hesitate to reach out through any of the social links below.</p>
-                        </div>
-                        <div class="mt-4 fade-in delay-3">
-                            <button id="changeColorBtn" class="btn btn-primary btn-lg px-4 py-2 me-3">
-                                <i class="fas fa-palette me-2"></i> Change Theme
-                            </button>
-                            <button id="pulseBtn" class="btn btn-outline-primary btn-lg px-4 py-2">
-                                <i class="fas fa-heart me-2"></i> Send Appreciation
-                            </button>
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <p class="thank-you-message">Thank you for visiting!</p>
                 </div>
             </div>
         </div>
@@ -285,27 +246,9 @@
     <footer class="footer-section">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h3 class="mb-4">Connect With Me</h3>
-                    <div class="social-links">
-                        <a href="#" class="social-icon" title="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="social-icon" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="#" class="social-icon" title="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-icon" title="Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="social-icon" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
+                <div class="col-12">
                     <div class="copyright">
-                        <p>&copy; <span id="currentYear"></span> Anil Maharjan. All Rights Reserved.</p>
+                        <p>&copy; <span id="currentYear"></span> Anil Maharjan</p>
                     </div>
                 </div>
             </div>
@@ -318,120 +261,26 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
-        // Theme color changer
-        const colorBtn = document.getElementById('changeColorBtn');
-        let colorIndex = 0;
-        const colorThemes = [
-            {primary: '#4a6fa5', secondary: '#166088', accent: '#ff6b6b'},
-            {primary: '#2a9d8f', secondary: '#264653', accent: '#e9c46a'},
-            {primary: '#9d4edd', secondary: '#560bad', accent: '#f72585'},
-            {primary: '#f3722c', secondary: '#f8961e', accent: '#90be6d'}
-        ];
-        
-        colorBtn.addEventListener('click', function() {
-            const root = document.documentElement;
-            colorIndex = (colorIndex + 1) % colorThemes.length;
-            const theme = colorThemes[colorIndex];
-            
-            root.style.setProperty('--primary-color', theme.primary);
-            root.style.setProperty('--secondary-color', theme.secondary);
-            root.style.setProperty('--accent-color', theme.accent);
-            
-            // Add pulse effect to button
-            this.classList.add('pulse-effect');
-            setTimeout(() => {
-                this.classList.remove('pulse-effect');
-            }, 1000);
-            
-            // Update button text
-            const themeNames = ['Blue', 'Green', 'Purple', 'Orange'];
-            colorBtn.innerHTML = `<i class="fas fa-palette me-2"></i> ${themeNames[colorIndex]} Theme`;
+        // Simple animation trigger on load
+        window.addEventListener('load', function() {
+            // Add a slight delay to ensure CSS animations trigger properly
+            setTimeout(function() {
+                document.querySelector('.welcome-title').style.opacity = '1';
+                document.querySelector('.thank-you-message').style.opacity = '1';
+            }, 100);
         });
         
-        // Pulse animation for appreciation button
-        const pulseBtn = document.getElementById('pulseBtn');
-        pulseBtn.addEventListener('click', function() {
-            // Create a temporary feedback message
-            const feedback = document.createElement('div');
-            feedback.className = 'position-fixed top-0 start-0 w-100 text-center p-3';
-            feedback.style.zIndex = '1050';
-            feedback.style.backgroundColor = 'rgba(255, 107, 107, 0.9)';
-            feedback.style.color = 'white';
-            feedback.style.fontWeight = 'bold';
-            feedback.innerHTML = '<i class="fas fa-heart me-2"></i> Thank you for your appreciation!';
-            document.body.appendChild(feedback);
-            
-            // Remove the message after 3 seconds
-            setTimeout(() => {
-                feedback.remove();
-            }, 3000);
-            
-            // Add pulse animation to the button
-            pulseBtn.classList.add('pulse-effect');
-            setTimeout(() => {
-                pulseBtn.classList.remove('pulse-effect');
-            }, 1000);
-            
-            // Add bounce effect to welcome icon
-            document.querySelector('.welcome-icon').classList.add('bounce-effect');
-            setTimeout(() => {
-                document.querySelector('.welcome-icon').classList.remove('bounce-effect');
-            }, 1000);
+        // Optional: Add a subtle color change effect on the name
+        const nameElement = document.querySelector('.name-title');
+        let hue = 20; // Starting orange hue
+        
+        // Uncomment below if you want a color-changing effect on click
+        /*
+        nameElement.addEventListener('click', function() {
+            hue = (hue + 40) % 360;
+            this.style.color = `hsl(${hue}, 100%, 65%)`;
         });
-        
-        // Animate elements on scroll
-        function animateOnScroll() {
-            const elements = document.querySelectorAll('.fade-in');
-            
-            elements.forEach(element => {
-                const elementPosition = element.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if (elementPosition < screenPosition) {
-                    element.style.animationPlayState = 'running';
-                }
-            });
-        }
-        
-        // Initialize animations
-        window.addEventListener('load', () => {
-            // Set initial animation state
-            document.querySelectorAll('.fade-in').forEach(el => {
-                el.style.animationPlayState = 'paused';
-            });
-            
-            // Run once on load
-            setTimeout(animateOnScroll, 500);
-            
-            // Add bounce effect to explore button
-            const exploreBtn = document.querySelector('.bounce-effect');
-            if (exploreBtn) {
-                setTimeout(() => {
-                    exploreBtn.classList.remove('bounce-effect');
-                }, 2000);
-            }
-        });
-        
-        // Run on scroll
-        window.addEventListener('scroll', animateOnScroll);
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+        */
     </script>
 </body>
 </html>
