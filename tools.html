@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tools | Anil Maharjan</title>
+    <title>Tools</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <style>
         :root {
             --primary-color: #4a6fa5;
@@ -23,6 +20,21 @@
             --dark-color: #343a40;
             --text-color: #333;
             --text-light: #777;
+            --card-bg: #ffffff;
+            --body-bg: #f9f9f9;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #5a8fd8;
+            --secondary-color: #2a7bc8;
+            --accent-color: #4ECDC4;
+            --name-color: #ff8c5a;
+            --light-color: #2d3748;
+            --dark-color: #1a202c;
+            --text-color: #e2e8f0;
+            --text-light: #a0aec0;
+            --card-bg: #2d3748;
+            --body-bg: #1a202c;
         }
         
         * {
@@ -35,8 +47,9 @@
             font-family: 'Open Sans', sans-serif;
             color: var(--text-color);
             line-height: 1.6;
-            background-color: #f9f9f9;
+            background-color: var(--body-bg);
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         h1, h2, h3, h4, h5 {
@@ -46,12 +59,13 @@
         
         /* Navigation */
         .navbar-custom {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: var(--card-bg);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
         }
         
         .nav-brand {
@@ -67,7 +81,7 @@
         }
         
         .nav-link-custom {
-            color: var(--dark-color) !important;
+            color: var(--text-color) !important;
             font-weight: 500;
             padding: 8px 20px !important;
             margin: 0 5px;
@@ -84,46 +98,6 @@
         .nav-link-custom.active {
             background-color: var(--name-color);
             color: white !important;
-        }
-        
-        /* Admin Login Button */
-        .admin-login-btn {
-            background-color: #9d4edd;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-left: 10px;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .admin-login-btn:hover {
-            background-color: #8a3ed0;
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        /* Logout Button */
-        .logout-btn {
-            background-color: #dc3545;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-left: 10px;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .logout-btn:hover {
-            background-color: #c82333;
-            color: white;
-            transform: translateY(-2px);
         }
         
         /* Hero Section */
@@ -195,7 +169,7 @@
         }
         
         .tool-card {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
@@ -280,6 +254,7 @@
             color: white;
             padding: 40px 0;
             text-align: center;
+            transition: background-color 0.3s ease;
         }
         
         .copyright {
@@ -364,49 +339,10 @@
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom active" href="tools.html">Tools</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" href="blog.html">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <button class="admin-login-btn" id="adminLoginBtn">
-                            <i class="fas fa-sign-in-alt me-2"></i> Admin Login
-                        </button>
-                        <button class="logout-btn" id="logoutBtn" style="display: none;">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                        </button>
-                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- Login Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Admin Login</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label for="loginEmail" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="loginEmail" placeholder="admin@example.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="loginPassword" placeholder="Enter password" required>
-                        </div>
-                        <div id="loginError" class="alert alert-danger" style="display: none;"></div>
-                        <button type="submit" class="btn btn-primary" id="loginSubmitBtn" style="width: 100%; background-color: #9d4edd; border: none;">
-                            <i class="fas fa-sign-in-alt me-2"></i> Login
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -654,8 +590,7 @@
                 <div class="col-12">
                     <div class="copyright">
                         <p>&copy; <span id="currentYear"></span> Anil Maharjan | 
-                           <a href="index.html" class="home-link">Back to Home</a> | 
-                           <a href="blog.html" class="home-link">View Blog</a>
+                           <a href="index.html" class="home-link">Back to Home</a>
                         </p>
                     </div>
                 </div>
@@ -666,123 +601,36 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ==============================================
-        // FIREBASE CONFIGURATION - REPLACE WITH YOURS!
-        // ==============================================
-        const firebaseConfig = {
-           apiKey: "AIzaSyATt6Bc5-Jes8zXz6aLp9b9wi9OPFhVE0s",
-  authDomain: "anil-blog-af680.firebaseapp.com",
-  projectId: "anil-blog-af680",
-  storageBucket: "anil-blog-af680.firebasestorage.app",
-  messagingSenderId: "702295756466",
-  appId: "1:702295756466:web:df537c87f0ef46d0d943ab"
-        };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
-        // Firebase Authentication Functions
-        let loginModal = null;
+        // Theme System - SHARED WITH HOME PAGE
+        const html = document.getElementById('htmlRoot');
         
-        // Initialize login modal
-        document.addEventListener('DOMContentLoaded', function() {
-            loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-            
-            // Check if user is already logged in
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    // User is signed in
-                    document.getElementById('adminLoginBtn').style.display = 'none';
-                    document.getElementById('logoutBtn').style.display = 'inline-block';
-                } else {
-                    // User is signed out
-                    document.getElementById('adminLoginBtn').style.display = 'inline-block';
-                    document.getElementById('logoutBtn').style.display = 'none';
-                }
-            });
-        });
-        
-        // Open login modal
-        document.getElementById('adminLoginBtn').addEventListener('click', function() {
-            loginModal.show();
-        });
-        
-        // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const loginError = document.getElementById('loginError');
-            const submitBtn = document.getElementById('loginSubmitBtn');
-            
-            // Clear previous error
-            loginError.style.display = 'none';
-            loginError.textContent = '';
-            
-            // Show loading state
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Logging in...';
-            submitBtn.disabled = true;
-            
-            try {
-                // Sign in with email and password
-                await auth.signInWithEmailAndPassword(email, password);
-                
-                // Success - close modal and update UI
-                loginModal.hide();
-                document.getElementById('loginForm').reset();
-                
-                // Show success message
-                alert('Login successful! You can now access the admin panel.');
-                
-            } catch (error) {
-                // Handle errors
-                let errorMessage = 'Login failed. ';
-                
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMessage += 'Invalid email address.';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage += 'This account has been disabled.';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage += 'No account found with this email.';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage += 'Incorrect password.';
-                        break;
-                    default:
-                        errorMessage += error.message;
-                }
-                
-                loginError.textContent = errorMessage;
-                loginError.style.display = 'block';
-                
-            } finally {
-                // Reset button state
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+        // Function to apply theme
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            // Save to localStorage
+            localStorage.setItem('theme', theme);
+        }
+
+        // Function to get current theme
+        function getCurrentTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+        }
+
+        // Initialize theme on page load
+        applyTheme(getCurrentTheme());
+
+        // Listen for theme changes from home page
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'theme') {
+                applyTheme(e.newValue);
             }
         });
         
-        // Logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', async function() {
-            try {
-                await auth.signOut();
-                alert('Logged out successfully!');
-            } catch (error) {
-                console.error('Logout error:', error);
-                alert('Error logging out. Please try again.');
-            }
-        });
-        
-        // Open modals for tools
+        // Open modals
         const open = (id) => new bootstrap.Modal(document.getElementById(id)).show();
         document.getElementById('goldOption').addEventListener('click', () => open('goldModal'));
         document.getElementById('forexOption').addEventListener('click', () => open('forexModal'));
