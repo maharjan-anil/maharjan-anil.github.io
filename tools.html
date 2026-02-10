@@ -3,7 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tools</title>
+    <title>Tools - Anil Maharjan</title>
+    <!-- Critical Theme FOUC Fix -->
+    <script>
+        // Prevent flash of unstyled content for dark mode
+        (function() {
+            const theme = localStorage.getItem('theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            if (theme === 'dark') {
+                document.documentElement.dataset.initialTheme = 'dark';
+            }
+        })();
+    </script>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -22,6 +34,7 @@
             --text-light: #777;
             --card-bg: #ffffff;
             --body-bg: #f9f9f9;
+            --transition: all 0.3s ease;
         }
         
         [data-theme="dark"] {
@@ -49,7 +62,7 @@
             line-height: 1.6;
             background-color: var(--body-bg);
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: var(--transition);
         }
         
         h1, h2, h3, h4, h5 {
@@ -65,7 +78,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
         
         .nav-brand {
@@ -86,7 +99,7 @@
             padding: 8px 20px !important;
             margin: 0 5px;
             border-radius: 5px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
         
         .nav-link-custom:hover {
@@ -98,6 +111,28 @@
         .nav-link-custom.active {
             background-color: var(--name-color);
             color: white !important;
+        }
+        
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotate(30deg);
         }
         
         /* Hero Section */
@@ -174,7 +209,7 @@
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             border-top: 5px solid var(--accent-color);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             height: 100%;
             text-align: center;
             margin-bottom: 30px;
@@ -226,7 +261,7 @@
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: none;
             cursor: pointer;
         }
@@ -276,49 +311,29 @@
         
         /* Responsive */
         @media (max-width: 992px) {
-            .page-title {
-                font-size: 2.8rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
+            .page-title { font-size: 2.8rem; }
+            .section-title { font-size: 2rem; }
         }
         
         @media (max-width: 768px) {
-            .hero-section {
-                padding: 80px 0 50px;
-            }
-            
-            .page-title {
-                font-size: 2.2rem;
-            }
-            
-            .page-subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .tools-section {
-                padding: 60px 0;
-            }
-            
-            .section-title {
-                font-size: 1.8rem;
-                margin-bottom: 40px;
-            }
-            
-            .tool-card {
-                padding: 25px;
-            }
+            .hero-section { padding: 80px 0 50px; }
+            .page-title { font-size: 2.2rem; }
+            .page-subtitle { font-size: 1.2rem; }
+            .tools-section { padding: 60px 0; }
+            .section-title { font-size: 1.8rem; margin-bottom: 40px; }
+            .tool-card { padding: 25px; }
         }
         
         @media (max-width: 576px) {
-            .page-title {
-                font-size: 1.8rem;
-            }
-            
-            .nav-brand {
-                font-size: 1.3rem;
+            .page-title { font-size: 1.8rem; }
+            .nav-brand { font-size: 1.3rem; }
+        }
+        
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
             }
         }
     </style>
@@ -327,8 +342,16 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
-            <a class="navbar-brand nav-brand" href="index.html">Anil <span>Maharjan</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand nav-brand" href="index.html" aria-label="Home">Anil <span>Maharjan</span></a>
+            <button 
+                class="navbar-toggler" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -338,6 +361,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom active" href="tools.html">Tools</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                            <i class="fas fa-moon"></i>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -464,11 +492,11 @@
     <!-- === MODALS === -->
 
     <!-- Gold -->
-    <div class="modal fade" id="goldModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="goldModal" tabindex="-1" aria-hidden="true" aria-labelledby="goldModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header gold">
-            <h5 class="modal-title">Gold & Silver Price</h5>
+            <h5 class="modal-title" id="goldModalLabel">Gold & Silver Price</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
@@ -479,11 +507,11 @@
     </div>
 
     <!-- Forex -->
-    <div class="modal fade" id="forexModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="forexModal" tabindex="-1" aria-hidden="true" aria-labelledby="forexModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header forex">
-            <h5 class="modal-title">Foreign Exchange Rates</h5>
+            <h5 class="modal-title" id="forexModalLabel">Foreign Exchange Rates</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
@@ -494,11 +522,11 @@
     </div>
 
     <!-- Fuel -->
-    <div class="modal fade" id="fuelModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="fuelModal" tabindex="-1" aria-hidden="true" aria-labelledby="fuelModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header fuel">
-            <h5 class="modal-title">Nepal Fuel Rates</h5>
+            <h5 class="modal-title" id="fuelModalLabel">Nepal Fuel Rates</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
@@ -509,11 +537,11 @@
     </div>
 
     <!-- Veg -->
-    <div class="modal fade" id="vegModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="vegModal" tabindex="-1" aria-hidden="true" aria-labelledby="vegModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header veg">
-            <h5 class="modal-title">Fruits & Vegetables Rates</h5>
+            <h5 class="modal-title" id="vegModalLabel">Fruits & Vegetables Rates</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
@@ -524,11 +552,11 @@
     </div>
 
     <!-- Date -->
-    <div class="modal fade" id="dateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="dateModal" tabindex="-1" aria-hidden="true" aria-labelledby="dateModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header date">
-            <h5 class="modal-title">Date Converter (BS ↔ AD)</h5>
+            <h5 class="modal-title" id="dateModalLabel">Date Converter (BS ↔ AD)</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
@@ -539,26 +567,26 @@
     </div>
 
     <!-- Weather -->
-    <div class="modal fade" id="weatherModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="weatherModal" tabindex="-1" aria-hidden="true" aria-labelledby="weatherModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header weather">
-            <h5 class="modal-title">Nepal Weather Observation</h5>
+            <h5 class="modal-title" id="weatherModalLabel">Nepal Weather Observation</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
-            <iframe src="https://www.ashesh.com.np/weather/widget.php?title=Nepal   Weather Observation&header_color=00a2e2&api=641112p367" frameborder="0" scrolling="Yes" style="border:none;width:100%;height:383px;border-radius:5px;" allowtransparency="true"></iframe>
+            <iframe src="https://www.ashesh.com.np/weather/widget.php?title=Nepal Weather Observation&header_color=00a2e2&api=641112p367" frameborder="0" scrolling="Yes" style="border:none;width:100%;height:383px;border-radius:5px;" allowtransparency="true"></iframe>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Unicode -->
-    <div class="modal fade" id="unicodeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="unicodeModal" tabindex="-1" aria-hidden="true" aria-labelledby="unicodeModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header unicode">
-            <h5 class="modal-title">Nepali Unicode Converter</h5>
+            <h5 class="modal-title" id="unicodeModalLabel">Nepali Unicode Converter</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
@@ -569,15 +597,15 @@
     </div>
 
     <!-- Panchang -->
-    <div class="modal fade" id="panchangModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="panchangModal" tabindex="-1" aria-hidden="true" aria-labelledby="panchangModalLabel">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header panchang">
-            <h5 class="modal-title">Nepali Panchang</h5>
+            <h5 class="modal-title" id="panchangModalLabel">Nepali Panchang</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
-            <iframe src="https://www.ashesh.com.np/panchang/widget.php?header_title=Nepali   Panchang&header_color=e6e5e2&api=641113p383" frameborder="0" scrolling="no" style="border:none;width:100%;height:365px;border-radius:5px;" allowtransparency="true"></iframe>
+            <iframe src="https://www.ashesh.com.np/panchang/widget.php?header_title=Nepali Panchang&header_color=e6e5e2&api=641113p383" frameborder="0" scrolling="no" style="border:none;width:100%;height:365px;border-radius:5px;" allowtransparency="true"></iframe>
           </div>
         </div>
       </div>
@@ -599,19 +627,32 @@
     </footer>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
-        // Theme System - SHARED WITH HOME PAGE
+        // Theme Toggle Functionality - SHARED WITH HOME PAGE
         const html = document.getElementById('htmlRoot');
+        const toggleBtn = document.getElementById('themeToggle');
+        const icon = toggleBtn.querySelector('i');
+        
+        // Set initial icon based on theme
+        if (html.dataset.initialTheme === 'dark') {
+            icon.className = 'fas fa-sun';
+        }
         
         // Function to apply theme
         function applyTheme(theme) {
             html.setAttribute('data-theme', theme);
+            // Update icon
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             // Save to localStorage
             localStorage.setItem('theme', theme);
+            
+            // Dispatch event for other pages
+            window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
         }
 
         // Function to get current theme
@@ -623,7 +664,14 @@
         // Initialize theme on page load
         applyTheme(getCurrentTheme());
 
-        // Listen for theme changes from home page
+        // Toggle on click
+        toggleBtn.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        // Listen for theme changes from other pages
         window.addEventListener('storage', function(e) {
             if (e.key === 'theme') {
                 applyTheme(e.newValue);
@@ -642,16 +690,32 @@
         document.getElementById('panchangOption').addEventListener('click', () => open('panchangModal'));
 
         // Set active navigation link
-        const currentPage = window.location.pathname.split('/').pop();
-        const navLinks = document.querySelectorAll('.nav-link-custom');
-        
-        navLinks.forEach(link => {
-            if (link.getAttribute('href') === currentPage) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPage = window.location.pathname.split('/').pop() || 'tools.html';
+            document.querySelectorAll('.nav-link-custom').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === currentPage) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
         });
+        
+        // Smooth scroll for same-page anchors
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        });
+        
+        // Respect prefers-reduced-motion
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.style.scrollBehavior = 'auto';
+        }
     </script>
 </body>
 </html>
