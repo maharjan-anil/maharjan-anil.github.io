@@ -588,6 +588,32 @@
             .page-title { font-size: 1.5rem; }
             .blog-preview-title { font-size: 1.3rem; }
         }
+         .footer-stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    .visitor-counter {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+    }
+         .visitor-counter i {
+        color: var(--accent-color);
+    }
+ @media (max-width: 768px) {
+        .footer-stats {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .visitor-counter {
+            justify-content: center;
+        }
+    }
     </style>
 </head>
 <body>
@@ -756,22 +782,27 @@
 
     <!-- Footer Section -->
     <footer class="footer-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="footer-links">
-                        <a href="index.html" class="footer-link">Home</a>
-                        <a href="tools.html" class="footer-link">Tools</a>
-                        <a href="blog.html" class="footer-link">Blog</a>
-                        <a href="mailto:your-email@example.com" class="footer-link">Contact</a>
-                    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="tools.html" class="footer-link">Tools</a>
+                    <a href="blog.html" class="footer-link">Blog</a>
+                    <a href="mailto:your-email@example.com" class="footer-link">Contact</a>
+                </div>
+                <div class="footer-stats">
                     <div class="copyright">
                         <p>&copy; <span id="currentYear"></span> Anil Maharjan. All rights reserved.</p>
+                    </div>
+                    <div class="visitor-counter">
+                        <i class="fas fa-eye"></i> <span>Visitors:</span> <span id="visitorCount">0</span>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -1004,6 +1035,57 @@
 
         // Initialize Firebase and load blog posts on page load
         document.addEventListener('DOMContentLoaded', initializeFirebaseForBlog);
+// Visitor Counter Function
+    async function incrementVisitorCount() {
+        if (!db || sessionStorage.getItem('visitorCounted')) return;
+        
+        const counterRef = db.collection('stats').doc('visitors');
+        
+        try {
+            // Use atomic increment to avoid race conditions
+            await counterRef.set({
+                count: firebase.firestore.FieldValue.increment(1)
+            }, { merge: true });
+            
+            // Mark this session as counted
+            sessionStorage.setItem('visitorCounted', 'true');
+            
+            // Get and display the updated count
+            const doc = await counterRef.get();
+            if (doc.exists) {
+                document.getElementById('visitorCount').textContent = doc.data().count.toLocaleString();
+            }
+        } catch (error) {
+            console.error('Error updating visitor count:', error);
+            // Fallback: try to create the document if it doesn't exist
+            if (error.code === 'not-found') {
+                await counterRef.set({ count: 1 });
+                document.getElementById('visitorCount').textContent = '1';
+                sessionStorage.setItem('visitorCounted', 'true');
+            }
+        }
+    }
+
+    // Initialize counter after Firebase is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        // Only count visitors on public pages (not admin pages)
+        const currentPage = window.location.pathname.split('/').pop();
+        if (!currentPage.includes('admin') && !currentPage.includes('login')) {
+            // Display loading state
+            document.getElementById('visitorCount').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            // Initialize counter after a short delay to avoid blocking page load
+            setTimeout(() => {
+                if (firebaseInitialized && db) {
+                    incrementVisitorCount();
+                } else {
+                    // Fallback display if Firebase not ready
+                    document.getElementById('visitorCount').textContent = '---';
+                }
+            }, 1000);
+        }
+    });
+        
     </script>
 </body>
 </html>
