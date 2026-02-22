@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anil Maharjan</title>
+    <!-- Critical Theme FOUC Fix -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            if (theme === 'dark') {
+                document.documentElement.dataset.initialTheme = 'dark';
+            }
+        })();
+    </script>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --name-color: #ff6b35;
+            --accent-color: #4ECDC4;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --text-color: #333;
+            --text-light: #777;
+            --card-bg: #ffffff;
+            --body-bg: #f9f9f9;
+            --transition: all 0.3s ease;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #5a8fd8;
+            --secondary-color: #2a7bc8;
+            --accent-color: #4ECDC4;
+            --name-color: #ff8c5a;
+            --light-color: #2d3748;
+            --dark-color: #1a202c;
+            --text-color: #e2e8f0;
+            --text-light: #a0aec0;
+            --card-bg: #2d3748;
+            --body-bg: #1a202c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--body-bg);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        /* Navigation Styles */
+        .navbar-custom {
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        .nav-brand {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+        
+        .nav-brand span {
+            color: var(--name-color);
+        }
+        
+        .nav-link-custom {
+            color: var(--text-color) !important;
+            font-weight: 500;
+            padding: 8px 20px !important;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+        
+        .nav-link-custom:hover {
+            background-color: var(--primary-color);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link-custom.active {
+            background-color: var(--name-color);
+            color: white !important;
+        }
+        
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotate(30deg);
+        }
+        
+        /* Header Styles */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 150px 0 100px;
+            position: relative;
+            overflow: hidden;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.2;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .name-title {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            color: var(--name-color);
+            letter-spacing: 1px;
+            animation: fadeInDown 1.5s ease forwards;
+        }
+        
+        .welcome-title {
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            color: #f8f9fa;
+            animation: fadeInUp 1.8s ease forwards 0.3s;
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+        
+        .cta-buttons {
+            margin-top: 40px;
+            animation: fadeInUp 2s ease forwards 0.6s;
+            animation-fill-mode: forwards;
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .cta-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cta-btn:hover {
+            background-color: #3ab7af;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            color: white;
+        }
+        
+        .cta-btn i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .cta-btn:hover i {
+            transform: translateX(5px);
+        }
+        
+        .cta-btn.secondary {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .cta-btn.secondary:hover {
+            background-color: white;
+            color: var(--secondary-color);
+        }
+        
+        /* About Section */
+        .about-section {
+            padding: 100px 0;
+            background-color: var(--body-bg);
+            transition: background-color 0.3s ease;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .about-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+        
+        .about-text {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        /* Page Links Section */
+        .page-links-section {
+            padding: 80px 0;
+            background-color: var(--card-bg);
+            transition: background-color 0.3s ease;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .page-link-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-top: 5px solid var(--accent-color);
+            transition: var(--transition);
+            height: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-link-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        
+        .page-icon {
+            font-size: 3.5rem;
+            color: var(--accent-color);
+            margin-bottom: 25px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .page-description {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+        
+        .page-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .page-link:hover {
+            background-color: var(--name-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Blog Section */
+        .blog-preview-section {
+            padding: 100px 0;
+            background-color: var(--body-bg);
+            transition: background-color 0.3s ease;
+        }
+        
+        .blog-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .blog-preview-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: var(--transition);
+            border-left: 5px solid var(--accent-color);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .blog-preview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        
+        .blog-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .blog-preview-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .blog-preview-meta i {
+            margin-right: 5px;
+        }
+        
+        .blog-preview-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .blog-preview-title:hover {
+            color: var(--name-color);
+        }
+        
+        .blog-preview-content {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.7;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .blog-preview-tags {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .blog-preview-tag {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .view-all-blog {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .view-all-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .view-all-btn:hover {
+            background-color: var(--name-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Thank You Section */
+        .thank-you-section {
+            padding: 80px 0;
+            background-color: var(--card-bg);
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .thank-you-message {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease forwards 0.5s;
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+        
+        /* Footer */
+        .footer-section {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            margin-top: auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .footer-link:hover {
+            color: var(--accent-color);
+        }
+        
+        .copyright {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Name color hover effect */
+        .name-title:hover {
+            color: #ff8c5a;
+            text-shadow: 3px 3px 12px rgba(0,0,0,0.4);
+            transition: var(--transition);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .name-title { font-size: 3.8rem; }
+            .welcome-title { font-size: 2.4rem; }
+            .thank-you-message { font-size: 2rem; }
+            .cta-btn { padding: 13px 35px; font-size: 1.2rem; }
+            .about-title { font-size: 2.2rem; }
+            .section-title { font-size: 2.2rem; }
+            .blog-cards { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section { padding: 120px 0 80px; }
+            .name-title { font-size: 2.8rem; margin-bottom: 20px; }
+            .welcome-title { font-size: 1.8rem; margin-bottom: 30px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .cta-btn { width: 100%; max-width: 300px; }
+            .about-section { padding: 80px 0; }
+            .about-title { font-size: 2rem; }
+            .page-links-section { padding: 60px 0; }
+            .page-link-card { padding: 30px; }
+            .blog-preview-section { padding: 80px 0; }
+            .blog-cards { grid-template-columns: 1fr; }
+            .thank-you-section { padding: 60px 0; }
+            .thank-you-message { font-size: 1.6rem; padding: 0 20px; }
+            .footer-links { flex-direction: column; gap: 10px; }
+        }
+        
+        @media (max-width: 576px) {
+            .name-title { font-size: 2.2rem; }
+            .welcome-title { font-size: 1.5rem; }
+            .thank-you-message { font-size: 1.4rem; }
+            .nav-brand { font-size: 1.3rem; }
+            .cta-btn { padding: 10px 25px; font-size: 1rem; }
+            .about-title { font-size: 1.8rem; }
+            .section-title { font-size: 1.8rem; }
+            .page-title { font-size: 1.5rem; }
+            .blog-preview-title { font-size: 1.3rem; }
+        }
+         .footer-stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    .visitor-counter {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+    }
+         .visitor-counter i {
+        color: var(--accent-color);
+    }
+ @media (max-width: 768px) {
+        .footer-stats {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .visitor-counter {
+            justify-content: center;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand nav-brand" href="index.html">Anil <span>Maharjan</span></a>
+            <button 
+                class="navbar-toggler" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="tools.html">Tools</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="blog.html">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Section -->
+    <main class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto hero-content">
+                    <h1 class="name-title">Anil Maharjan</h1>
+                    <h2 class="welcome-title">Welcome to my Website!</h2>
+                    
+                    <div class="cta-buttons">
+                        <a href="tools.html" class="cta-btn">
+                            Explore Tools <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="blog.html" class="cta-btn secondary">
+                            Read My Blog <i class="fas fa-book-open"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content"
+                <p class="about-text">
+                    On this website, you'll find useful tools for everyday tasks, 
+                    insights from my experiences, and resources to help you on your 
+                    own development journey. Feel free to explore and reach out!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page Links Section -->
+    <section class="page-links-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Explore</h2>
+                <p class="section-subtitle">Access various tools and resources I've created</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="page-link-card">
+                        <div class="page-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3 class="page-title">Tools Page</h3>
+                        <p class="page-description">
+                            Visit my tools page to explore various useful tools and resources for Nepal.
+                        </p>
+                        <a href="tools.html" class="page-link">
+                            Go to Tools <i class="fas fa-external-link-alt ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="page-link-card">
+                        <div class="page-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3 class="page-title">My Blog</h3>
+                        <p class="page-description">
+                            Read latest articles, thoughts, and insights on productivity.
+                        </p>
+                        <a href="blog.html" class="page-link">
+                            Read Blog <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="page-link-card">
+                        <div class="page-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3 class="page-title">Get in Touch</h3>
+                        <p class="page-description">
+                            Have questions or want to collaborate? Feel free to reach out to me.
+                        </p>
+                        <a href="mailto:your-email@example.com" class="page-link">
+                            Contact Me <i class="fas fa-paper-plane ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Preview Section -->
+    <section class="blog-preview-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Latest Blog Posts</h2>
+                <p class="section-subtitle">Read latest thoughts and insights</p>
+            </div>
+            
+            <div id="blogPreviewContainer">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading latest posts...</p>
+                </div>
+            </div>
+            
+            <div class="view-all-blog">
+                <a href="blog.html" class="view-all-btn">
+                    View All Posts <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Thank You Section -->
+    <section class="thank-you-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <p class="thank-you-message">Thank you for visiting my website!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="tools.html" class="footer-link">Tools</a>
+                    <a href="blog.html" class="footer-link">Blog</a>
+                    <a href="mailto:your-email@example.com" class="footer-link">Contact</a>
+                </div>
+                <div class="footer-stats">
+                    <div class="copyright">
+                        <p>&copy; <span id="currentYear"></span> Anil Maharjan. All rights reserved.</p>
+                    </div>
+                    <div class="visitor-counter">
+                        <i class="fas fa-eye"></i> <span>Visitors:</span> <span id="visitorCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // === FIREBASE CONFIGURATION ===
+        // ⚠️ REPLACE THESE VALUES WITH YOUR ACTUAL FIREBASE CONFIG ⚠️
+        const firebaseConfig = {
+            apiKey: "AIzaSyATt6Bc5-Jes8zXz6aLp9b9wi9OPFhVE0s",
+  authDomain: "anil-blog-af680.firebaseapp.com",
+  projectId: "anil-blog-af680",
+  storageBucket: "anil-blog-af680.firebasestorage.app",
+  messagingSenderId: "702295756466",
+  appId: "1:702295756466:web:df537c87f0ef46d0d943ab"
+        };
+
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Theme Toggle Functionality
+        const html = document.getElementById('htmlRoot');
+        const toggleBtn = document.getElementById('themeToggle');
+        const icon = toggleBtn.querySelector('i');
+
+        // Set initial icon based on theme
+        if (html.dataset.initialTheme === 'dark') {
+            icon.className = 'fas fa-sun';
+        }
+        
+        // Function to apply theme
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            // Update icon
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+            // Save to localStorage
+            localStorage.setItem('theme', theme);
+            
+            // Dispatch event for other pages to listen to
+            window.dispatchEvent(new CustomEvent('themeChanged', { detail: theme }));
+        }
+
+        // Function to get current theme
+        function getCurrentTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+        }
+
+        // Initialize theme on page load
+        applyTheme(getCurrentTheme());
+
+        // Toggle on click
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                const current = html.getAttribute('data-theme');
+                const newTheme = current === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+        }
+
+        // Simple animation trigger on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (document.querySelector('.welcome-title')) {
+                    document.querySelector('.welcome-title').style.opacity = '1';
+                }
+                if (document.querySelector('.thank-you-message')) {
+                    document.querySelector('.thank-you-message').style.opacity = '1';
+                }
+                if (document.querySelector('.cta-buttons')) {
+                    document.querySelector('.cta-buttons').style.opacity = '1';
+                }
+            }, 100);
+        });
+        
+        // Add active class to current page in navigation
+        const currentPage = window.location.pathname.split('/').pop();
+        const navLinks = document.querySelectorAll('.nav-link-custom');
+        
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPage || 
+                (currentPage === '' && link.getAttribute('href') === 'index.html') ||
+                (currentPage === 'index.html' && link.getAttribute('href') === 'index.html')) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } else if (targetId.startsWith('#')) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // === LOAD LATEST BLOG POSTS ===
+        let db = null;
+        let firebaseInitialized = false;
+
+        function initializeFirebaseForBlog() {
+            try {
+                // Check if config is still default
+                if (firebaseConfig.apiKey === "AIzaSyC..." || 
+                    firebaseConfig.projectId === "your-project-id") {
+                    throw new Error("Firebase config not updated!");
+                }
+
+                // Initialize Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                // Initialize Firestore
+                db = firebase.firestore();
+                firebaseInitialized = true;
+                
+                // Load blog posts
+                loadLatestBlogPosts();
+                
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                document.getElementById('blogPreviewContainer').innerHTML = `
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Unable to load blog posts
+                    </div>
+                `;
+            }
+        }
+
+        async function loadLatestBlogPosts() {
+            if (!firebaseInitialized || !db) {
+                initializeFirebaseForBlog();
+                return;
+            }
+
+            try {
+                const postsRef = db.collection('blogPosts')
+                    .orderBy('createdAt', 'desc')
+                    .limit(3); // Show only 3 latest posts
+                const snapshot = await postsRef.get();
+                
+                if (snapshot.empty) {
+                    document.getElementById('blogPreviewContainer').innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: var(--text-light);"></i>
+                            <p class="mt-3" style="color: var(--text-light);">No blog posts yet. Check back soon!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let postsHTML = '<div class="blog-cards">';
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    const postId = doc.id;
+                    const date = post.createdAt ? post.createdAt.toDate() : new Date();
+                    const formattedDate = date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+
+                    // Extract first 100 characters for preview
+                    const contentPreview = post.content 
+                        ? post.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...' 
+                        : 'Read more about this post...';
+
+                    const tagsHTML = post.tags && post.tags.length > 0 
+                        ? post.tags.slice(0, 3).map(tag => 
+                            `<span class="blog-preview-tag">#${tag}</span>`
+                          ).join('')
+                        : '';
+
+                    postsHTML += `
+                        <div class="blog-preview-card">
+                            <div class="blog-preview-header">
+                                <div class="blog-preview-meta">
+                                    <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                                    <span><i class="fas fa-user"></i> ${post.authorName || 'Admin'}</span>
+                                </div>
+                            </div>
+                            <h3 class="blog-preview-title" onclick="window.location.href='blog.html'">
+                                ${post.title}
+                            </h3>
+                            <div class="blog-preview-content">
+                                ${contentPreview}
+                            </div>
+                            <div class="blog-preview-tags">
+                                ${tagsHTML}
+                            </div>
+                        </div>
+                    `;
+                });
+                postsHTML += '</div>';
+
+                document.getElementById('blogPreviewContainer').innerHTML = postsHTML;
+                
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                document.getElementById('blogPreviewContainer').innerHTML = `
+                    <div class="alert alert-danger text-center">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error loading posts
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize Firebase and load blog posts on page load
+        document.addEventListener('DOMContentLoaded', initializeFirebaseForBlog);
+// Visitor Counter Function
+    async function incrementVisitorCount() {
+        if (!db || sessionStorage.getItem('visitorCounted')) return;
+        
+        const counterRef = db.collection('stats').doc('visitors');
+        
+        try {
+            // Use atomic increment to avoid race conditions
+            await counterRef.set({
+                count: firebase.firestore.FieldValue.increment(1)
+            }, { merge: true });
+            
+            // Mark this session as counted
+            sessionStorage.setItem('visitorCounted', 'true');
+            
+            // Get and display the updated count
+            const doc = await counterRef.get();
+            if (doc.exists) {
+                document.getElementById('visitorCount').textContent = doc.data().count.toLocaleString();
+            }
+        } catch (error) {
+            console.error('Error updating visitor count:', error);
+            // Fallback: try to create the document if it doesn't exist
+            if (error.code === 'not-found') {
+                await counterRef.set({ count: 1 });
+                document.getElementById('visitorCount').textContent = '1';
+                sessionStorage.setItem('visitorCounted', 'true');
+            }
+        }
+    }
+
+    // Initialize counter after Firebase is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        // Only count visitors on public pages (not admin pages)
+        const currentPage = window.location.pathname.split('/').pop();
+        if (!currentPage.includes('admin') && !currentPage.includes('login')) {
+            // Display loading state
+            document.getElementById('visitorCount').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            // Initialize counter after a short delay to avoid blocking page load
+            setTimeout(() => {
+                if (firebaseInitialized && db) {
+                    incrementVisitorCount();
+                } else {
+                    // Fallback display if Firebase not ready
+                    document.getElementById('visitorCount').textContent = '---';
+                }
+            }, 1000);
+        }
+    });
+        
+    </script>
+</body>
+</html>
