@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMS Bachat Kosh</title>
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: var(--text-main); }
+        
+        /* Login Screen Styles */
+        #login-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* App Styles */
+        #app-section { display: none; }
+        
+        .header-section {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white; padding: 1.5rem 0; margin-bottom: 1rem;
+            border-radius: 0 0 25px 25px; box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.4);
+        }        .header-title { font-weight: 800; letter-spacing: -0.5px; font-size: 1.8rem; }
+        .header-subtitle { opacity: 0.9; font-weight: 300; font-size: 0.9rem; }
+
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); background: var(--card-bg); margin-bottom: 1.5rem; }
+        .card-header { background: transparent; border-bottom: 1px solid var(--border); padding: 1.25rem; font-weight: 700; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        
+        .member-card {
+            border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;
+            background: #fff; position: relative; overflow: hidden;
+        }
+        .member-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--primary-light); }
+        .member-card.edit-mode { background: #f0fdfa; border-color: var(--primary-light); }
+        .member-card.edit-mode::before { background: #f59e0b; }
+
+        .member-name { font-weight: 700; color: var(--text-main); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; }
+        .section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); font-weight: 700; margin: 1rem 0 0.5rem 0; border-bottom: 1px dashed var(--border); padding-bottom: 4px; }
+        
+        .form-control-sm, .form-select-sm { border-radius: 8px; border: 1px solid var(--border); font-size: 0.8rem; padding: 0.35rem 0.5rem; }
+        .form-control-sm:focus, .form-select-sm:focus { border-color: var(--primary-light); box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.15); }
+        .input-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; text-transform: uppercase; }
+
+        .totals-bar {
+            background: var(--text-main); color: white; border-radius: 12px; padding: 1rem;
+            display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;
+        }
+        .grand-total-val { font-size: 1.5rem; font-weight: 700; color: var(--primary-light); }
+
+        .nav-tabs { border-bottom: 2px solid var(--border); margin-bottom: 1rem; }
+        .nav-tabs .nav-link {
+            border: none; color: var(--text-muted); font-weight: 600; padding: 10px 20px;
+            background: transparent; transition: all 0.2s; border-radius: 8px 8px 0 0;
+        }
+        .nav-tabs .nav-link:hover { color: var(--primary); background: rgba(15, 118, 110, 0.05); }
+        .nav-tabs .nav-link.active {
+            color: var(--primary); background: white; border-bottom: 3px solid var(--primary);
+            font-weight: 700;
+        }
+
+        .accordion-item { border: none; margin-bottom: 1rem; border-radius: 12px !important; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+        .accordion-button { background-color: white; color: var(--text-main); font-weight: 600; padding: 1rem 1.5rem; box-shadow: none !important; font-size: 1.1rem; }
+        .accordion-button:not(.collapsed) { background-color: var(--primary); color: white; }
+        .accordion-button::after { filter: invert(1); opacity: 0.7; }
+        .accordion-button:not(.collapsed)::after { filter: invert(1); }
+        
+        .history-table, .summary-table, .loan-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .history-table th, .summary-table th, .loan-table th { background: #f9fafb; font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; padding: 10px; text-align: center; }
+        .history-table td, .summary-table td, .loan-table td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem; text-align: center; vertical-align: middle; }
+        .history-table tr:last-child td, .summary-table tr:last-child td, .loan-table tr:last-child td { border-bottom: none; }
+        .history-table tr:hover, .summary-table tr:hover, .loan-table tr:hover { background-color: #f9fafb; }
+                .col-month { text-align: left !important; font-weight: 600; color: var(--primary); }
+        .badge-loan { background-color: #e0e7ff; color: #4338ca; font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+        .badge-loan:hover { background-color: #c7d2fe; }
+
+        .btn-primary-custom { background: var(--primary); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; width: 100%; }
+        .btn-primary-custom:hover { background: var(--primary-light); color: white; }
+        .btn-action { width: 30px; height: 30px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.75rem; margin: 0 1px; }
+
+        .modal-content { border: none; border-radius: 16px; overflow: hidden; }
+        .modal-header { background: #f9fafb; border-bottom: 1px solid var(--border); }
+        .loan-detail-box { background: #f0fdfa; border: 1px solid var(--primary-light); border-radius: 8px; padding: 12px; margin-top: 8px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #eee; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { color: var(--text-muted); font-size: 0.85rem; }
+        .detail-value { font-weight: 600; color: var(--text-main); }
+        .positive-value { color: var(--primary); }
+
+        .yearly-total-row {
+            background-color: var(--text-main) !important;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .yearly-total-row td {
+            border-top: 2px solid var(--primary-light);
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+        }
+        .yearly-total-label {
+            text-align: right !important;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .summary-total-row {
+            background-color: var(--primary) !important;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+        .summary-total-row td { border-top: 2px solid var(--primary-light); }
+
+        .date-group { display: flex; gap: 4px; }
+        .date-group select { flex: 1; }
+        .date-group select:first-child { flex: 0.8; }
+        
+        .tab-content-section { display: none; }
+        .tab-content-section.active { display: block; }
+        /* Updated Status Badges */
+        .status-active { background-color: #d1fae5; color: #065f46; font-weight: 700; padding: 6px 10px; border-radius: 6px; }
+        .status-closed { background-color: #e5e7eb; color: #374151; font-weight: 700; padding: 6px 10px; border-radius: 6px; }
+        .status-overdue { background-color: #fee2e2; color: #991b1b; font-weight: 700; padding: 6px 10px; border-radius: 6px; }
+
+        /* Utility to hide elements for non-admins/guests */
+        .admin-only { display: none !important; }
+        body.is-admin .admin-only { display: inline-block !important; }
+        body.is-admin .admin-only-btn { display: block !important; }
+        body.is-admin .admin-only-flex { display: flex !important; }
+        body.is-admin .admin-only-table-cell { display: table-cell !important; }
+
+        /* Member Link Style */
+        .member-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .member-link:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        /* Bank Details Tab Styling */
+        .bank-details-container {
+            padding: 2rem;
+            text-align: center;
+        }
+        .bank-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+        .bank-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;        }
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            padding: 0.8rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        .bank-label {
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .bank-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            min-width: 150px;
+            text-align: right;
+        }
+        .bank-value.copyable {
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+        }
+        .bank-value.copyable:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .copy-icon {
+            margin-left: 8px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        .bank-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }    </style>
+</head>
+<body>
+
+    <!-- LOGIN SECTION -->
+    <div id="login-section">
+        <div class="login-card text-center">
+            <h2 class="mb-4 text-primary fw-bold"><i class="fas fa-piggy-bank me-2"></i>GMS Bachat Kosh</h2>
+            <p class="text-muted mb-4">Select Login Type</p>
+            
+            <div id="loginError" class="alert alert-danger d-none small"></div>
+
+            <!-- Admin Login Form -->
+            <form id="loginForm" class="mb-4">
+                <div class="mb-3 text-start">
+                    <label class="form-label small fw-bold">Admin Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="admin@example.com" required>
+                </div>
+                <div class="mb-3 text-start">
+                    <label class="form-label small fw-bold">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary-custom w-100 mb-2">
+                    <span id="loginBtnText">Login as Admin</span>
+                    <span id="loginLoader" class="spinner-border spinner-border-sm d-none ms-2"></span>
+                </button>
+            </form>
+
+            <div class="position-relative my-3">
+                <hr class="text-muted">
+                <span class="position-absolute top-50 start-50 translate-middle bg-white px-2 small text-muted">OR</span>
+            </div>
+
+            <!-- Guest Login Button -->
+            <button onclick="loginAsGuest()" class="btn btn-outline-secondary w-100 py-2">
+                <i class="fas fa-user-eye me-2"></i> Enter as Guest (View Only)
+            </button>
+            
+            <div class="mt-4 small text-muted">
+                Guests can view records but cannot add, edit, or delete data.
+            </div>
+        </div>
+    </div>
+
+    <!-- APP SECTION -->
+    <div id="app-section">
+        <!-- Header -->
+        <div class="header-section text-center">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div class="w-100">                    <h1 class="header-title"><i class="fas fa-piggy-bank me-2"></i>GMS Bachat Kosh</h1>
+                    <p class="header-subtitle mb-0">Financial Details</p>
+                </div>
+                <!-- Logout Button -->
+                <div class="position-absolute top-0 end-0 p-3">
+                    <button onclick="logout()" class="btn btn-sm btn-outline-light" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt me-1"></i> <span id="logoutText">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid px-3 px-md-4">
+            <div class="row">
+                <!-- Input Section (Left) - ADMIN ONLY -->
+                <div class="col-lg-4 col-xl-3 mb-4 admin-only">
+                    <div class="card sticky-top" style="top: 20px; z-index: 100;">
+                        <div class="card-header">
+                            <span id="formTitle"><i class="fas fa-plus-circle me-2"></i>Add Entry</span>
+                            <button id="cancelEditBtn" class="btn btn-sm btn-outline-danger d-none" onclick="cancelEdit()">Cancel</button>
+                        </div>
+                        <div class="card-body">
+                            <div id="debugError" class="alert alert-danger small py-2 d-none"></div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="input-label">Month</label>
+                                    <select id="nepaliMonth" class="form-select form-select-sm">
+                                        <option value="Baishakh">Baishakh</option><option value="Jestha">Jestha</option>
+                                        <option value="Ashadh">Ashadh</option><option value="Shrawan">Shrawan</option>
+                                        <option value="Bhadra">Bhadra</option><option value="Ashwin">Ashwin</option>
+                                        <option value="Kartik">Kartik</option><option value="Mangsir">Mangsir</option>
+                                        <option value="Poush">Poush</option><option value="Magh">Magh</option>
+                                        <option value="Falgun">Falgun</option><option value="Chaitra">Chaitra</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="input-label">Year</label>
+                                    <select id="entryYear" class="form-select form-select-sm"></select>
+                                </div>
+                            </div>
+
+                            <div id="membersInputContainer" style="max-height: 55vh; overflow-y: auto; padding-right: 2px;">
+                                <!-- Dynamic Inputs -->
+                            </div>
+
+                            <div class="totals-bar">
+                                <span class="small fw-bold">Grand Total (Cash)</span>
+                                <span class="grand-total-val" id="grandTotalDisplay">0</span>
+                            </div>                            <small class="text-muted d-block mt-1 text-center" style="font-size: 0.7rem;">*Excludes Loan Principal</small>
+
+                            <button id="saveBtn" class="btn btn-primary-custom mt-3 admin-only-btn">
+                                <span id="btnText">Save Record</span>
+                                <span id="btnLoader" class="spinner-border spinner-border-sm d-none ms-2"></span>
+                            </button>
+                            <div id="messageArea" class="mt-2 text-center small fw-bold"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section (Tabs) -->
+                <div class="col-lg-8 col-xl-9" id="contentCol">
+                    <div class="card">
+                        <div class="card-header p-0">
+                            <ul class="nav nav-tabs w-100 m-0 p-3" id="mainTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-content" type="button" role="tab" onclick="switchTab('history')">
+                                        <i class="fas fa-history me-2"></i>Records History
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary-content" type="button" role="tab" onclick="switchTab('summary')">
+                                        <i class="fas fa-users me-2"></i>Member Summary
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="loan-tab" data-bs-toggle="tab" data-bs-target="#loan-content" type="button" role="tab" onclick="switchTab('loan')">
+                                        <i class="fas fa-hand-holding-usd me-2"></i>Loan Summary
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank-content" type="button" role="tab" onclick="switchTab('bank')">
+                                        <i class="fas fa-university me-2"></i>Bank Details
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body bg-white">
+                            
+                            <div id="history-content" class="tab-content-section active">
+                                <div class="d-flex justify-content-end mb-2">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="loadHistory()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                                </div>
+                                <div id="historyContainer">
+                                    <div class="text-center text-muted py-5">Loading records...</div>
+                                </div>
+                            </div>
+
+                            <div id="summary-content" class="tab-content-section">                                <div class="d-flex justify-content-end mb-2">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="loadSummary()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                                </div>
+                                <div id="summaryContainer">
+                                    <div class="text-center text-muted py-5">Loading summary...</div>
+                                </div>
+                            </div>
+
+                            <div id="loan-content" class="tab-content-section">
+                                <div class="d-flex justify-content-end mb-2">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="loadLoanSummary()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                                </div>
+                                <div id="loanContainer">
+                                    <div class="text-center text-muted py-5">Loading loan data...</div>
+                                </div>
+                            </div>
+
+                            <!-- Bank Details Tab Content -->
+                            <div id="bank-content" class="tab-content-section">
+                                <div class="bank-details-container">
+                                    <div class="bank-card">
+                                        <div class="bank-title">
+                                            <i class="fas fa-university"></i> GMS Kosh Bank A/C Details
+                                        </div>
+                                        <div class="bank-row">
+                                            <span class="bank-label">Bank Name:</span>
+                                            <span class="bank-value">Himalayan Bank Limited</span>
+                                        </div>
+                                        <div class="bank-row">
+                                            <span class="bank-label">A/C Number:</span>
+                                            <span class="bank-value copyable" onclick="copyToClipboard('21254325340012')" title="Click to copy">
+                                                21254325340012 <i class="far fa-copy copy-icon"></i>
+                                            </span>
+                                        </div>
+                                        <div class="bank-row">
+                                            <span class="bank-label">Account Name:</span>
+                                            <span class="bank-value">Bindu/Anil Maharjan</span>
+                                        </div>
+                                        <div class="bank-note">
+                                            <i class="fas fa-info-circle me-1"></i> Please use the account number above for all deposits. Click on the account number to copy.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    </div>
+
+    <!-- Detail Modal (Record Details) -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="modalTitle">Record Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalBody" style="max-height: 70vh; overflow-y: auto;"></div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger admin-only" id="modalDeleteBtn">Delete Record</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Details Modal -->
+    <div class="modal fade" id="memberDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-id-card me-2"></i>Member Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="memberModalBody">
+                    <!-- Content injected via JS -->
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+           apiKey: "AIzaSyCHgrUuln0hRyEVYzCo3DHjLq-ApcseTeI",
+           authDomain: "member-tracker-78f9f.firebaseapp.com",
+           projectId: "member-tracker-78f9f",
+           storageBucket: "member-tracker-78f9f.firebasestorage.app",
+           messagingSenderId: "368007807825",           appId: "1:368007807825:web:e80570af3567c4ed3a0970",
+           measurementId: "G-WEP639W4HY"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const collectionName = "gms_bachat_kosh_v6";
+
+        const members = [
+            "Anil Maharjan", "Bindu Maharjan", "Manisha Maharjan",
+            "Rajeep Maharjan", "Sajina Barahi", "Supreme Chitrakar"
+        ];
+
+        // Member Static Data (For Popup)
+        const memberDetailsData = {
+            "Anil Maharjan": { address: "Gwarko-07, Lalitpur", contact: "9808276033", email: "anilmaharjan@live.com", dob: "11-30-1990", joined: "2079 Bhadra" },
+            "Bindu Maharjan": { address: "Gwarko-07, Lalitpur", contact: "98XXXXXXXX", email: "bindu@example.com", dob: "XX-XX-XXXX", joined: "2079 Bhadra" },
+            "Manisha Maharjan": { address: "Lalitpur", contact: "98XXXXXXXX", email: "manisha@example.com", dob: "XX-XX-XXXX", joined: "2079 Bhadra" },
+            "Rajeep Maharjan": { address: "Lalitpur", contact: "98XXXXXXXX", email: "rajeep@example.com", dob: "XX-XX-XXXX", joined: "2079 Bhadra" },
+            "Sajina Barahi": { address: "Lalitpur", contact: "98XXXXXXXX", email: "sajina@example.com", dob: "XX-XX-XXXX", joined: "2079 Bhadra" },
+            "Supreme Chitrakar": { address: "Lalitpur", contact: "98XXXXXXXX", email: "supreme@example.com", dob: "XX-XX-XXXX", joined: "2079 Bhadra" }
+        };
+
+        const nepaliMonthsOrder = [
+            "Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+            "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
+        ];
+
+        const nepaliMonths = [
+            "Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+            "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
+        ];
+
+        let currentEditId = null;
+        const membersContainer = document.getElementById('membersInputContainer');
+        const saveBtn = document.getElementById('saveBtn');
+        const grandTotalDisplay = document.getElementById('grandTotalDisplay');
+        const messageArea = document.getElementById('messageArea');
+        const historyContainer = document.getElementById('historyContainer');
+        const summaryContainer = document.getElementById('summaryContainer');
+        const loanContainer = document.getElementById('loanContainer');
+        const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+        const memberDetailModal = new bootstrap.Modal(document.getElementById('memberDetailModal'));
+        const modalBody = document.getElementById('modalBody');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDeleteBtn = document.getElementById('modalDeleteBtn');
+        const formTitle = document.getElementById('formTitle');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const yearSelect = document.getElementById('entryYear');        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutText = document.getElementById('logoutText');
+        let currentDeleteId = null;
+        let allRecordsData = [];
+
+        // --- AUTHENTICATION LOGIC ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('app-section').style.display = 'block';
+                
+                if (user.isAnonymous) {
+                    document.body.classList.remove('is-admin');
+                    logoutText.textContent = "Exit";
+                    logoutBtn.title = "Exit Guest Mode";
+                } else {
+                    document.body.classList.add('is-admin');
+                    logoutText.textContent = "Logout";
+                    logoutBtn.title = "Logout Admin Account";
+                }
+                initApp();
+            } else {
+                document.getElementById('login-section').style.display = 'flex';
+                document.getElementById('app-section').style.display = 'none';
+                document.body.classList.remove('is-admin');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btnText = document.getElementById('loginBtnText');
+            const loader = document.getElementById('loginLoader');
+            const errorDiv = document.getElementById('loginError');
+
+            btnText.textContent = "Logging in...";
+            loader.classList.remove('d-none');
+            errorDiv.classList.add('d-none');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => { btnText.textContent = "Login as Admin"; loader.classList.add('d-none'); })
+                .catch((error) => {
+                    btnText.textContent = "Login as Admin";
+                    loader.classList.add('d-none');
+                    errorDiv.textContent = "Invalid Email or Password.";
+                    errorDiv.classList.remove('d-none');
+                });
+        });
+        window.loginAsGuest = () => {
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Entering...';
+            btn.disabled = true;
+            signInAnonymously(auth)
+                .then(() => { btn.innerHTML = originalText; btn.disabled = false; })
+                .catch((error) => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert("Guest login failed: " + error.message);
+                });
+        };
+
+        window.logout = () => {
+            signOut(auth).then(() => { location.reload(); });
+        };
+
+        function initApp() {
+            initDropdowns();
+            renderInputs();
+            loadHistory();
+        }
+
+        function initDropdowns() {
+            yearSelect.innerHTML = '';
+            for (let y = 2075; y <= 2085; y++) {
+                const option = document.createElement('option');
+                option.value = y;
+                option.text = y;
+                if (y === 2081) option.selected = true;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        function createDateSelectors(prefix, member, data = {}) {
+            const days = Array.from({length: 32}, (_, i) => i + 1);
+            const getSelected = (type, val) => (data[`${prefix}${type}`] == val ? 'selected' : '');
+            const getDaySelected = (d) => (data[`${prefix}Day`] == d ? 'selected' : '');
+            return `
+                <div class="date-group">
+                    <select class="form-select form-select-sm date-part" data-member="${member}" data-prefix="${prefix}" data-type="day">
+                        <option value="" disabled>Day</option>
+                        ${days.map(d => `<option value="${d}" ${getDaySelected(d)}>${d}</option>`).join('')}
+                    </select>
+                    <select class="form-select form-select-sm date-part" data-member="${member}" data-prefix="${prefix}" data-type="month">
+                        <option value="" disabled>Month</option>
+                        ${nepaliMonths.map(m => `<option value="${m}" ${getSelected('Month', m)}>${m}</option>`).join('')}
+                    </select>
+                    <select class="form-select form-select-sm date-part" data-member="${member}" data-prefix="${prefix}" data-type="year">                        <option value="" disabled>Year</option>
+                        ${Array.from({length: 11}, (_, i) => 2075 + i).map(y => `<option value="${y}" ${getSelected('Year', y)}>${y}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+        }
+
+        function renderInputs(dataToFill = null) {
+            membersContainer.innerHTML = '';
+            members.forEach((member) => {
+                const d = dataToFill && dataToFill.members[member] ? dataToFill.members[member] : {};
+                const div = document.createElement('div');
+                div.className = `member-card ${dataToFill ? 'edit-mode' : ''}`;
+                div.innerHTML = `
+                    <div class="member-name"><i class="fas fa-user-circle text-primary"></i> ${member}</div>
+                    <div class="section-title">Financials (Cash Flow)</div>
+                    <div class="row g-2">
+                        <div class="col-6"><label class="input-label">Deposit</label><input type="number" class="form-control form-control-sm calc-input" data-member="${member}" data-type="deposit" value="${d.deposit || 0}"></div>
+                        <div class="col-6"><label class="input-label">Interest</label><input type="number" class="form-control form-control-sm calc-input" data-member="${member}" data-type="interest" value="${d.interest || 0}"></div>
+                        <div class="col-6"><label class="input-label">Installment</label><input type="number" class="form-control form-control-sm calc-input" data-member="${member}" data-type="installment" value="${d.installment || 0}"></div>
+                        <div class="col-6"><label class="input-label">Fine</label><input type="number" class="form-control form-control-sm calc-input" data-member="${member}" data-type="fine" value="${d.fine || 0}"></div>
+                    </div>
+                    <div class="section-title">Loan Record (Info Only)</div>
+                    <div class="row g-2">
+                        <div class="col-6"><label class="input-label">Loan Amount</label><input type="number" class="form-control form-control-sm calc-input" data-member="${member}" data-type="loanAmount" value="${d.loanAmount || 0}"></div>
+                        <div class="col-6"><label class="input-label">Rate (%)</label><input type="number" step="0.1" class="form-control form-control-sm calc-input" data-member="${member}" data-type="interestRate" value="${d.interestRate || 0}"></div>
+                        <div class="col-12"><label class="input-label">Taken Date</label>${createDateSelectors('taken', member, d)}</div>
+                        <div class="col-12"><label class="input-label">Maturity Date</label>${createDateSelectors('maturity', member, d)}</div>
+                    </div>
+                `;
+                membersContainer.appendChild(div);
+            });
+            document.querySelectorAll('.calc-input').forEach(input => input.addEventListener('input', calculateTotals));
+            calculateTotals();
+        }
+
+        function calculateTotals() {
+            let grandTotal = 0;
+            members.forEach(member => {
+                const types = ['deposit', 'interest', 'installment', 'fine'];
+                let memberTotal = 0;
+                types.forEach(type => {
+                    const val = parseFloat(document.querySelector(`.calc-input[data-member="${member}"][data-type="${type}"]`)?.value) || 0;
+                    memberTotal += val;
+                });
+                grandTotal += memberTotal;
+            });
+            grandTotalDisplay.textContent = `NPR ${grandTotal.toLocaleString()}`;
+            return grandTotal;
+        }
+        function getDateFromSelects(prefix, member) {
+            const day = document.querySelector(`.date-part[data-member="${member}"][data-prefix="${prefix}"][data-type="day"]`)?.value;
+            const month = document.querySelector(`.date-part[data-member="${member}"][data-prefix="${prefix}"][data-type="month"]`)?.value;
+            const year = document.querySelector(`.date-part[data-member="${member}"][data-prefix="${prefix}"][data-type="year"]`)?.value;
+            if (day && month && year) return `${day} ${month}, ${year}`;
+            return '';
+        }
+
+        function parseNepaliDateToNum(dateStr) {
+            if (!dateStr) return 0;
+            const parts = dateStr.split(' ');
+            if (parts.length < 3) return 0;
+            const day = parseInt(parts[0]);
+            const year = parseInt(parts[2].replace(',', ''));
+            const monthName = parts[1];
+            const monthIdx = nepaliMonthsOrder.indexOf(monthName) + 1;
+            return year * 10000 + monthIdx * 100 + day;
+        }
+
+        // FIXED: More accurate Current Date Calculation
+        function getCurrentNepaliDateNum() {
+            const now = new Date();
+            const gYear = now.getFullYear();
+            const gMonth = now.getMonth() + 1; // 1-12
+            const gDay = now.getDate();
+
+            // Approximate Nepali Year
+            let npYear = gYear + 57;
+            if (gMonth < 4) { // Before mid-April
+                npYear = gYear + 56; 
+            }
+            
+            // Approximate Nepali Month based on Gregorian Month
+            // This is a simplified mapping. For production, a full library is best, 
+            // but this fixes the immediate "always overdue" bug by being more conservative.
+            let npMonth = 1; 
+            if (gMonth >= 4 && gMonth <= 5) npMonth = 1; // Baishakh
+            else if (gMonth >= 5 && gMonth <= 6) npMonth = 2; // Jestha
+            else if (gMonth >= 6 && gMonth <= 7) npMonth = 3; // Ashadh
+            else if (gMonth >= 7 && gMonth <= 8) npMonth = 4; // Shrawan
+            else if (gMonth >= 8 && gMonth <= 9) npMonth = 5; // Bhadra
+            else if (gMonth >= 9 && gMonth <= 10) npMonth = 6; // Ashwin
+            else if (gMonth >= 10 && gMonth <= 11) npMonth = 7; // Kartik
+            else if (gMonth >= 11 && gMonth <= 12) npMonth = 8; // Mangsir
+            else if (gMonth >= 12 || gMonth <= 1) npMonth = 9; // Poush
+            else if (gMonth >= 1 && gMonth <= 2) npMonth = 10; // Magh
+            else if (gMonth >= 2 && gMonth <= 3) npMonth = 11; // Falgun
+            else if (gMonth >= 3 && gMonth <= 4) npMonth = 12; // Chaitra
+            // To prevent false "Overdue" flags, we will use a slightly earlier date estimate
+            // or just rely on the Year/Month. If the maturity year is far in the future, it's safe.
+            // If the maturity year is the current year, we need to be careful.
+            
+            // Safe fallback: Just use Year and Month for comparison if day is ambiguous
+            // But let's try to construct a comparable number.
+            // We'll assume the 15th of the estimated month to be safe in the middle.
+            return npYear * 10000 + npMonth * 100 + 15;
+        }
+        
+        const todayNP = getCurrentNepaliDateNum();
+
+        saveBtn.addEventListener('click', async () => {
+            if (auth.currentUser.isAnonymous) { showMessage("Guests cannot save data.", "danger"); return; }
+            const month = document.getElementById('nepaliMonth').value;
+            const year = document.getElementById('entryYear').value;
+            if(!year) { showMessage("Enter Year", "danger"); return; }
+
+            let memberData = {};
+            let sums = { deposit:0, interest:0, installment:0, fine:0, loanCount:0 };
+
+            members.forEach(member => {
+                const getVal = (type) => parseFloat(document.querySelector(`.calc-input[data-member="${member}"][data-type="${type}"]`).value) || 0;
+                const deposit = getVal('deposit');
+                const interest = getVal('interest');
+                const installment = getVal('installment');
+                const fine = getVal('fine');
+                const loanAmount = getVal('loanAmount');
+                const interestRate = getVal('interestRate');
+                const takenDate = getDateFromSelects('taken', member);
+                const maturityDate = getDateFromSelects('maturity', member);
+                const cashTotal = deposit + interest + installment + fine; 
+
+                memberData[member] = { deposit, interest, installment, fine, loanAmount, interestRate, takenDate, maturityDate, cashTotal };
+                sums.deposit += deposit; sums.interest += interest; sums.installment += installment; sums.fine += fine;
+                if(loanAmount > 0) sums.loanCount++;
+            });
+
+            const grandTotal = Object.values(memberData).reduce((acc, curr) => acc + curr.cashTotal, 0);
+
+            setLoading(true);
+            try {
+                const payload = { month, year, timestamp: new Date(), members: memberData, totals: { ...sums, grand: grandTotal }, updatedAt: new Date() };
+                if (currentEditId) {
+                    await updateDoc(doc(db, collectionName, currentEditId), payload);
+                    showMessage("Updated!", "success");
+                    cancelEdit();
+                } else {
+                    payload.createdAt = new Date();
+                    payload.createdBy = auth.currentUser.email || "Admin";                    await addDoc(collection(db, collectionName), payload);
+                    showMessage("Saved!", "success");
+                    renderInputs(null);
+                }
+                loadHistory();
+                if(document.getElementById('summary-content').classList.contains('active')) loadSummary();
+                if(document.getElementById('loan-content').classList.contains('active')) loadLoanSummary();
+            } catch (error) {
+                console.error(error);
+                showMessage("Error: " + error.message, "danger");
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        async function loadHistory() {
+            historyContainer.innerHTML = '<div class="text-center text-muted py-5"><div class="spinner-border text-primary"></div></div>';
+            try {
+                const q = query(collection(db, collectionName), orderBy("timestamp", "desc"));
+                const snapshot = await getDocs(q);
+                historyContainer.innerHTML = '';
+                allRecordsData = []; 
+
+                if(snapshot.empty) {
+                    historyContainer.innerHTML = '<div class="text-center text-muted py-5">No records found.</div>';
+                    return;
+                }
+
+                const grouped = {};
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const y = data.year;
+                    if(!grouped[y]) grouped[y] = [];
+                    const record = { id: docSnap.id, ...data };
+                    grouped[y].push(record);
+                    allRecordsData.push(record); 
+                });
+
+                Object.keys(grouped).sort((a,b) => b-a).forEach(year => {
+                    let records = grouped[year];
+                    records.sort((a, b) => {
+                        const indexA = nepaliMonthsOrder.indexOf(a.month);
+                        const indexB = nepaliMonthsOrder.indexOf(b.month);
+                        return indexB - indexA;
+                    });
+
+                    const uniqueId = `year-${year}`;
+                    let yearGrandTotal = 0;
+                    records.forEach(rec => { yearGrandTotal += rec.totals.grand; });
+                    const accordionItem = document.createElement('div');
+                    accordionItem.className = 'accordion-item';
+                    accordionItem.innerHTML = `
+                        <h2 class="accordion-header" id="heading${uniqueId}">
+                            <button class="accordion-button ${year === Object.keys(grouped)[0] ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${uniqueId}" aria-expanded="${year === Object.keys(grouped)[0]}">
+                                <i class="far fa-calendar-alt me-2"></i> Year ${year} 
+                                <span class="badge bg-light text-primary ms-2">${records.length} Months</span>
+                            </button>
+                        </h2>
+                        <div id="collapse${uniqueId}" class="accordion-collapse collapse ${year === Object.keys(grouped)[0] ? 'show' : ''}" data-bs-parent="#historyContainer">
+                            <div class="accordion-body p-0">
+                                <div class="table-responsive">
+                                    <table class="history-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-month">Month</th>
+                                                <th>Deposit</th>
+                                                <th>Interest</th>
+                                                <th>Install</th>
+                                                <th>Fine</th>
+                                                <th>Total</th>
+                                                <th>Loans</th>
+                                                <th class="admin-only admin-only-table-cell">Action</th>
+                                                <th>View</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr class="yearly-total-row">
+                                                <td colspan="6" class="yearly-total-label">Year ${year} Grand Total</td>
+                                                <td colspan="2" style="text-align: center; font-size: 1.1rem;">NPR ${yearGrandTotal.toLocaleString()}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    const tbody = accordionItem.querySelector('tbody');
+                    records.forEach(rec => {
+                        const t = rec.totals;
+                        const hasLoan = t.loanCount > 0;
+                        const loanBadge = hasLoan ? `<span class="badge-loan" onclick="window.showLoanDetails('${rec.id}')"><i class="fas fa-file-invoice-dollar me-1"></i>${t.loanCount} Active</span>` : '<span class="text-muted small">-</span>';
+                        
+                        let actionButtons = '';
+                        if (!auth.currentUser.isAnonymous) {
+                            actionButtons = `
+                                <button class="btn btn-action btn-outline-primary admin-only" onclick="window.editRecord('${rec.id}')"><i class="fas fa-pen"></i></button>
+                                <button class="btn btn-action btn-outline-danger admin-only" onclick="window.confirmDelete('${rec.id}')"><i class="fas fa-trash"></i></button>                            `;
+                        }
+
+                        // View Button (Visible to ALL)
+                        const viewButton = `<button class="btn btn-action btn-outline-secondary" onclick="window.viewDetails('${rec.id}')"><i class="fas fa-eye"></i></button>`;
+
+                        const row = `
+                            <tr>
+                                <td class="col-month">${rec.month}</td>
+                                <td class="text-primary fw-bold">${t.deposit.toLocaleString()}</td>
+                                <td class="text-success">${t.interest.toLocaleString()}</td>
+                                <td class="text-info">${t.installment.toLocaleString()}</td>
+                                <td class="text-danger">${t.fine.toLocaleString()}</td>
+                                <td class="fw-bold text-dark">${t.grand.toLocaleString()}</td>
+                                <td>${loanBadge}</td>
+                                <td class="admin-only admin-only-table-cell">${actionButtons}</td>
+                                <td>${viewButton}</td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                    historyContainer.appendChild(accordionItem);
+                });
+
+            } catch (error) {
+                console.error(error);
+                historyContainer.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+            }
+        }
+
+        function loadSummary() {
+            if (allRecordsData.length === 0) {
+                summaryContainer.innerHTML = '<div class="text-center text-muted py-5">No data available.</div>';
+                return;
+            }
+            let memberStats = {};
+            members.forEach(m => { memberStats[m] = { deposit: 0, fine: 0, total: 0 }; });
+            let grandTotalAll = 0;
+
+            allRecordsData.forEach(rec => {
+                members.forEach(m => {
+                    const data = rec.members[m];
+                    if (data) {
+                        const dep = data.deposit || 0;
+                        const fn = data.fine || 0;
+                        memberStats[m].deposit += dep;
+                        memberStats[m].fine += fn;
+                        memberStats[m].total += (dep + fn);
+                        grandTotalAll += (dep + fn);
+                    }                });
+            });
+
+            let html = `<div class="table-responsive"><table class="summary-table"><thead><tr><th class="col-month" style="text-align:left !important;">Member Name</th><th class="text-primary">Total Deposit</th><th class="text-danger">Total Fine</th><th class="text-dark" style="background:#eef2ff !important;">Subtotal (Dep+Fine)</th></tr></thead><tbody>`;
+            members.forEach(m => {
+                const stats = memberStats[m];
+                // Make name clickable
+                html += `<tr>
+                    <td class="col-month" style="text-align:left !important; font-weight:600;">
+                        <span class="member-link" onclick="window.showMemberDetails('${m}')"><i class="fas fa-user-circle me-1"></i>${m}</span>
+                    </td>
+                    <td class="text-primary fw-bold">${stats.deposit.toLocaleString()}</td>
+                    <td class="text-danger fw-bold">${stats.fine.toLocaleString()}</td>
+                    <td class="fw-bold" style="background:#f9fafb;">${stats.total.toLocaleString()}</td>
+                </tr>`;
+            });
+            html += `</tbody><tfoot><tr class="summary-total-row"><td class="text-end" style="text-align:right !important; padding-right:15px;">GRAND TOTAL (All Members)</td><td colspan="3" style="font-size:1.2rem; text-align:center;">NPR ${grandTotalAll.toLocaleString()}</td></tr></tfoot></table></div>`;
+            summaryContainer.innerHTML = html;
+        }
+
+        function loadLoanSummary() {
+            if (allRecordsData.length === 0) {
+                loanContainer.innerHTML = '<div class="text-center text-muted py-5">No data available.</div>';
+                return;
+            }
+            let chronologicalData = [...allRecordsData].sort((a, b) => {
+                if (a.year !== b.year) return a.year - b.year;
+                return nepaliMonthsOrder.indexOf(a.month) - nepaliMonthsOrder.indexOf(b.month);
+            });
+            let loans = []; 
+            chronologicalData.forEach(rec => {
+                members.forEach(m => {
+                    const data = rec.members[m];
+                    if (data && data.loanAmount > 0 && data.takenDate) {
+                        loans.push({
+                            member: m,
+                            loanAmount: data.loanAmount,
+                            rate: data.interestRate,
+                            takenDate: data.takenDate,
+                            maturityDate: data.maturityDate,
+                            takenDateNum: parseNepaliDateToNum(data.takenDate),
+                            maturityDateNum: parseNepaliDateToNum(data.maturityDate),
+                            totalPaid: 0,
+                            status: 'Active'
+                        });
+                    }
+                });
+            });
+            loans.forEach(loan => {
+                chronologicalData.forEach(rec => {                    const rMonthIdx = nepaliMonthsOrder.indexOf(rec.month) + 1;
+                    const recNum = rec.year * 10000 + rMonthIdx * 100 + 15; 
+                    const data = rec.members[loan.member];
+                    if (data && data.installment > 0 && recNum >= loan.takenDateNum) {
+                        loan.totalPaid += data.installment;
+                    }
+                });
+            });
+
+            let html = `<div class="table-responsive"><table class="loan-table"><thead><tr>
+                <th class="col-month" style="text-align:left !important;">Member</th>
+                <th>Loan Amount</th>
+                <th>Paid Installment</th>
+                <th>Balance</th>
+                <th>Taken Date</th>
+                <th>Maturity</th>
+                <th>Status</th>
+            </tr></thead><tbody>`;
+
+            if (loans.length === 0) {
+                loanContainer.innerHTML = '<div class="text-center text-muted py-5">No loan records found.</div>';
+                return;
+            }
+
+            loans.forEach(loan => {
+                const balance = loan.loanAmount - loan.totalPaid;
+                let statusBadge = '';
+                
+                // STRICT DATE CHECK LOGIC
+                if (loan.totalPaid >= loan.loanAmount) {
+                    // Fully Paid -> Closed
+                    statusBadge = '<span class="badge status-closed">Closed</span>';
+                } else if (todayNP > loan.maturityDateNum) {
+                    // Today is AFTER Maturity -> Overdue
+                    statusBadge = '<span class="badge status-overdue">Overdue</span>';
+                } else {
+                    // Today is BEFORE or EQUAL to Maturity -> Active
+                    statusBadge = '<span class="badge status-active">Active</span>';
+                }
+
+                html += `
+                    <tr>
+                        <td class="col-month" style="text-align:left !important; font-weight:600;">${loan.member}</td>
+                        <td class="fw-bold">NPR ${loan.loanAmount.toLocaleString()}</td>
+                        <td class="text-success fw-bold">NPR ${loan.totalPaid.toLocaleString()}</td>
+                        <td class="${balance > 0 ? 'text-danger fw-bold' : 'text-muted'}">NPR ${Math.max(0, balance).toLocaleString()}</td>
+                        <td>${loan.takenDate}</td>
+                        <td>${loan.maturityDate}</td>
+                        <td>${statusBadge}</td>
+                    </tr>                `;
+            });
+            html += `</tbody></table></div>`;
+            loanContainer.innerHTML = html;
+        }
+
+        window.switchTab = (tabName) => {
+            const sections = ['history', 'summary', 'loan', 'bank'];
+            sections.forEach(t => {
+                document.getElementById(`${t}-content`).classList.remove('active');
+                document.getElementById(`${t}-tab`).classList.remove('active');
+            });
+            document.getElementById(`${tabName}-content`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            if (tabName === 'summary') loadSummary();
+            if (tabName === 'loan') loadLoanSummary();
+        };
+
+        window.editRecord = (id) => {
+            if (auth.currentUser.isAnonymous) return;
+            getDocs(query(collection(db, collectionName), orderBy("timestamp", "desc")))
+            .then(snap => {
+                const target = snap.docs.find(d => d.id === id);
+                if(target) {
+                    const data = target.data();
+                    currentEditId = id;
+                    document.getElementById('nepaliMonth').value = data.month;
+                    document.getElementById('entryYear').value = data.year;
+                    renderInputs(data);
+                    formTitle.innerHTML = '<i class="fas fa-edit me-2"></i>Edit Entry';
+                    cancelEditBtn.classList.remove('d-none');
+                    saveBtn.classList.replace('btn-primary-custom', 'btn-warning');
+                    saveBtn.style.background = '#f59e0b';
+                    saveBtn.style.color = 'white';
+                    document.getElementById('btnText').innerText = "Update";
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    showMessage("Editing mode active", "info");
+                }
+            });
+        };
+
+        window.cancelEdit = () => {
+            currentEditId = null;
+            formTitle.innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add Entry';
+            cancelEditBtn.classList.add('d-none');
+            saveBtn.classList.replace('btn-warning', 'btn-primary-custom');
+            saveBtn.style.background = ''; 
+            saveBtn.style.color = '';
+            document.getElementById('btnText').innerText = "Save Record";
+            renderInputs(null);            messageArea.innerText = "";
+        };
+
+        window.showLoanDetails = (id) => {
+            getDocs(query(collection(db, collectionName), orderBy("timestamp", "desc")))
+            .then(snap => {
+                const target = snap.docs.find(d => d.id === id);
+                if(!target) return;
+                const data = target.data();
+                let html = `<h6 class="mb-3 text-center text-primary">Loan Records for ${data.month} ${data.year}</h6>`;
+                let found = false;
+                for (const [name, vals] of Object.entries(data.members)) {
+                    if(vals.loanAmount > 0) {
+                        found = true;
+                        html += `
+                            <div class="loan-detail-box mb-2">
+                                <div class="fw-bold text-dark"><i class="fas fa-user me-2"></i>${name}</div>
+                                <div class="row mt-2">
+                                    <div class="col-6"><small class="text-muted">Amount:</small> <br><strong>NPR ${vals.loanAmount.toLocaleString()}</strong></div>
+                                    <div class="col-6"><small class="text-muted">Rate:</small> <br><strong>${vals.interestRate}%</strong></div>
+                                    <div class="col-6"><small class="text-muted">Taken:</small> <br>${vals.takenDate || '-'}</div>
+                                    <div class="col-6"><small class="text-muted">Maturity:</small> <br>${vals.maturityDate || '-'}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                if(!found) html += '<p class="text-center text-muted">No loans recorded for this month.</p>';
+                modalBody.innerHTML = html;
+                modalTitle.innerText = "Loan Information";
+                modalDeleteBtn.classList.add('d-none'); 
+                detailModal.show();
+            });
+        };
+
+        window.viewDetails = (id) => {
+            getDocs(query(collection(db, collectionName), orderBy("timestamp", "desc")))
+            .then(snap => {
+                const target = snap.docs.find(d => d.id === id);
+                if(!target) return;
+                const data = target.data();
+                let html = `<h5 class="mb-4 text-center border-bottom pb-2">${data.month} ${data.year}</h5>`;
+                for (const [name, vals] of Object.entries(data.members)) {
+                    if(vals.cashTotal === 0 && vals.loanAmount === 0) continue;
+                    html += `
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
+                                <strong>${name}</strong>
+                                <span class="badge bg-primary">Total: NPR ${vals.cashTotal.toLocaleString()}</span>
+                            </div>                            <div class="card-body py-2">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="detail-row"><span class="detail-label">Deposit</span> <span class="detail-value positive-value">${vals.deposit > 0 ? vals.deposit.toLocaleString() : '-'}</span></div>
+                                        ${vals.interest > 0 ? `<div class="detail-row"><span class="detail-label">Interest</span> <span class="detail-value positive-value">${vals.interest.toLocaleString()}</span></div>` : ''}
+                                        ${vals.installment > 0 ? `<div class="detail-row"><span class="detail-label">Installment</span> <span class="detail-value positive-value">${vals.installment.toLocaleString()}</span></div>` : ''}
+                                        ${vals.fine > 0 ? `<div class="detail-row"><span class="detail-label">Fine</span> <span class="detail-value text-danger">${vals.fine.toLocaleString()}</span></div>` : ''}
+                                    </div>
+                                    <div class="col-6 border-start">
+                                        ${vals.loanAmount > 0 ? `
+                                            <div class="small text-muted mb-1">Loan Details:</div>
+                                            <div class="detail-row"><span class="detail-label">Amount</span> <span class="detail-value">${vals.loanAmount.toLocaleString()}</span></div>
+                                            <div class="detail-row"><span class="detail-label">Rate</span> <span class="detail-value">${vals.interestRate}%</span></div>
+                                            <div class="detail-row"><span class="detail-label">Taken</span> <span class="detail-value">${vals.takenDate || '-'}</span></div>
+                                            <div class="detail-row"><span class="detail-label">Maturity</span> <span class="detail-value">${vals.maturityDate || '-'}</span></div>
+                                        ` : '<div class="text-muted small fst-italic mt-2">No loan record</div>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                html += `<div class="alert alert-success mt-3 mb-0 text-center fw-bold fs-5">Grand Total: NPR ${data.totals.grand.toLocaleString()}</div>`;
+                modalBody.innerHTML = html;
+                modalTitle.innerText = "Full Record Details";
+                
+                if (!auth.currentUser.isAnonymous) {
+                    modalDeleteBtn.classList.remove('d-none');
+                    currentDeleteId = id;
+                } else {
+                    modalDeleteBtn.classList.add('d-none');
+                }
+                detailModal.show();
+            });
+        };
+
+        // NEW: Show Member Details Popup
+        window.showMemberDetails = (memberName) => {
+            const details = memberDetailsData[memberName];
+            if (!details) {
+                alert("Details not found for this member.");
+                return;
+            }
+            const html = `
+                <div class="text-center mb-3">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem; color: var(--primary);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <table class="table table-borderless">                    <tr><td class="fw-bold">Name:</td><td class="text-end">${memberName}</td></tr>
+                    <tr><td class="fw-bold">Address:</td><td class="text-end">${details.address}</td></tr>
+                    <tr><td class="fw-bold">Contact:</td><td class="text-end">${details.contact}</td></tr>
+                    <tr><td class="fw-bold">Email:</td><td class="text-end">${details.email}</td></tr>
+                    <tr><td class="fw-bold">DOB:</td><td class="text-end">${details.dob}</td></tr>
+                    <tr><td class="fw-bold">Kosh Joined Date:</td><td class="text-end">${details.joined}</td></tr>
+                </table>
+            `;
+            document.getElementById('memberModalBody').innerHTML = html;
+            memberDetailModal.show();
+        };
+
+        window.confirmDelete = (id) => {
+            if (auth.currentUser.isAnonymous) return;
+            if(confirm("Delete this record?")) {
+                deleteDoc(doc(db, collectionName, id)).then(() => {
+                    if(currentEditId === id) cancelEdit();
+                    loadHistory();
+                    if(document.getElementById('summary-content').classList.contains('active')) loadSummary();
+                    if(document.getElementById('loan-content').classList.contains('active')) loadLoanSummary();
+                    detailModal.hide();
+                    showMessage("Deleted", "warning");
+                }).catch(e => showMessage(e.message, "danger"));
+            }
+        };
+
+        modalDeleteBtn.addEventListener('click', () => { if(currentDeleteId) window.confirmDelete(currentDeleteId); });
+
+        function setLoading(isLoading) {
+            saveBtn.disabled = isLoading;
+            document.getElementById('btnLoader').classList.toggle('d-none', !isLoading);
+        }
+
+        function showMessage(msg, type) {
+            messageArea.textContent = msg;
+            messageArea.className = `mt-2 text-center small fw-bold text-${type}`;
+            setTimeout(() => messageArea.textContent = '', 3000);
+        }
+
+        window.copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Account Number Copied: " + text);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        };
+
+        // Expose globals
+        window.editRecord = editRecord;
+        window.cancelEdit = cancelEdit;        window.showLoanDetails = showLoanDetails;
+        window.viewDetails = viewDetails;
+        window.showMemberDetails = showMemberDetails;
+        window.confirmDelete = confirmDelete;
+        window.switchTab = switchTab;
+        window.logout = logout;
+        window.loginAsGuest = loginAsGuest;
+        window.copyToClipboard = copyToClipboard;
+    </script>
+</body>
+                                    </html>
