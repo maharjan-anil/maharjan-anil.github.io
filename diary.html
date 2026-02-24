@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary 2026</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sidebar-bg: #2c3e50;
+            --sidebar-text: #ecf0f1;
+            --accent-color: #e67e22;
+            --paper-bg: #fdfbf7;
+            --cover-color: #5d4037;
+            --toolbar-bg: #f8f9fa;
+            --toolbar-border: #dee2e6;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background-color: #e9ecef;
+            margin: 0;
+        }
+
+        /* --- FRONT COVER STYLES --- */
+        #frontCover {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--cover-color), #3e2723);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #d7ccc8;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.5);
+        }
+
+        #frontCover.hidden { transform: translateY(-100%); }
+
+        .cover-border {
+            border: 4px solid #8d6e63;
+            padding: 40px;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .cover-border::before, .cover-border::after {
+            content: ''; position: absolute; width: 80%; height: 2px; background: #8d6e63; left: 10%;
+        }
+        .cover-border::before { top: 40px; }
+        .cover-border::after { bottom: 40px; }
+
+        .cover-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            margin: 0; text-align: center; line-height: 1;
+        }
+        .cover-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #ffd700;
+            margin-top: 10px;
+            letter-spacing: 5px;
+        }
+        .open-btn {
+            margin-top: 50px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: transparent;
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Lora', serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .open-btn:hover {
+            background: #ffd700;
+            color: var(--cover-color);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        /* --- MAIN APP WRAPPER --- */
+        .main-wrapper {
+            height: 100vh;
+            display: flex;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+            pointer-events: none;
+        }
+        .main-wrapper.visible { opacity: 1; pointer-events: all; }
+
+        /* --- LEFT SECTION: Navigation --- */
+        .sidebar-section {
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .brand-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--accent-color);
+        }
+        .user-profile {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .user-email {
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+        .logout-btn {
+            background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 0.9rem; transition: color 0.2s;
+        }
+        .logout-btn:hover { color: #ff8787; text-decoration: underline; }
+
+        .date-display-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .big-day { font-size: 4rem; font-weight: 700; line-height: 1; display: block; }
+        .big-month { font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; display: block; margin-top: 5px; }
+        .big-year { font-size: 1.2rem; opacity: 0.8; display: block; margin-top: 5px; }
+
+        .nav-controls {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        }
+        .nav-btn {
+            background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white;
+            width: 40px; height: 40px; border-radius: 50%; transition: all 0.3s;
+        }
+        .nav-btn:hover { background: var(--accent-color); border-color: var(--accent-color); }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .date-picker-wrapper { margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .custom-date-input {
+            background: rgba(0,0,0,0.2); border: none; color: white; width: 100%; padding: 10px; border-radius: 5px; text-align: center;
+        }
+        .custom-date-input::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+
+        /* Sidebar Tool Buttons */
+        .sidebar-tool-btn {
+            margin-top: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-tool-btn:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        .sidebar-tool-btn i {
+            font-size: 1.1rem;
+        }
+        .sidebar-tool-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        /* --- RIGHT SECTION: Diary Page --- */
+        .diary-section {
+            flex: 1; padding: 40px; overflow-y: auto; background-color: #e9ecef;
+            display: flex; justify-content: center; align-items: flex-start; position: relative;
+        }
+        .paper-sheet {
+            background-color: var(--paper-bg);
+            width: 100%; max-width: 800px; min-height: 85vh; padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 5px; position: relative;
+            background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
+            background-size: 100% 2rem; opacity: 1; transition: all 0.3s ease;
+        }
+        .paper-sheet.loading { opacity: 0.5; pointer-events: none; }
+        .paper-sheet.no-toolbar { padding-top: 20px; }
+
+        .paper-header {
+            font-family: 'Lora', serif; color: #333; margin-bottom: 1rem;
+            border-bottom: 2px solid #333; padding-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+        .paper-date-display { font-size: 1.5rem; font-weight: bold; font-style: italic; }
+        
+        /* Floating Toolbar Panel (Hidden by Default) */
+        .toolbar-panel {
+            background: var(--toolbar-bg);
+            border: 1px solid var(--toolbar-border);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .toolbar-panel.visible {
+            display: block;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .editor-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .toolbar-btn {
+            background: white;
+            border: 1px solid var(--toolbar-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: #495057;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+        .toolbar-btn:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+        .toolbar-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+        .toolbar-btn i {
+            font-size: 0.95rem;
+        }
+        
+        .toolbar-separator {
+            width: 1px;
+            height: 28px;
+            background: var(--toolbar-border);
+            margin: 0 8px;
+        }
+        
+        .toolbar-select {
+            background: white;
+            border: 1px solid var(--toolbar-border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            color: #495057;
+            cursor: pointer;
+            min-height: 36px;
+        }
+        
+        .toolbar-color {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--toolbar-border);
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 0;
+            background: white;
+        }
+        
+        /* Content Editable Area */
+        .diary-editor {
+            width: 100%;
+            min-height: 65vh;
+            border: 1px solid var(--toolbar-border);
+            border-radius: 8px;
+            padding: 25px;
+            background: transparent;
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            outline: none;
+            color: #2c3e50;
+            overflow-y: auto;
+            transition: min-height 0.3s ease;
+        }
+        .paper-sheet.no-toolbar .diary-editor {
+            min-height: 72vh;
+        }
+        .diary-editor:empty:before {
+            content: attr(placeholder);
+            color: #adb5bd;
+            pointer-events: none;
+        }
+        .diary-editor:focus {
+            box-shadow: none;
+        }
+        
+        /* Editor Content Styles */
+        .diary-editor b, .diary-editor strong { font-weight: bold; }
+        .diary-editor i, .diary-editor em { font-style: italic; }
+        .diary-editor u { text-decoration: underline; }
+        .diary-editor s { text-decoration: line-through; }
+        .diary-editor p { margin: 0 0 1rem 0; }
+        .diary-editor h1, .diary-editor h2, .diary-editor h3 { 
+            margin: 1rem 0; 
+            font-family: 'Playfair Display', serif;
+        }
+        .diary-editor ul, .diary-editor ol { 
+            margin: 0 0 1rem 1.5rem; 
+            padding: 0;
+        }
+        .diary-editor li { margin: 0.25rem 0; }
+        .diary-editor blockquote {
+            border-left: 3px solid var(--accent-color);
+            margin: 1rem 0;
+            padding-left: 1rem;
+            font-style: italic;
+            color: #6c757d;
+        }
+        .diary-editor .text-left { text-align: left; }
+        .diary-editor .text-center { text-align: center; }
+        .diary-editor .text-right { text-align: right; }
+        .diary-editor .text-justify { text-align: justify; }
+
+        .save-status {
+            position: fixed; bottom: 30px; right: 30px; padding: 10px 20px; border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: bold; transition: all 0.3s;
+            transform: translateY(100px); z-index: 100;
+        }
+        .save-status.saved { background: #27ae60; color: white; transform: translateY(0); }
+        .save-status.saving { background: #f39c12; color: white; transform: translateY(0); }
+        .save-status.error { background: #c0392b; color: white; transform: translateY(0); }
+
+        /* Auth Modal Overlay */
+        #authOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 62, 80, 0.95); z-index: 3000; display: none;
+            justify-content: center; align-items: center;
+        }
+        .auth-box {
+            background: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 400px; text-align: center;
+        }
+
+        /* Nepali Unicode Modal Styles */
+        #nepaliModal .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        #nepaliModal .modal-header {
+            background: var(--sidebar-bg);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            border: none;
+        }
+        #nepaliModal .modal-header .btn-close {
+            filter: invert(1);
+        }
+        #nepaliModal .modal-body {
+            padding: 0;
+        }
+        #nepaliModal iframe {
+            border-radius: 0 0 15px 15px;
+        }
+        #nepaliModal .modal-footer {
+            border: none;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 0 0 15px 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper { flex-direction: column; height: auto; overflow: auto; }
+            .sidebar-section { width: 100%; padding: 20px; }
+            .diary-section { padding: 20px; }
+            .paper-sheet { min-height: 60vh; padding: 20px; }
+            body { overflow: auto; }
+            .cover-border { width: 250px; height: 350px; }
+            .cover-title { font-size: 3rem; }
+            .paper-header { flex-direction: column; align-items: flex-start; }
+            #nepaliModal .modal-dialog { margin: 10px; }
+            .editor-toolbar { gap: 3px; }
+            .toolbar-btn { padding: 6px 10px; min-width: 32px; height: 32px; }
+            .diary-editor { min-height: 50vh; font-size: 1.1rem; padding: 20px; }
+            .paper-sheet.no-toolbar .diary-editor { min-height: 58vh; }
+            .toolbar-panel { padding: 10px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 1. FRONT COVER -->
+<div id="frontCover">
+    <div class="cover-border">
+        <h1 class="cover-title">Diary</h1>
+        <div class="cover-year">2026</div>
+    </div>
+    <button class="open-btn" onclick="openDiary()">Open Diary</button>
+</div>
+
+<!-- 2. AUTHENTICATION OVERLAY -->
+<div id="authOverlay">
+    <div class="auth-box">
+        <h2 class="mb-4" style="font-family: 'Caveat'; color: var(--sidebar-bg);">Welcome</h2>
+        <div id="loginForm">
+            <input type="email" id="loginEmail" class="form-control mb-3" placeholder="Email">
+            <input type="password" id="loginPass" class="form-control mb-3" placeholder="Password">
+            <button class="btn btn-primary w-100 mb-2" onclick="handleLogin()">Login</button>
+            <p class="small text-muted">Don't have an account? <a href="#" onclick="toggleAuthMode()">Sign Up</a></p>
+        </div>
+        <div id="signupForm" style="display:none;">
+            <input type="email" id="signupEmail" class="form-control mb-3" placeholder="Email">
+            <input type="password" id="signupPass" class="form-control mb-3" placeholder="Password">
+            <button class="btn btn-success w-100 mb-2" onclick="handleSignup()">Create Account</button>
+            <p class="small text-muted">Already have an account? <a href="#" onclick="toggleAuthMode()">Login</a></p>
+        </div>
+        <div id="authError" class="text-danger small mt-2"></div>
+    </div>
+</div>
+
+<!-- 3. MAIN APP WRAPPER -->
+<div class="main-wrapper" id="mainApp">
+    
+    <!-- LEFT SECTION -->
+    <aside class="sidebar-section">
+        <div class="brand-title">
+            <i class="fas fa-cloud me-2"></i> Cloud Diary
+        </div>
+        <div class="user-profile">
+            <div class="text-truncate user-email" id="userEmailDisplay">user@example.com</div>
+            <button class="logout-btn" onclick="handleLogout()" title="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <div class="date-display-card">
+            <span class="big-day" id="sidebarDay">01</span>
+            <span class="big-month" id="sidebarMonth">January</span>
+            <span class="big-year" id="sidebarYear">2026</span>
+            <div class="mt-2 text-white-50" id="sidebarWeekday">Thursday</div>
+        </div>
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="changeDay(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="btn btn-outline-light btn-sm" onclick="goToToday()"><i class="fas fa-calendar-day me-1"></i> Today</button>
+            <button class="nav-btn" onclick="changeDay(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="date-picker-wrapper">
+            <label class="form-label text-white-50 small">Jump to Date:</label>
+            <input type="date" id="datePicker" class="custom-date-input" min="2026-01-01" max="2026-12-31" onchange="jumpToDate(this.value)">
+        </div>
+        
+        <!-- Toolbar Toggle Button -->
+        <button class="sidebar-tool-btn" id="toolbarToggleBtn" onclick="toggleToolbar()">
+            <i class="fas fa-palette"></i>
+            <span>Show Formatting Toolbar</span>
+        </button>
+        
+        <!-- Nepali Unicode Tool Button -->
+        <button class="sidebar-tool-btn" data-bs-toggle="modal" data-bs-target="#nepaliModal">
+            <i class="fas fa-language"></i>
+            <span>Nepali Unicode Tool</span>
+        </button>
+    </aside>
+
+    <!-- RIGHT SECTION -->
+    <main class="diary-section">
+        <div class="paper-sheet" id="paperSheet">
+            <div class="paper-header">
+                <div class="paper-date-display" id="paperDateDisplay">January 1, 2026</div>
+                <div class="text-muted small">
+                    <i class="fas fa-sync-alt fa-spin" id="loadingIcon" style="display:none;"></i> 
+                    <span id="syncStatus">Synced</span>
+                </div>
+            </div>
+            
+            <!-- Floating Toolbar Panel (Hidden by Default) -->
+            <div class="toolbar-panel" id="toolbarPanel">
+                <div class="editor-toolbar">
+                    <!-- Font Style -->
+                    <button class="toolbar-btn" onclick="execCmd('bold')" title="Bold (Ctrl+B)"><i class="fas fa-bold"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('italic')" title="Italic (Ctrl+I)"><i class="fas fa-italic"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('underline')" title="Underline (Ctrl+U)"><i class="fas fa-underline"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('strikeThrough')" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+                    
+                    <div class="toolbar-separator"></div>
+                    
+                    <!-- Font Size -->
+                    <select class="toolbar-select" onchange="execCmd('fontSize', this.value)">
+                        <option value="3">Normal</option>
+                        <option value="1">Small</option>
+                        <option value="2">Medium</option>
+                        <option value="4">Large</option>
+                        <option value="5">Extra Large</option>
+                        <option value="7">Huge</option>
+                    </select>
+                    
+                    <!-- Font Color -->
+                    <input type="color" class="toolbar-color" onchange="execCmd('foreColor', this.value)" title="Text Color" value="#2c3e50">
+                    
+                    <!-- Background Color -->
+                    <input type="color" class="toolbar-color" onchange="execCmd('hiliteColor', this.value)" title="Highlight Color" value="#ffff00">
+                    
+                    <div class="toolbar-separator"></div>
+                    
+                    <!-- Alignment -->
+                    <button class="toolbar-btn" onclick="execCmd('justifyLeft')" title="Align Left"><i class="fas fa-align-left"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('justifyCenter')" title="Align Center"><i class="fas fa-align-center"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('justifyRight')" title="Align Right"><i class="fas fa-align-right"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('justifyFull')" title="Justify"><i class="fas fa-align-justify"></i></button>
+                    
+                    <div class="toolbar-separator"></div>
+                    
+                    <!-- Lists & Indent -->
+                    <button class="toolbar-btn" onclick="execCmd('insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('indent')" title="Indent"><i class="fas fa-indent"></i></button>
+                    <button class="toolbar-btn" onclick="execCmd('outdent')" title="Outdent"><i class="fas fa-outdent"></i></button>
+                    
+                    <div class="toolbar-separator"></div>
+                    
+                    <!-- Headings & Format -->
+                    <select class="toolbar-select" onchange="execCmd('formatBlock', this.value)">
+                        <option value="p">Paragraph</option>
+                        <option value="h1">Heading 1</option>
+                        <option value="h2">Heading 2</option>
+                        <option value="h3">Heading 3</option>
+                        <option value="blockquote">Quote</option>
+                    </select>
+                    
+                    <!-- Clear Formatting -->
+                    <button class="toolbar-btn" onclick="execCmd('removeFormat')" title="Clear Formatting"><i class="fas fa-eraser"></i></button>
+                </div>
+            </div>
+            
+            <!-- Content Editable Area -->
+            <div class="diary-editor" id="diaryEditor" contenteditable="true" placeholder="Dear Diary..." disabled></div>
+        </div>
+    </main>
+</div>
+
+<!-- Status Toast -->
+<div class="save-status" id="saveStatus">Saved to Cloud</div>
+
+<!-- 4. NEPALI UNICODE MODAL POPUP -->
+<div class="modal fade" id="nepaliModal" tabindex="-1" aria-labelledby="nepaliModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nepaliModalLabel">
+                    <i class="fas fa-keyboard me-2"></i>Nepali Unicode Converter
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Ashesh Nepali Unicode Iframe -->
+                <iframe width="100%" height="400" frameborder="0" border="no" scrolling="no" marginwidth="0" marginheight="0" allowtransparency="true" src="https://www.ashesh.com.np/linknepali-unicode3.php?api=462121q052">
+                </iframe><br>
+                <span style="color:gray; font-size:8px; text-align:left; display:block; padding: 5px 15px;">
+                    © <a href="https://www.ashesh.com.np/nepali-unicode.php" title="Nepali unicode" target="_top" style="text-decoration:none; color:gray;">Nepali Unicode</a>
+                </span>
+            </div>
+            <div class="modal-footer">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Type in English, get Nepali Unicode. Copy and paste into your diary.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. FIREBASE CONFIGURATION (PASTE YOUR KEYS HERE)
+    // --------------------------------------------------------------
+    const firebaseConfig = {
+       apiKey: "AIzaSyCu0sK2T4R-FiVzKc_tH7U9o1lk_o6mxWQ",
+  authDomain: "diary-a100e.firebaseapp.com",
+  projectId: "diary-a100e",
+  storageBucket: "diary-a100e.firebasestorage.app",
+  messagingSenderId: "729595512227",
+  appId: "1:729595512227:web:fc6a42b11e8244537d4616"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // --------------------------------------------------------------
+    // 2. APP STATE & VARIABLES
+    // --------------------------------------------------------------
+    const TARGET_YEAR = 2026;
+    let currentDate = new Date(TARGET_YEAR, 0, 1);
+    let currentUser = null;
+    let isTypingTimeout = null;
+    let isAppOpen = false; 
+    let isToolbarVisible = false; // Track toolbar state
+
+    // DOM Elements
+    const els = {
+        frontCover: document.getElementById('frontCover'),
+        mainApp: document.getElementById('mainApp'),
+        authOverlay: document.getElementById('authOverlay'),
+        loginForm: document.getElementById('loginForm'),
+        signupForm: document.getElementById('signupForm'),
+        authError: document.getElementById('authError'),
+        userEmail: document.getElementById('userEmailDisplay'),
+        sidebarDay: document.getElementById('sidebarDay'),
+        sidebarMonth: document.getElementById('sidebarMonth'),
+        sidebarYear: document.getElementById('sidebarYear'),
+        sidebarWeekday: document.getElementById('sidebarWeekday'),
+        paperDateDisplay: document.getElementById('paperDateDisplay'),
+        diaryEditor: document.getElementById('diaryEditor'),
+        datePicker: document.getElementById('datePicker'),
+        paperSheet: document.getElementById('paperSheet'),
+        saveStatus: document.getElementById('saveStatus'),
+        loadingIcon: document.getElementById('loadingIcon'),
+        syncStatus: document.getElementById('syncStatus'),
+        toolbarPanel: document.getElementById('toolbarPanel'),
+        toolbarToggleBtn: document.getElementById('toolbarToggleBtn')
+    };
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    // --------------------------------------------------------------
+    // 3. TOOLBAR TOGGLE FUNCTION
+    // --------------------------------------------------------------
+    
+    function toggleToolbar() {
+        isToolbarVisible = !isToolbarVisible;
+        
+        if (isToolbarVisible) {
+            // Show toolbar
+            els.toolbarPanel.classList.add('visible');
+            els.paperSheet.classList.remove('no-toolbar');
+            els.toolbarToggleBtn.classList.add('active');
+            els.toolbarToggleBtn.innerHTML = '<i class="fas fa-palette"></i><span>Hide Formatting Toolbar</span>';
+        } else {
+            // Hide toolbar
+            els.toolbarPanel.classList.remove('visible');
+            els.paperSheet.classList.add('no-toolbar');
+            els.toolbarToggleBtn.classList.remove('active');
+            els.toolbarToggleBtn.innerHTML = '<i class="fas fa-palette"></i><span>Show Formatting Toolbar</span>';
+        }
+        
+        // Focus editor after toggle
+        els.diaryEditor.focus();
+    }
+
+    // --------------------------------------------------------------
+    // 4. RICH TEXT EDITOR FUNCTIONS
+    // --------------------------------------------------------------
+    
+    function execCmd(command, value = null) {
+        document.execCommand(command, false, value);
+        els.diaryEditor.focus();
+        triggerAutoSave();
+    }
+    
+    function triggerAutoSave() {
+        els.syncStatus.textContent = "Typing...";
+        clearTimeout(isTypingTimeout);
+        isTypingTimeout = setTimeout(saveEntry, 1000);
+    }
+    
+    // Handle keyboard shortcuts for formatting
+    els.diaryEditor.addEventListener('keydown', function(e) {
+        // Ctrl+B for bold
+        if (e.ctrlKey && e.key === 'b') {
+            e.preventDefault();
+            execCmd('bold');
+        }
+        // Ctrl+I for italic
+        if (e.ctrlKey && e.key === 'i') {
+            e.preventDefault();
+            execCmd('italic');
+        }
+        // Ctrl+U for underline
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            execCmd('underline');
+        }
+    });
+    
+    // Update toolbar button states based on cursor position
+    els.diaryEditor.addEventListener('keyup', updateToolbarState);
+    els.diaryEditor.addEventListener('mouseup', updateToolbarState);
+    
+    function updateToolbarState() {
+        // Only update if toolbar is visible
+        if (!isToolbarVisible) return;
+        
+        // Update bold button state
+        const boldBtn = document.querySelector('.toolbar-btn[onclick="execCmd(\'bold\')"]');
+        if (boldBtn) {
+            if (document.queryCommandState('bold')) {
+                boldBtn.classList.add('active');
+            } else {
+                boldBtn.classList.remove('active');
+            }
+        }
+        
+        // Update italic button state
+        const italicBtn = document.querySelector('.toolbar-btn[onclick="execCmd(\'italic\')"]');
+        if (italicBtn) {
+            if (document.queryCommandState('italic')) {
+                italicBtn.classList.add('active');
+            } else {
+                italicBtn.classList.remove('active');
+            }
+        }
+        
+        // Update underline button state
+        const underlineBtn = document.querySelector('.toolbar-btn[onclick="execCmd(\'underline\')"]');
+        if (underlineBtn) {
+            if (document.queryCommandState('underline')) {
+                underlineBtn.classList.add('active');
+            } else {
+                underlineBtn.classList.remove('active');
+            }
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 5. COVER & INITIALIZATION LOGIC
+    // --------------------------------------------------------------
+
+    function openDiary() {
+        els.frontCover.classList.add('hidden');
+        els.mainApp.classList.add('visible');
+        isAppOpen = true;
+        checkAuthState();
+    }
+
+    function checkAuthState() {
+        if (auth.currentUser) {
+            handleAuthSuccess(auth.currentUser);
+        } else {
+            els.authOverlay.style.display = 'flex';
+        }
+    }
+
+    auth.onAuthStateChanged(user => {
+        if (isAppOpen) {
+            if (user) {
+                handleAuthSuccess(user);
+            } else {
+                currentUser = null;
+                els.authOverlay.style.display = 'flex';
+                els.diaryEditor.disabled = true;
+                els.diaryEditor.innerHTML = "";
+                els.syncStatus.textContent = "Logged Out";
+            }
+        }
+    });
+
+    function handleAuthSuccess(user) {
+        currentUser = user;
+        els.authOverlay.style.display = 'none';
+        els.userEmail.textContent = user.email;
+        els.diaryEditor.disabled = false;
+        loadDate(currentDate); 
+    }
+
+    // --------------------------------------------------------------
+    // 6. AUTHENTICATION HELPERS
+    // --------------------------------------------------------------
+    
+    function toggleAuthMode() {
+        const isLogin = els.loginForm.style.display !== 'none';
+        els.loginForm.style.display = isLogin ? 'none' : 'block';
+        els.signupForm.style.display = isLogin ? 'block' : 'none';
+        els.authError.textContent = "";
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+        try { await auth.signInWithEmailAndPassword(email, pass); } 
+        catch (error) { els.authError.textContent = error.message; }
+    }
+
+    async function handleSignup() {
+        const email = document.getElementById('signupEmail').value;
+        const pass = document.getElementById('signupPass').value;
+        try { await auth.createUserWithEmailAndPassword(email, pass); } 
+        catch (error) { els.authError.textContent = error.message; }
+    }
+
+    function handleLogout() {
+        if(confirm("Are you sure you want to logout?")) {
+            auth.signOut();
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 7. DIARY LOGIC (FIRESTORE)
+    // --------------------------------------------------------------
+
+    function getDocId(dateObj) {
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function loadDate(dateObj) {
+        currentDate = dateObj;
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth();
+        const year = currentDate.getFullYear();
+        
+        els.sidebarDay.textContent = day < 10 ? '0' + day : day;
+        els.sidebarMonth.textContent = monthNames[month];
+        els.sidebarYear.textContent = year;
+        els.sidebarWeekday.textContent = weekdayNames[currentDate.getDay()];
+        els.paperDateDisplay.textContent = `${monthNames[month]} ${day}, ${year}`;
+
+        const yyyy = currentDate.getFullYear();
+        const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(currentDate.getDate()).padStart(2, '0');
+        els.datePicker.value = `${yyyy}-${mm}-${dd}`;
+
+        els.diaryEditor.innerHTML = ""; 
+        els.syncStatus.textContent = "Loading...";
+        els.loadingIcon.style.display = 'inline-block';
+        els.paperSheet.classList.add('loading');
+
+        fetchEntry();
+    }
+
+    async function fetchEntry() {
+        if (!currentUser) return;
+        const docId = getDocId(currentDate);
+        try {
+            const docRef = db.collection('diary_entries').doc(docId);
+            const docSnap = await docRef.get();
+            if (docSnap.exists) {
+                if (getDocId(currentDate) === docId) {
+                    // Load HTML content safely
+                    const content = docSnap.data().html || docSnap.data().text || "";
+                    els.diaryEditor.innerHTML = content;
+                }
+            } else {
+                els.diaryEditor.innerHTML = "";
+            }
+        } catch (error) {
+            console.error("Error fetching entry:", error);
+            showStatus("Error loading entry", "error");
+        } finally {
+            els.paperSheet.classList.remove('loading');
+            els.loadingIcon.style.display = 'none';
+            els.syncStatus.textContent = "Synced";
+        }
+    }
+
+    async function saveEntry() {
+        if (!currentUser) return;
+        showStatus("Saving...", "saving");
+        const docId = getDocId(currentDate);
+        // Get both plain text and HTML for compatibility
+        const htmlContent = els.diaryEditor.innerHTML;
+        const textContent = els.diaryEditor.innerText || els.diaryEditor.textContent;
+        
+        try {
+            await db.collection('diary_entries').doc(docId).set({
+                userId: currentUser.uid,
+                html: htmlContent,      // Rich text HTML
+                text: textContent,      // Plain text fallback
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+            showStatus("Saved to Cloud", "saved");
+        } catch (error) {
+            console.error("Error saving:", error);
+            showStatus("Save Failed", "error");
+        }
+    }
+
+    function showStatus(msg, type) {
+        els.saveStatus.textContent = msg;
+        els.saveStatus.className = `save-status ${type}`;
+        setTimeout(() => {
+            if(type === 'saved' || type === 'error') {
+                els.saveStatus.style.transform = 'translateY(100px)';
+            }
+        }, 2000);
+    }
+
+    // --------------------------------------------------------------
+    // 8. NAVIGATION HELPERS
+    // --------------------------------------------------------------
+
+    function changeDay(offset) {
+        const newDate = new Date(currentDate);
+        newDate.setDate(newDate.getDate() + offset);
+        if (newDate.getFullYear() !== TARGET_YEAR) {
+            alert("Stay within 2026!");
+            return;
+        }
+        loadDate(newDate);
+    }
+
+    function goToToday() {
+        const today = new Date();
+        if (today.getFullYear() === TARGET_YEAR) loadDate(today);
+        else alert("Today is not in 2026.");
+    }
+
+    function jumpToDate(dateString) {
+        if (!dateString) return;
+        const parts = dateString.split('-');
+        const newDate = new Date(parts[0], parts[1] - 1, parts[2]);
+        loadDate(newDate);
+    }
+
+    // Auto-save on content change
+    els.diaryEditor.addEventListener('input', () => {
+        els.syncStatus.textContent = "Typing...";
+        clearTimeout(isTypingTimeout);
+        isTypingTimeout = setTimeout(saveEntry, 1000); 
+    });
+
+</script>
+
+</body>
+</html>
