@@ -406,6 +406,15 @@ transition: all 0.3s ease;
 transform: translateY(-2px);
 box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
 }
+.btn-info {
+background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+border: none;
+transition: all 0.3s ease;
+}
+.btn-info:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+}
 /* Form Styles */
 .form-control,
 .form-select {
@@ -835,6 +844,15 @@ margin: 0.25rem;
 font-weight: 600;
 color: #4f46e5;
 }
+/* Action Buttons in Table */
+.action-btn-group {
+display: flex;
+gap: 0.5rem;
+}
+.action-btn-group .btn {
+padding: 0.4rem 0.75rem;
+font-size: 0.85rem;
+}
 </style>
 </head>
 <body>
@@ -1098,21 +1116,9 @@ Showing statistics for <strong>2026</strong>
 </div>
 </div>
 </div>
-<!-- Summary Cards - REMOVED AVERAGE EXPENSE -->
+<!-- Summary Cards - MODIFIED: Removed Total Expenses, Expense Count Full Width -->
 <div class="row g-4 mb-4">
-<div class="col-md-6">
-<div class="stat-card">
-<div class="d-flex justify-content-between align-items-start position-relative">
-<div>
-<div class="card-text mb-1">Total Expenses</div>
-<h3 class="card-title mb-0" id="totalExpenses">₨ 0.00</h3>
-<small class="card-text" id="totalPeriodLabel">For selected period</small>
-</div>
-<i class="fas fa-money-bill-wave stat-icon"></i>
-</div>
-</div>
-</div>
-<div class="col-md-6">
+<div class="col-md-12">
 <div class="stat-card bg-info">
 <div class="d-flex justify-content-between align-items-start position-relative">
 <div>
@@ -1125,14 +1131,14 @@ Showing statistics for <strong>2026</strong>
 </div>
 </div>
 </div>
-<!-- Payment Method Breakdown -->
+<!-- Payment Method Breakdown - MODIFIED: Cash & Online Only -->
 <div class="payment-summary">
 <div class="d-flex justify-content-between align-items-center mb-4">
 <h5 class="mb-0"><i class="fas fa-wallet me-2"></i>Payment Method Breakdown</h5>
 <span class="badge bg-light text-dark" id="paymentPeriodBadge">2026</span>
 </div>
 <div class="row g-3">
-<div class="col-md-3 col-6">
+<div class="col-md-6 col-6">
 <div class="payment-summary-item">
 <i class="fas fa-money-bill-wave"></i>
 <div class="fw-bold">Cash</div>
@@ -1140,28 +1146,12 @@ Showing statistics for <strong>2026</strong>
 <small class="text-white-50" id="cashPercent">0%</small>
 </div>
 </div>
-<div class="col-md-3 col-6">
+<div class="col-md-6 col-6">
 <div class="payment-summary-item">
-<i class="fas fa-credit-card"></i>
-<div class="fw-bold">Card</div>
-<div class="h5 mb-0" id="totalCard">₨ 0.00</div>
-<small class="text-white-50" id="cardPercent">0%</small>
-</div>
-</div>
-<div class="col-md-3 col-6">
-<div class="payment-summary-item">
-<i class="fas fa-mobile-alt"></i>
-<div class="fw-bold">Mobile</div>
-<div class="h5 mb-0" id="totalMobile">₨ 0.00</div>
-<small class="text-white-50" id="mobilePercent">0%</small>
-</div>
-</div>
-<div class="col-md-3 col-6">
-<div class="payment-summary-item">
-<i class="fas fa-university"></i>
-<div class="fw-bold">Bank</div>
-<div class="h5 mb-0" id="totalBank">₨ 0.00</div>
-<small class="text-white-50" id="bankPercent">0%</small>
+<i class="fas fa-wifi"></i>
+<div class="fw-bold">Online</div>
+<div class="h5 mb-0" id="totalOnline">₨ 0.00</div>
+<small class="text-white-50" id="onlinePercent">0%</small>
 </div>
 </div>
 </div>
@@ -1395,6 +1385,55 @@ For example, "Jan 10 - Feb 9" represents the budget period for January. Select a
 </div>
 </div>
 </div>
+<!-- Edit Expense Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal-content">
+<div class="modal-header bg-warning text-dark">
+<h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Expense</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body py-4">
+<form id="editExpenseForm">
+<input type="hidden" id="editExpenseId">
+<div class="row g-3">
+<div class="col-md-6">
+<label for="editExpenseDate" class="form-label fw-medium">Date <span class="text-danger">*</span></label>
+<input type="date" class="form-control form-control-lg" id="editExpenseDate" required>
+</div>
+<div class="col-md-6">
+<label for="editExpenseAmount" class="form-label fw-medium">Amount (NPR) <span class="text-danger">*</span></label>
+<div class="input-group input-group-lg">
+<span class="input-group-text">₨</span>
+<input type="number" class="form-control" id="editExpenseAmount" placeholder="0.00" step="0.01" required>
+</div>
+</div>
+<div class="col-md-6">
+<label for="editExpensePayment" class="form-label fw-medium">Payment Method <span class="text-danger">*</span></label>
+<select class="form-select form-select-lg" id="editExpensePayment" required>
+<option value="">Select Payment Method</option>
+<option value="Cash">Cash</option>
+<option value="Card">Credit/Debit Card</option>
+<option value="Mobile">Mobile Banking</option>
+<option value="Bank">Bank Transfer</option>
+</select>
+</div>
+<div class="col-12">
+<label for="editExpenseDescription" class="form-label fw-medium">Description (Optional)</label>
+<textarea class="form-control form-control-lg" id="editExpenseDescription" rows="2" placeholder="e.g., Grocery shopping, Lunch with friends"></textarea>
+</div>
+</div>
+</form>
+</div>
+<div class="modal-footer justify-content-center border-0">
+<button type="button" class="btn btn-secondary px-5" data-bs-dismiss="modal">Cancel</button>
+<button type="button" class="btn btn-warning px-5" id="confirmEdit">
+<i class="fas fa-save me-1"></i> Save Changes
+</button>
+</div>
+</div>
+</div>
+</div>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -1404,7 +1443,6 @@ For example, "Jan 10 - Feb 9" represents the budget period for January. Select a
 // ======================
 // FIREBASE CONFIGURATION
 // ======================
-// TODO: REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
 const firebaseConfig = {
 apiKey: "AIzaSyACnmnZczn0Hgw-9UtaJNcuh-3JAPgR_7c",
 authDomain: "expenditure-tracer.firebaseapp.com",
@@ -1429,10 +1467,11 @@ let expenses = [];
 let currentPage = 1;
 let expensesPerPage = 10;
 let currentDeleteId = null;
+let currentEditId = null;
 let currentFilter = 'all';
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth() + 1;
-let statsPeriodType = 'yearly'; // 'yearly' or 'monthly'
+let statsPeriodType = 'yearly';
 let statsSelectedYear = new Date().getFullYear();
 let statsSelectedMonth = new Date().getMonth() + 1;
 let budgetSelectedYear = new Date().getFullYear();
@@ -1441,37 +1480,30 @@ let lastCashBudgetCheck = 0;
 let lastDigitalBudgetCheck = 0;
 const db = firebase.firestore();
 const SETTINGS_DOC_ID = 'userSettings';
-const BUDGETS_COLLECTION = 'budgets'; // New collection for monthly budgets
-const BUDGET_CHECK_INTERVAL = 300000; // 5 minutes in milliseconds
-const CUSTOM_MONTH_START_DAY = 10; // Custom month starts on the 10th
+const BUDGETS_COLLECTION = 'budgets';
+const BUDGET_CHECK_INTERVAL = 300000;
+const CUSTOM_MONTH_START_DAY = 10;
 // ======================
 // CUSTOM MONTH HELPER FUNCTIONS
 // ======================
-// Get custom month key (YYYY-MM) for a given date
 function getCustomMonthKey(date) {
 const d = new Date(date);
 let year = d.getFullYear();
-let month = d.getMonth() + 1; // 1-12
-// If date is before the 10th, it belongs to the previous custom month
+let month = d.getMonth() + 1;
 if (d.getDate() < CUSTOM_MONTH_START_DAY) {
 if (month === 1) {
-// December of previous year
 year -= 1;
 month = 12;
 } else {
 month -= 1;
 }
 }
-// Format month as two digits
 const monthStr = String(month).padStart(2, '0');
 return `${year}-${monthStr}`;
 }
-// Get date range for a custom month key (YYYY-MM)
 function getCustomMonthDateRange(customMonthKey) {
 const [year, month] = customMonthKey.split('-').map(Number);
-// Start date: 10th of the month
 const startDate = new Date(year, month - 1, CUSTOM_MONTH_START_DAY);
-// End date: 9th of next month
 let endYear = year;
 let endMonth = month;
 if (month === 12) {
@@ -1480,31 +1512,21 @@ endMonth = 1;
 } else {
 endMonth = month + 1;
 }
-const endDate = new Date(endYear, endMonth - 1, 9, 23, 59, 59, 999); // End of day on the 9th
+const endDate = new Date(endYear, endMonth - 1, 9, 23, 59, 59, 999);
 return { startDate, endDate };
 }
-// Get period label for display (e.g., "Jan 10 - Feb 9, 2026")
 function getCustomPeriodLabel(year, monthIndex) {
-// monthIndex: 1-12 where 1 = Jan 10 - Feb 9, 12 = Dec 10 - Jan 9
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
 'July', 'August', 'September', 'October', 'November', 'December'];
 if (monthIndex === 12) {
-// December period: Dec 10 - Jan 9 (next year)
 return `${monthNames[11]} ${CUSTOM_MONTH_START_DAY} - ${monthNames[0]} 9, ${year}-${year+1}`;
 } else {
-// Regular period: e.g., Jan 10 - Feb 9
 return `${monthNames[monthIndex-1]} ${CUSTOM_MONTH_START_DAY} - ${monthNames[monthIndex]} 9, ${year}`;
 }
 }
-// Get custom month key from year and period index (1-12)
 function getCustomMonthKeyFromPeriod(year, periodIndex) {
-// periodIndex: 1-12 where 1 = Jan, 2 = Feb, ... 12 = Dec
-// For period 12 (Dec), the custom month key is YYYY-12
-// For other periods, the custom month key is YYYY-MM where MM = periodIndex
 let month = periodIndex;
 let y = year;
-// Special case: Period 12 (Dec 10 - Jan 9) belongs to December of the current year
-// No adjustment needed
 const monthStr = String(month).padStart(2, '0');
 return `${y}-${monthStr}`;
 }
@@ -1530,33 +1552,24 @@ sidebarIcon.className = 'fas fa-chevron-right';
 // INITIALIZATION
 // ======================
 document.addEventListener('DOMContentLoaded', function() {
-// Set today's date as default
 const today = new Date().toISOString().split('T')[0];
 document.getElementById('expenseDate').value = today;
-// Populate year dropdowns
 populateYearDropdowns();
-// Load settings from Firebase
 loadSettingsFromFirebase();
-// Load expenses from Firebase
 loadExpenses();
-// Setup event listeners
 setupEventListeners();
-// Show welcome notification if first visit
 if (!localStorage.getItem('expenseTrackerVisited')) {
 showNotification('Welcome! Budget periods run from the 10th to the 9th of next month.', 'info');
 localStorage.setItem('expenseTrackerVisited', 'true');
 }
-// Setup budget notification check interval
 setupBudgetNotificationCheck();
 });
 // ======================
 // EVENT LISTENERS
 // ======================
 function setupEventListeners() {
-// Sidebar toggle buttons
 document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
 document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
-// Close sidebar when clicking a nav link on mobile
 document.querySelectorAll('.nav-link').forEach(link => {
 link.addEventListener('click', function() {
 if (window.innerWidth <= 1366 && document.querySelector('.sidebar').classList.contains('collapsed')) {
@@ -1564,18 +1577,20 @@ toggleSidebar();
 }
 });
 });
-// Expense form submission
 document.getElementById('expenseForm').addEventListener('submit', function(e) {
 e.preventDefault();
 addExpense();
 });
-// Delete confirmation
 document.getElementById('confirmDelete').addEventListener('click', function() {
 if (currentDeleteId) {
 deleteExpense(currentDeleteId);
 }
 });
-// Pagination buttons
+document.getElementById('confirmEdit').addEventListener('click', function() {
+if (currentEditId) {
+updateExpense(currentEditId);
+}
+});
 document.getElementById('prevPage').addEventListener('click', function() {
 if (currentPage > 1) {
 currentPage--;
@@ -1589,7 +1604,6 @@ currentPage++;
 displayExpenses();
 }
 });
-// Search functionality
 document.getElementById('searchExpense').addEventListener('input', function(e) {
 const searchTerm = e.target.value.toLowerCase().trim();
 if (searchTerm === '') {
@@ -1599,7 +1613,6 @@ applyCurrentFilter();
 filterExpensesBySearch(searchTerm);
 }
 });
-// Filter type change
 document.getElementById('filterType').addEventListener('change', function(e) {
 const filterType = e.target.value;
 document.getElementById('yearFilterGroup').style.display = 'none';
@@ -1614,7 +1627,6 @@ document.getElementById('monthFilterGroup').style.display = 'block';
 } else if (filterType === 'custom') {
 document.getElementById('startDateGroup').style.display = 'block';
 document.getElementById('endDateGroup').style.display = 'block';
-// Set default dates
 const today = new Date().toISOString().split('T')[0];
 const lastMonth = new Date();
 lastMonth.setMonth(lastMonth.getMonth() - 1);
@@ -1622,13 +1634,9 @@ document.getElementById('startDate').value = lastMonth.toISOString().split('T')[
 document.getElementById('endDate').value = today;
 }
 });
-// Apply filter button
 document.getElementById('applyFilter').addEventListener('click', applyFilter);
-// Save settings button (application settings only)
 document.getElementById('saveSettings').addEventListener('click', saveAppSettingsToFirebase);
-// Save budget settings button
 document.getElementById('saveBudgetSettings').addEventListener('click', saveBudgetSettingsToFirebase);
-// Statistics period filter
 document.getElementById('statsPeriodType').addEventListener('change', function(e) {
 statsPeriodType = e.target.value;
 if (statsPeriodType === 'monthly') {
@@ -1648,14 +1656,12 @@ document.getElementById('statsMonthFilter').addEventListener('change', function(
 statsSelectedMonth = parseInt(e.target.value);
 updateStatistics();
 });
-// Budget period selector in Settings tab
 document.getElementById('budgetYearSelector').addEventListener('change', function(e) {
 budgetSelectedYear = parseInt(e.target.value);
 });
 document.getElementById('budgetMonthSelector').addEventListener('change', function(e) {
 budgetSelectedMonth = parseInt(e.target.value);
 });
-// Toggle period filter button
 document.getElementById('togglePeriodFilter').addEventListener('click', function() {
 const periodFilterRow = document.getElementById('periodFilterRow');
 const toggleBtn = this;
@@ -1726,7 +1732,6 @@ displayFilteredExpenses(filtered);
 showNotification(`Showing expenses for ${year}`, 'info');
 }
 function filterByCustomMonth(year, periodIndex) {
-// Get custom month key for this period
 const customMonthKey = getCustomMonthKeyFromPeriod(year, periodIndex);
 const { startDate, endDate } = getCustomMonthDateRange(customMonthKey);
 const filtered = expenses.filter(expense => {
@@ -1741,7 +1746,7 @@ showNotification(`Showing expenses for ${periodLabel}`, 'info');
 function filterByDateRange(startDate, endDate) {
 const start = new Date(startDate);
 const end = new Date(endDate);
-end.setHours(23, 59, 59, 999); // Include entire end day
+end.setHours(23, 59, 59, 999);
 const filtered = expenses.filter(expense => {
 const expenseDate = new Date(expense.date);
 return expenseDate >= start && expenseDate <= end;
@@ -1756,14 +1761,12 @@ applyCurrentFilter();
 return;
 }
 let filteredExpenses = expenses;
-// Apply current time filter first
 if (currentFilter === 'yearly') {
 filteredExpenses = filteredExpenses.filter(expense => {
 const expenseDate = new Date(expense.date);
 return expenseDate.getFullYear() === currentYear;
 });
 } else if (currentFilter === 'monthly') {
-// Get custom month key for current filter
 const customMonthKey = getCustomMonthKeyFromPeriod(currentYear, currentMonth);
 const { startDate, endDate } = getCustomMonthDateRange(customMonthKey);
 filteredExpenses = filteredExpenses.filter(expense => {
@@ -1771,7 +1774,6 @@ const expenseDate = new Date(expense.date);
 return expenseDate >= startDate && expenseDate <= endDate;
 });
 }
-// Then apply search filter
 filteredExpenses = filteredExpenses.filter(expense =>
 (expense.description && expense.description.toLowerCase().includes(searchTerm)) ||
 expense.amount.toString().includes(searchTerm) ||
@@ -1789,7 +1791,6 @@ const expenseDate = document.getElementById('expenseDate').value;
 const expenseAmount = parseFloat(document.getElementById('expenseAmount').value);
 const expensePayment = document.getElementById('expensePayment').value;
 const expenseDescription = document.getElementById('expenseDescription').value.trim();
-// Validation
 if (!expenseDate || isNaN(expenseAmount) || expenseAmount <= 0 || !expensePayment) {
 showNotification('Please fill all required fields with valid values', 'danger');
 return;
@@ -1802,25 +1803,19 @@ description: expenseDescription || 'No description',
 timestamp: firebase.firestore.FieldValue.serverTimestamp()
 };
 try {
-// Show loading state
 const saveBtn = document.querySelector('#expenseForm button[type="submit"]');
 const originalText = saveBtn.innerHTML;
 saveBtn.disabled = true;
 saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
-// Add to Firebase
 await db.collection('expenses').add(expense);
-// Reset form and show success
 resetForm();
 showNotification('Expense added successfully!', 'success');
-// Reload expenses
 await loadExpenses();
-// Check budget warnings for current period with payment method specificity
 await checkPaymentSpecificBudgetWarnings();
 } catch (error) {
 console.error('Error adding expense:', error);
 showNotification('Error adding expense. Please try again.', 'danger');
 } finally {
-// Restore button state
 const saveBtn = document.querySelector('#expenseForm button[type="submit"]');
 saveBtn.disabled = false;
 saveBtn.innerHTML = originalText;
@@ -1828,7 +1823,6 @@ saveBtn.innerHTML = originalText;
 }
 async function loadExpenses() {
 try {
-// Show loading state
 const tbody = document.getElementById('expensesTableBody');
 tbody.innerHTML = `
 <tr>
@@ -1838,23 +1832,19 @@ tbody.innerHTML = `
 </td>
 </tr>
 `;
-// Fetch from Firebase
 const snapshot = await db.collection('expenses')
 .orderBy('timestamp', 'desc')
 .get();
-// Process data
 expenses = [];
 snapshot.forEach(doc => {
 expenses.push({ id: doc.id, ...doc.data() });
 });
-// Apply default filter from settings
 const savedSettings = JSON.parse(localStorage.getItem('expenseTrackerSettings')) || {};
 const defaultFilter = savedSettings.defaultFilter || 'all';
 const defaultYear = savedSettings.defaultYear || new Date().getFullYear();
 if (defaultFilter === 'monthly') {
 currentFilter = 'monthly';
 currentYear = defaultYear;
-// Determine current period index based on today's date
 const today = new Date();
 currentMonth = today.getDate() < CUSTOM_MONTH_START_DAY ?
 (today.getMonth() === 0 ? 12 : today.getMonth()) :
@@ -1868,7 +1858,6 @@ filterByYear(currentYear);
 currentFilter = 'all';
 displayExpenses();
 }
-// Update statistics
 updateStatistics();
 } catch (error) {
 console.error('Error loading expenses:', error);
@@ -1902,11 +1891,9 @@ tbody.innerHTML = `
 updatePageInfo();
 return;
 }
-// Pagination
 const startIndex = (currentPage - 1) * expensesPerPage;
 const endIndex = Math.min(startIndex + expensesPerPage, expenses.length);
 const currentExpenses = expenses.slice(startIndex, endIndex);
-// Generate table rows
 let html = '';
 currentExpenses.forEach((expense, index) => {
 const paymentBadge = getPaymentBadge(expense.paymentMethod);
@@ -1917,20 +1904,30 @@ html += `
 <td class="px-4 py-3 fw-bold">₨ ${expense.amount.toFixed(2)}</td>
 <td class="px-4 py-3">${paymentBadge}</td>
 <td class="px-4 py-3">
+<div class="action-btn-group">
+<button class="btn btn-sm btn-info edit-btn" data-id="${expense.id}" title="Edit expense">
+<i class="fas fa-edit"></i>
+</button>
 <button class="btn btn-sm btn-danger delete-btn" data-id="${expense.id}" title="Delete expense">
 <i class="fas fa-trash"></i>
 </button>
+</div>
 </td>
 </tr>
 `;
 });
 tbody.innerHTML = html;
-// Add delete event listeners
 document.querySelectorAll('.delete-btn').forEach(btn => {
 btn.addEventListener('click', function() {
 currentDeleteId = this.getAttribute('data-id');
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 deleteModal.show();
+});
+});
+document.querySelectorAll('.edit-btn').forEach(btn => {
+btn.addEventListener('click', function() {
+const expenseId = this.getAttribute('data-id');
+openEditModal(expenseId);
 });
 });
 updatePageInfo();
@@ -1950,7 +1947,6 @@ tbody.innerHTML = `
 document.getElementById('pageInfo').textContent = 'No results';
 return;
 }
-// Pagination
 const startIndex = (currentPage - 1) * expensesPerPage;
 const endIndex = Math.min(startIndex + expensesPerPage, filteredExpenses.length);
 const currentExpenses = filteredExpenses.slice(startIndex, endIndex);
@@ -1964,15 +1960,19 @@ html += `
 <td class="px-4 py-3 fw-bold">₨ ${expense.amount.toFixed(2)}</td>
 <td class="px-4 py-3">${paymentBadge}</td>
 <td class="px-4 py-3">
+<div class="action-btn-group">
+<button class="btn btn-sm btn-info edit-btn" data-id="${expense.id}" title="Edit expense">
+<i class="fas fa-edit"></i>
+</button>
 <button class="btn btn-sm btn-danger delete-btn" data-id="${expense.id}" title="Delete expense">
 <i class="fas fa-trash"></i>
 </button>
+</div>
 </td>
 </tr>
 `;
 });
 tbody.innerHTML = html;
-// Add delete event listeners
 document.querySelectorAll('.delete-btn').forEach(btn => {
 btn.addEventListener('click', function() {
 currentDeleteId = this.getAttribute('data-id');
@@ -1980,19 +1980,23 @@ const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 deleteModal.show();
 });
 });
+document.querySelectorAll('.edit-btn').forEach(btn => {
+btn.addEventListener('click', function() {
+const expenseId = this.getAttribute('data-id');
+openEditModal(expenseId);
+});
+});
 updatePageInfoForFiltered(filteredExpenses.length);
 }
 function updatePageInfo() {
 const totalPages = Math.ceil(expenses.length / expensesPerPage);
 document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages || 1}`;
-// Disable buttons when needed
 document.getElementById('prevPage').disabled = currentPage === 1;
 document.getElementById('nextPage').disabled = currentPage === Math.ceil(expenses.length / expensesPerPage);
 }
 function updatePageInfoForFiltered(totalCount) {
 const totalPages = Math.ceil(totalCount / expensesPerPage);
 document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages || 1}`;
-// Disable buttons when needed
 document.getElementById('prevPage').disabled = currentPage === 1;
 document.getElementById('nextPage').disabled = currentPage === Math.ceil(totalCount / expensesPerPage);
 }
@@ -2005,29 +2009,76 @@ const badges = {
 };
 return badges[paymentMethod] || '<span class="badge bg-secondary">Unknown</span>';
 }
+// ======================
+// EDIT EXPENSE FUNCTIONS
+// ======================
+function openEditModal(expenseId) {
+const expense = expenses.find(e => e.id === expenseId);
+if (!expense) {
+showNotification('Expense not found', 'danger');
+return;
+}
+currentEditId = expenseId;
+document.getElementById('editExpenseId').value = expenseId;
+document.getElementById('editExpenseDate').value = expense.date;
+document.getElementById('editExpenseAmount').value = expense.amount;
+document.getElementById('editExpensePayment').value = expense.paymentMethod;
+document.getElementById('editExpenseDescription').value = expense.description || '';
+const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+editModal.show();
+}
+async function updateExpense(expenseId) {
+const expenseDate = document.getElementById('editExpenseDate').value;
+const expenseAmount = parseFloat(document.getElementById('editExpenseAmount').value);
+const expensePayment = document.getElementById('editExpensePayment').value;
+const expenseDescription = document.getElementById('editExpenseDescription').value.trim();
+if (!expenseDate || isNaN(expenseAmount) || expenseAmount <= 0 || !expensePayment) {
+showNotification('Please fill all required fields with valid values', 'danger');
+return;
+}
+const updatedExpense = {
+date: expenseDate,
+amount: expenseAmount,
+paymentMethod: expensePayment,
+description: expenseDescription || 'No description',
+lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+};
+try {
+const saveBtn = document.getElementById('confirmEdit');
+const originalText = saveBtn.innerHTML;
+saveBtn.disabled = true;
+saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Saving...';
+await db.collection('expenses').doc(expenseId).update(updatedExpense);
+const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+editModal.hide();
+showNotification('Expense updated successfully!', 'success');
+await loadExpenses();
+await checkPaymentSpecificBudgetWarnings();
+} catch (error) {
+console.error('Error updating expense:', error);
+showNotification('Error updating expense. Please try again.', 'danger');
+} finally {
+const saveBtn = document.getElementById('confirmEdit');
+saveBtn.disabled = false;
+saveBtn.innerHTML = originalText;
+}
+}
 async function deleteExpense(expenseId) {
 try {
-// Show loading state on delete button
 const deleteBtn = document.getElementById('confirmDelete');
 const originalText = deleteBtn.innerHTML;
 deleteBtn.disabled = true;
 deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Deleting...';
-// Delete from Firebase
 await db.collection('expenses').doc(expenseId).delete();
-// Close modal
 const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
 deleteModal.hide();
-// Show success notification
 showNotification('Expense deleted successfully!', 'success');
-// Reload expenses
 await loadExpenses();
-// Check budget warnings after deletion
 await checkPaymentSpecificBudgetWarnings();
 } catch (error) {
 console.error('Error deleting expense:', error);
 showNotification('Error deleting expense. Please try again.', 'danger');
 } finally {
-// Restore button state
 const deleteBtn = document.getElementById('confirmDelete');
 deleteBtn.disabled = false;
 deleteBtn.innerHTML = originalText;
@@ -2038,17 +2089,11 @@ deleteBtn.innerHTML = originalText;
 // ======================
 async function updateStatistics() {
 if (expenses.length === 0) {
-document.getElementById('totalExpenses').textContent = '₨ 0.00';
 document.getElementById('expenseCount').textContent = '0';
 document.getElementById('totalCash').textContent = '₨ 0.00';
-document.getElementById('totalCard').textContent = '₨ 0.00';
-document.getElementById('totalMobile').textContent = '₨ 0.00';
-document.getElementById('totalBank').textContent = '₨ 0.00';
+document.getElementById('totalOnline').textContent = '₨ 0.00';
 document.getElementById('cashPercent').textContent = '0%';
-document.getElementById('cardPercent').textContent = '0%';
-document.getElementById('mobilePercent').textContent = '0%';
-document.getElementById('bankPercent').textContent = '0%';
-// Hide budget cards for empty state
+document.getElementById('onlinePercent').textContent = '0%';
 document.getElementById('budgetCardsRow').style.display = 'none';
 document.getElementById('recentExpensesList').innerHTML = `
 <div class="empty-state">
@@ -2057,11 +2102,9 @@ document.getElementById('recentExpensesList').innerHTML = `
 <p>Add some expenses to see them here</p>
 </div>
 `;
-// Update period displays
 updatePeriodDisplays();
 return;
 }
-// Filter expenses based on selected period
 let filteredExpenses = [];
 let periodLabel = '';
 if (statsPeriodType === 'yearly') {
@@ -2070,10 +2113,8 @@ const expenseDate = new Date(expense.date);
 return expenseDate.getFullYear() === statsSelectedYear;
 });
 periodLabel = `${statsSelectedYear}`;
-// Hide budget cards for yearly view
 document.getElementById('budgetCardsRow').style.display = 'none';
 } else {
-// Get custom month key for the selected period
 const customMonthKey = getCustomMonthKeyFromPeriod(statsSelectedYear, statsSelectedMonth);
 const { startDate, endDate } = getCustomMonthDateRange(customMonthKey);
 filteredExpenses = expenses.filter(expense => {
@@ -2081,17 +2122,10 @@ const expenseDate = new Date(expense.date);
 return expenseDate >= startDate && expenseDate <= endDate;
 });
 periodLabel = getCustomPeriodLabel(statsSelectedYear, statsSelectedMonth);
-// Show budget cards for monthly view
 document.getElementById('budgetCardsRow').style.display = 'block';
 }
-// Calculate total expenses for selected period
-const total = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-document.getElementById('totalExpenses').textContent = `₨ ${total.toFixed(2)}`;
-document.getElementById('totalPeriodLabel').textContent = `For ${periodLabel}`;
-// Expense count
 document.getElementById('expenseCount').textContent = filteredExpenses.length;
 document.getElementById('countPeriodLabel').textContent = `in ${periodLabel}`;
-// Calculate payment method breakdown for selected period
 const paymentTotals = {
 Cash: 0,
 Card: 0,
@@ -2103,25 +2137,17 @@ if (paymentTotals[expense.paymentMethod] !== undefined) {
 paymentTotals[expense.paymentMethod] += expense.amount;
 }
 });
-// Update payment method totals
+const onlineTotal = paymentTotals.Card + paymentTotals.Mobile + paymentTotals.Bank;
 document.getElementById('totalCash').textContent = `₨ ${paymentTotals.Cash.toFixed(2)}`;
-document.getElementById('totalCard').textContent = `₨ ${paymentTotals.Card.toFixed(2)}`;
-document.getElementById('totalMobile').textContent = `₨ ${paymentTotals.Mobile.toFixed(2)}`;
-document.getElementById('totalBank').textContent = `₨ ${paymentTotals.Bank.toFixed(2)}`;
-// Calculate percentages
-const totalPayment = paymentTotals.Cash + paymentTotals.Card + paymentTotals.Mobile + paymentTotals.Bank;
+document.getElementById('totalOnline').textContent = `₨ ${onlineTotal.toFixed(2)}`;
+const totalPayment = paymentTotals.Cash + onlineTotal;
 document.getElementById('cashPercent').textContent = totalPayment > 0 ? `${((paymentTotals.Cash / totalPayment) * 100).toFixed(1)}%` : '0%';
-document.getElementById('cardPercent').textContent = totalPayment > 0 ? `${((paymentTotals.Card / totalPayment) * 100).toFixed(1)}%` : '0%';
-document.getElementById('mobilePercent').textContent = totalPayment > 0 ? `${((paymentTotals.Mobile / totalPayment) * 100).toFixed(1)}%` : '0%';
-document.getElementById('bankPercent').textContent = totalPayment > 0 ? `${((paymentTotals.Bank / totalPayment) * 100).toFixed(1)}%` : '0%';
-// Update period badges
+document.getElementById('onlinePercent').textContent = totalPayment > 0 ? `${((onlineTotal / totalPayment) * 100).toFixed(1)}%` : '0%';
 document.getElementById('paymentPeriodBadge').textContent = periodLabel;
 document.getElementById('recentPeriodBadge').textContent = periodLabel;
-// For monthly view, load and display budget for this custom month
 if (statsPeriodType === 'monthly') {
 await loadAndDisplayBudgetForCustomMonth(statsSelectedYear, statsSelectedMonth, paymentTotals);
 }
-// Recent expenses list (last 5 from selected period)
 let recentHTML = '';
 filteredExpenses.slice(0, 5).forEach(expense => {
 const paymentIcon = getPaymentIcon(expense.paymentMethod);
@@ -2145,14 +2171,11 @@ recentHTML = `
 `;
 }
 document.getElementById('recentExpensesList').innerHTML = recentHTML;
-// Update period displays
 updatePeriodDisplays();
 }
 async function loadAndDisplayBudgetForCustomMonth(year, periodIndex, paymentTotals) {
 try {
-// Get custom month key for this period
 const customMonthKey = getCustomMonthKeyFromPeriod(year, periodIndex);
-// Load budget for this custom month
 const budgetDoc = await db.collection(BUDGETS_COLLECTION).doc(customMonthKey).get();
 let cashBudget = 0;
 let digitalBudget = 0;
@@ -2161,16 +2184,12 @@ const budgetData = budgetDoc.data();
 cashBudget = budgetData.cashBudget || 0;
 digitalBudget = budgetData.digitalBudget || 0;
 }
-// Calculate spent amounts
 const cashSpent = paymentTotals.Cash || 0;
 const digitalSpent = (paymentTotals.Card || 0) + (paymentTotals.Mobile || 0) + (paymentTotals.Bank || 0);
-// Update cash budget card
 updateBudgetCard('cash', cashBudget, cashSpent, year, periodIndex);
-// Update digital budget card
 updateBudgetCard('digital', digitalBudget, digitalSpent, year, periodIndex);
 } catch (error) {
 console.error('Error loading budget for custom month:', error);
-// Show default values if error occurs
 updateBudgetCard('cash', 0, paymentTotals.Cash || 0, year, periodIndex);
 updateBudgetCard('digital', 0, (paymentTotals.Card || 0) + (paymentTotals.Mobile || 0) + (paymentTotals.Bank || 0), year, periodIndex);
 }
@@ -2185,10 +2204,8 @@ budgetLimitEl.textContent = `₨ ${budgetLimit.toFixed(2)}`;
 spentEl.textContent = `₨ ${spentAmount.toFixed(2)}`;
 const remaining = Math.max(0, budgetLimit - spentAmount);
 remainingEl.textContent = `₨ ${remaining.toFixed(2)}`;
-// Calculate progress percentage
 const progressPercent = budgetLimit > 0 ? Math.min(100, (spentAmount / budgetLimit) * 100) : 0;
 progressEl.style.width = `${progressPercent.toFixed(1)}%`;
-// Add color coding based on percentage
 if (progressPercent >= 90) {
 progressEl.className = 'progress-bar bg-danger';
 } else if (progressPercent >= 75) {
@@ -2198,7 +2215,6 @@ progressEl.className = 'progress-bar bg-info';
 } else {
 progressEl.className = `progress-bar bg-${type === 'cash' ? 'success' : 'primary'}`;
 }
-// Update period note with custom period label
 const periodLabel = getCustomPeriodLabel(year, periodIndex);
 periodNoteEl.textContent = `Budget for ${periodLabel}`;
 }
@@ -2235,22 +2251,19 @@ return classes[paymentMethod] || 'bg-secondary';
 // ======================
 async function checkPaymentSpecificBudgetWarnings() {
 try {
-// Get current custom month key for today
 const today = new Date();
 const customMonthKey = getCustomMonthKey(today);
 const { year, month } = parseCustomMonthKey(customMonthKey);
-// Load budget for current custom month
 const budgetDoc = await db.collection(BUDGETS_COLLECTION).doc(customMonthKey).get();
 if (!budgetDoc.exists) {
-return; // No budget set for current period
+return;
 }
 const budgetData = budgetDoc.data();
 const cashBudget = parseFloat(budgetData.cashBudget || 0);
 const digitalBudget = parseFloat(budgetData.digitalBudget || 0);
 if (cashBudget <= 0 && digitalBudget <= 0) {
-return; // No budget limits set
+return;
 }
-// Get current custom month expenses
 const { startDate, endDate } = getCustomMonthDateRange(customMonthKey);
 const currentTime = Date.now();
 const currentPeriodExpenses = expenses.filter(expense => {
@@ -2263,10 +2276,8 @@ const cashSpent = currentPeriodExpenses
 const digitalSpent = currentPeriodExpenses
 .filter(e => ['Card', 'Mobile', 'Bank'].includes(e.paymentMethod))
 .reduce((sum, e) => sum + e.amount, 0);
-// Check cash budget with specific notifications
 if (cashBudget > 0) {
 const cashPercent = (cashSpent / cashBudget) * 100;
-// Only show notification if we haven't shown one recently for this threshold
 if (cashPercent >= 90 && (currentTime - lastCashBudgetCheck) > BUDGET_CHECK_INTERVAL) {
 showPaymentSpecificNotification('cash', 'critical', cashPercent, cashSpent, cashBudget, customMonthKey);
 lastCashBudgetCheck = currentTime;
@@ -2275,10 +2286,8 @@ showPaymentSpecificNotification('cash', 'warning', cashPercent, cashSpent, cashB
 lastCashBudgetCheck = currentTime;
 }
 }
-// Check digital budget with specific notifications
 if (digitalBudget > 0) {
 const digitalPercent = (digitalSpent / digitalBudget) * 100;
-// Only show notification if we haven't shown one recently for this threshold
 if (digitalPercent >= 90 && (currentTime - lastDigitalBudgetCheck) > BUDGET_CHECK_INTERVAL) {
 showPaymentSpecificNotification('digital', 'critical', digitalPercent, digitalSpent, digitalBudget, customMonthKey);
 lastDigitalBudgetCheck = currentTime;
@@ -2291,22 +2300,19 @@ lastDigitalBudgetCheck = currentTime;
 console.error('Error checking payment-specific budget warnings:', error);
 }
 }
-// Parse custom month key (YYYY-MM) to get year and month
 function parseCustomMonthKey(customMonthKey) {
 const [year, month] = customMonthKey.split('-').map(Number);
 return { year, month };
 }
 function showPaymentSpecificNotification(paymentType, severity, percent, spent, limit, customMonthKey) {
-// Create notification element
 const notification = document.createElement('div');
 notification.className = `alert alert-${severity === 'critical' ? 'danger' : 'warning'} notification`;
 notification.role = 'alert';
 let icon = '';
 let title = '';
 let message = '';
-// Get period label for display
 const { year, month } = parseCustomMonthKey(customMonthKey);
-const periodIndex = month; // For custom months, month index = period index
+const periodIndex = month;
 const periodLabel = getCustomPeriodLabel(year, periodIndex);
 if (paymentType === 'cash') {
 icon = '<i class="fas fa-money-bill-wave fa-2x text-success me-3"></i>';
@@ -2327,41 +2333,32 @@ ${icon}
 <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 `;
-// Add to body
 document.body.appendChild(notification);
-// Auto-remove after animation completes
 setTimeout(() => {
 if (notification.parentNode) {
 notification.parentNode.removeChild(notification);
 }
 }, 5000);
-// Also show persistent badge notification
 showBudgetBadgeNotification(paymentType, severity, percent, spent, limit);
 }
 function showBudgetBadgeNotification(paymentType, severity, percent, spent, limit) {
 const badge = paymentType === 'cash' ? document.getElementById('cashBudgetBadge') : document.getElementById('digitalBudgetBadge');
 const messageEl = paymentType === 'cash' ? document.getElementById('cashBudgetMessage') : document.getElementById('digitalBudgetMessage');
-// Set message
 if (paymentType === 'cash') {
 messageEl.textContent = `Cash: ₨${spent.toFixed(0)}/${limit.toFixed(0)} (${percent.toFixed(0)}%)`;
 } else {
 messageEl.textContent = `Digital: ₨${spent.toFixed(0)}/${limit.toFixed(0)} (${percent.toFixed(0)}%)`;
 }
-// Set severity class
 badge.className = `budget-badge ${paymentType} ${severity}`;
-// Show badge
 badge.style.display = 'block';
-// Auto-hide after 10 seconds
 setTimeout(() => {
 badge.style.display = 'none';
 }, 10000);
 }
 function setupBudgetNotificationCheck() {
-// Check budget notifications every 5 minutes
 setInterval(async () => {
 await checkPaymentSpecificBudgetWarnings();
 }, BUDGET_CHECK_INTERVAL);
-// Initial check after 10 seconds (allow expenses to load first)
 setTimeout(async () => {
 await checkPaymentSpecificBudgetWarnings();
 }, 10000);
@@ -2372,7 +2369,6 @@ await checkPaymentSpecificBudgetWarnings();
 async function saveBudgetSettingsToFirebase() {
 const cashBudget = document.getElementById('cashBudgetInput').value;
 const digitalBudget = document.getElementById('digitalBudgetInput').value;
-// Validation
 if (cashBudget && parseFloat(cashBudget) < 0) {
 showNotification('Cash budget cannot be negative', 'danger');
 return;
@@ -2382,25 +2378,21 @@ showNotification('Digital budget cannot be negative', 'danger');
 return;
 }
 try {
-// Show loading state
 const saveBtn = document.getElementById('saveBudgetSettings');
 const originalText = saveBtn.innerHTML;
 saveBtn.disabled = true;
 saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
-// Get custom month key for selected period
 const customMonthKey = getCustomMonthKeyFromPeriod(budgetSelectedYear, budgetSelectedMonth);
-// Save to Firebase budgets collection
 const budgetData = {
 cashBudget: parseFloat(cashBudget || 0),
 digitalBudget: parseFloat(digitalBudget || 0),
 year: budgetSelectedYear,
-periodIndex: budgetSelectedMonth, // 1-12 representing the custom period
+periodIndex: budgetSelectedMonth,
 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
 };
 await db.collection(BUDGETS_COLLECTION).doc(customMonthKey).set(budgetData);
 const periodLabel = getCustomPeriodLabel(budgetSelectedYear, budgetSelectedMonth);
 showNotification(`Budget settings saved successfully for ${periodLabel}!`, 'success');
-// If we're currently viewing this period in statistics, update it
 if (statsPeriodType === 'monthly' &&
 statsSelectedYear === budgetSelectedYear &&
 statsSelectedMonth === budgetSelectedMonth) {
@@ -2410,7 +2402,6 @@ await updateStatistics();
 console.error('Error saving budget settings to Firebase:', error);
 showNotification('Error saving budget settings. Please try again.', 'danger');
 } finally {
-// Restore button state
 const saveBtn = document.getElementById('saveBudgetSettings');
 saveBtn.disabled = false;
 saveBtn.innerHTML = originalText;
@@ -2420,26 +2411,22 @@ async function saveAppSettingsToFirebase() {
 const currency = document.getElementById('currencySetting').value;
 const dateFormat = document.getElementById('dateFormatSetting').value;
 try {
-// Show loading state
 const saveBtn = document.getElementById('saveSettings');
 const originalText = saveBtn.innerHTML;
 saveBtn.disabled = true;
 saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
-// Save to Firebase
 const settingsData = {
 currency: currency,
 dateFormat: dateFormat,
 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
 };
 await db.collection('settings').doc(SETTINGS_DOC_ID).set(settingsData, { merge: true });
-// Also save to localStorage for offline access
 localStorage.setItem('expenseTrackerSettings', JSON.stringify(settingsData));
 showNotification('Application settings saved successfully to Firebase!', 'success');
 } catch (error) {
 console.error('Error saving settings to Firebase:', error);
 showNotification('Error saving settings. Please try again.', 'danger');
 } finally {
-// Restore button state
 const saveBtn = document.getElementById('saveSettings');
 saveBtn.disabled = false;
 saveBtn.innerHTML = originalText;
@@ -2450,10 +2437,8 @@ try {
 const doc = await db.collection('settings').doc(SETTINGS_DOC_ID).get();
 if (doc.exists) {
 const settings = doc.data();
-// Update UI
 document.getElementById('currencySetting').value = settings.currency || 'NPR';
 document.getElementById('dateFormatSetting').value = settings.dateFormat || 'YYYY-MM-DD';
-// Save to localStorage
 localStorage.setItem('expenseTrackerSettings', JSON.stringify(settings));
 }
 } catch (error) {
@@ -2475,7 +2460,6 @@ const options = { year: 'numeric', month: 'short', day: 'numeric' };
 return new Date(dateString).toLocaleDateString('en-US', options);
 }
 function showNotification(message, type) {
-// Create notification element
 const notification = document.createElement('div');
 notification.className = `alert alert-${type} notification`;
 notification.role = 'alert';
@@ -2490,9 +2474,7 @@ notification.innerHTML = `
 </div>
 </div>
 `;
-// Add to body
 document.body.appendChild(notification);
-// Auto-remove after animation completes
 setTimeout(() => {
 if (notification.parentNode) {
 notification.parentNode.removeChild(notification);
@@ -2515,25 +2497,20 @@ return monthNames[monthNum - 1];
 }
 function populateYearDropdowns() {
 const currentYear = new Date().getFullYear();
-const startYear = currentYear - 10; // Show last 10 years
-const endYear = currentYear + 1; // Include next year
-// View Expenses tab
+const startYear = currentYear - 10;
+const endYear = currentYear + 1;
 const yearFilter = document.getElementById('yearFilter');
 yearFilter.innerHTML = '';
-// Statistics tab
 const statsYearFilter = document.getElementById('statsYearFilter');
 statsYearFilter.innerHTML = '';
-// Budget settings in Settings tab
 const budgetYearSelector = document.getElementById('budgetYearSelector');
 budgetYearSelector.innerHTML = '';
 for (let year = endYear; year >= startYear; year--) {
-// View Expenses dropdown
 const option1 = document.createElement('option');
 option1.value = year;
 option1.textContent = year;
 if (year === currentYear) option1.selected = true;
 yearFilter.appendChild(option1);
-// Statistics dropdown
 const option2 = document.createElement('option');
 option2.value = year;
 option2.textContent = year;
@@ -2542,7 +2519,6 @@ option2.selected = true;
 statsSelectedYear = year;
 }
 statsYearFilter.appendChild(option2);
-// Budget settings dropdown
 const option3 = document.createElement('option');
 option3.value = year;
 option3.textContent = year;
@@ -2552,14 +2528,12 @@ budgetSelectedYear = year;
 }
 budgetYearSelector.appendChild(option3);
 }
-// Set current period for budget selector based on today's date
 const today = new Date();
 const currentPeriodIndex = today.getDate() < CUSTOM_MONTH_START_DAY ?
 (today.getMonth() === 0 ? 12 : today.getMonth()) :
 (today.getMonth() + 1);
 document.getElementById('budgetMonthSelector').value = currentPeriodIndex;
 budgetSelectedMonth = currentPeriodIndex;
-// Set current period for statistics
 document.getElementById('statsMonthFilter').value = currentPeriodIndex;
 statsSelectedMonth = currentPeriodIndex;
 }
