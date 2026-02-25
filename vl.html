@@ -24,7 +24,6 @@
 --accent-cyan: #06b6d4;
 --accent-green: #10b981;
 --accent-red: #ef4444;
---accent-orange: #f97316;
 --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #06b6d4 100%);
 --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
 --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.2);
@@ -464,7 +463,6 @@ background: var(--bg-dark);
 border: 1px solid var(--border-subtle);
 color: var(--text-primary);
 }
-/* Notes Section Styles */
 .notes-container { margin-top: 1.5rem; }
 .notes-list {
 max-height: 300px;
@@ -744,6 +742,7 @@ auth = getAuth(app);
 console.log("✅ Firebase initialized");
 } catch (e) {
 console.error("Firebase init error:", e);
+document.getElementById('videoGrid').innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Firebase Config Error</p></div>`;
 }
 
 const VIDEOS_PER_PAGE = 100;
@@ -757,6 +756,7 @@ let currentVideo = null;
 let currentNotesVideoId = null;
 let currentNoteId = null;
 let notesUnsubscribe = null;
+let videosLoaded = false;
 
 // DOM Elements
 const categoryFilter = document.getElementById('categoryFilter');
@@ -810,8 +810,6 @@ const editFirstVideoIdGroup = document.getElementById('editFirstVideoIdGroup');
 const editFirstVideoId = document.getElementById('editFirstVideoId');
 const newTypeSelect = document.getElementById('newType');
 const editTypeSelect = document.getElementById('editType');
-
-// Notes Modal Elements
 const notesModal = document.getElementById('notesModal');
 const notesList = document.getElementById('notesList');
 const noteTextarea = document.getElementById('noteTextarea');
@@ -839,6 +837,7 @@ if (!db) return;
 onSnapshot(doc(db, "settings", "videoPassword"), (docSnap) => {
 if (docSnap.exists()) {
 videoPassword = docSnap.data().password || "Animator";
+console.log("🔐 Video password loaded");
 } else {
 setDoc(doc(db, "settings", "videoPassword"), { password: "Animator", updatedAt: serverTimestamp() });
 }
@@ -864,18 +863,30 @@ authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Admin Login';
 authBtn.classList.remove('logout');
 userInfo.style.display = 'none';
 }
-renderVideos();
+if (videosLoaded) renderVideos();
 });
 }
 
-// Load Videos
+// Load Videos - FIXED
 if (db) {
-onSnapshot(query(collection(db, "videos"), orderBy("createdAt", "desc")), (snapshot) => {
+console.log("📹 Setting up video listener...");
+onSnapshot(query(collection(db, "videos"), orderBy("createdAt", "desc")), 
+(snapshot) => {
+console.log("📹 Snapshot received:", snapshot.size, "videos");
 allVideos = snapshot.docs.map(doc => ({ firestoreId: doc.id, ...doc.data() }));
+console.log("📹 Videos loaded:", allVideos.length);
+videosLoaded = true;
 updateDataLists();
 populateFilters();
 applyFilters();
-});
+},
+(error) => {
+console.error("❌ Error loading videos:", error);
+videoGrid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><p style="font-size:0.8rem; margin-top:0.5rem;">Check Firebase console & security rules</p></div>`;
+}
+);
+} else {
+videoGrid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Database not connected</p></div>`;
 }
 
 // Helper Functions
@@ -1007,32 +1018,20 @@ ${adminActionsHtml}
 </div>`;
 
 if (currentUser) {
-// Notes Button
-const notesBtn = card.querySelector('.notes-btn');
-if (notesBtn) {
-notesBtn.addEventListener('click', (e) => {
+card.querySelector('.notes-btn')?.addEventListener('click', (e) => {
 e.stopPropagation();
 openNotesModal(video);
 });
-}
-// Edit Button
-const editBtn = card.querySelector('.edit-btn');
-if (editBtn) {
-editBtn.addEventListener('click', (e) => {
+card.querySelector('.edit-btn')?.addEventListener('click', (e) => {
 e.stopPropagation();
 openEditModal(video);
 });
-}
-// Delete Button
-const deleteBtn = card.querySelector('.delete-btn');
-if (deleteBtn) {
-deleteBtn.addEventListener('click', async (e) => {
+card.querySelector('.delete-btn')?.addEventListener('click', async (e) => {
 e.stopPropagation();
 if (confirm(`Delete "${video.title}"?`)) {
 await deleteDoc(doc(db, "videos", video.firestoreId));
 }
 });
-}
 }
 
 if (thumbUrl) {
@@ -1044,9 +1043,7 @@ card.addEventListener('click', () => openVideo(video));
 return card;
 }
 
-// ============================================
-// 📝 NOTES FUNCTIONS (FIXED)
-// ============================================
+// NOTES FUNCTIONS
 function openNotesModal(video) {
 currentNotesVideoId = video.firestoreId;
 notesVideoTitle.textContent = `📹 ${video.title}`;
@@ -1062,31 +1059,17 @@ if (!db) {
 notesList.innerHTML = `<div class="empty-notes"><i class="fas fa-exclamation-triangle"></i><p>Database not connected</p></div>`;
 return;
 }
-
 if (!currentUser) {
 notesList.innerHTML = `<div class="empty-notes"><i class="fas fa-lock"></i><p>Please login to view notes</p></div>`;
 return;
 }
-
-// Unsubscribe from previous listener if exists
 if (notesUnsubscribe) {
 notesUnsubscribe();
 notesUnsubscribe = null;
 }
-
-console.log("📝 Loading notes for video:", videoId, "User:", currentUser.uid);
-
-// Listen to notes collection in real-time
-notesUnsubscribe = onSnapshot(
-query(collection(db, "notes"), orderBy("createdAt", "desc")),
-(snapshot) => {
-console.log("📝 Notes snapshot received:", snapshot.size, "notes");
+notesUnsubscribe = onSnapshot(query(collection(db, "notes"), orderBy("createdAt", "desc")), (snapshot) => {
 const allNotes = snapshot.docs.map(doc => ({ noteId: doc.id, ...doc.data() }));
-// Filter notes for this video AND this user
 const videoNotes = allNotes.filter(note => note.videoId === videoId && note.userId === currentUser.uid);
-
-console.log("📝 Filtered notes for this video:", videoNotes.length);
-
 if (videoNotes.length === 0) {
 notesList.innerHTML = `<div class="empty-notes"><i class="fas fa-clipboard"></i><p>No notes yet. Add your first note!</p></div>`;
 } else {
@@ -1101,42 +1084,27 @@ notesList.innerHTML = videoNotes.map(note => `
 </div>
 <div class="note-content">${escapeHtml(note.content)}</div>
 </div>`).join('');
-
-// Add event listeners for note actions
 document.querySelectorAll('.note-edit-btn').forEach(btn => {
 btn.addEventListener('click', (e) => {
 const noteItem = e.target.closest('.note-item');
 currentNoteId = noteItem.getAttribute('data-note-id');
 noteTextarea.value = noteItem.querySelector('.note-content').textContent;
 notesStatus.textContent = '✏️ Editing note...';
-notesStatus.className = '';
 });
 });
-
 document.querySelectorAll('.note-delete-btn').forEach(btn => {
 btn.addEventListener('click', async (e) => {
 const noteItem = e.target.closest('.note-item');
 if (confirm('Delete this note?')) {
-try {
 await deleteDoc(doc(db, "notes", noteItem.getAttribute('data-note-id')));
-notesStatus.textContent = '✅ Note deleted!';
-notesStatus.className = 'status-success';
-setTimeout(() => notesStatus.textContent = '', 2000);
-} catch (error) {
-console.error("Error deleting note:", error);
-notesStatus.textContent = '❌ Failed to delete';
-notesStatus.className = 'status-error';
-}
 }
 });
 });
 }
-},
-(error) => {
-console.error("❌ Error loading notes:", error);
-notesList.innerHTML = `<div class="empty-notes"><i class="fas fa-exclamation-triangle"></i><p>Error: ${error.message}</p><p style="font-size:0.8rem; margin-top:0.5rem;">Check Firebase console & security rules</p></div>`;
-}
-);
+}, (error) => {
+console.error("Error loading notes:", error);
+notesList.innerHTML = `<div class="empty-notes"><i class="fas fa-exclamation-triangle"></i><p>Error loading notes</p></div>`;
+});
 }
 
 function formatDate(timestamp) {
@@ -1154,10 +1122,9 @@ div.textContent = text;
 return div.innerHTML;
 }
 
-// Save Note
 saveNote.addEventListener('click', async () => {
 if (!currentUser) {
-notesStatus.textContent = '❌ Please login to save notes';
+notesStatus.textContent = '❌ Please login';
 notesStatus.className = 'status-error';
 return;
 }
@@ -1169,11 +1136,9 @@ return;
 }
 try {
 if (currentNoteId) {
-// Update existing note
 await updateDoc(doc(db, "notes", currentNoteId), { content, updatedAt: serverTimestamp() });
 notesStatus.textContent = '✅ Note updated!';
 } else {
-// Create new note
 await addDoc(collection(db, "notes"), {
 videoId: currentNotesVideoId,
 userId: currentUser.uid,
@@ -1189,21 +1154,16 @@ noteTextarea.value = '';
 currentNoteId = null;
 setTimeout(() => notesStatus.textContent = '', 2000);
 } catch (error) {
-console.error("Error saving note:", error);
 notesStatus.textContent = `❌ Failed: ${error.message}`;
 notesStatus.className = 'status-error';
 }
 });
 
 cancelNotes.addEventListener('click', () => {
-if (notesUnsubscribe) {
-notesUnsubscribe();
-notesUnsubscribe = null;
-}
+if (notesUnsubscribe) { notesUnsubscribe(); notesUnsubscribe = null; }
 notesModal.style.display = 'none';
 currentNotesVideoId = null;
 currentNoteId = null;
-notesStatus.textContent = '';
 });
 
 // Filtering & Rendering
@@ -1212,21 +1172,20 @@ let list = [...allVideos];
 const cat = categoryFilter.value.trim();
 const sub = subcategoryFilter.value.trim();
 const top = topicFilter.value.trim();
-const query = searchBox.value.trim().toLowerCase();
-
+const qry = searchBox.value.trim().toLowerCase();
 if (cat) list = list.filter(v => v.category === cat);
 if (sub) list = list.filter(v => v.subcategory === sub);
 if (top) list = list.filter(v => v.topic === top);
-if (query) {
-list = list.filter(v => v.title.toLowerCase().includes(query) || v.category?.toLowerCase().includes(query));
+if (qry) {
+list = list.filter(v => v.title.toLowerCase().includes(qry) || v.category?.toLowerCase().includes(qry));
 }
-
 filteredVideos = list;
 currentPage = 1;
 renderVideos();
 }
 
 function renderVideos() {
+console.log("📹 Rendering videos:", filteredVideos.length);
 if (!allVideos.length) {
 videoGrid.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No videos found</p></div>`;
 paginationEl.innerHTML = '';
@@ -1252,8 +1211,10 @@ paginationEl.appendChild(btn);
 }
 }
 
-// Video Playback
+// Video Playback - FIXED WITH ADMIN BYPASS
 function openVideo(video) {
+console.log("🎬 Opening video:", video.title, "Protected:", video.protected, "User:", currentUser?.email);
+// ✅ Admin users bypass password protection
 if (video.protected && !currentUser) {
 currentVideo = video;
 passwordModal.style.display = 'flex';
