@@ -22,45 +22,71 @@
 --accent-purple: #7c3aed;
 --accent-blue: #3b82f6;
 --accent-cyan: #06b6d4;
+--accent-pink: #ec4899;
+--accent-orange: #f97316;
 --accent-green: #10b981;
 --accent-red: #ef4444;
 --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #06b6d4 100%);
+--gradient-glow: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+--shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+--shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
 --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
 --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.2);
+--radius-sm: 6px;
 --radius-md: 12px;
+--radius-lg: 16px;
 --radius-xl: 24px;
 --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
 body {
-font-family: 'Inter', sans-serif;
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 background: var(--bg-dark);
 color: var(--text-primary);
 min-height: 100vh;
+line-height: 1.6;
 overflow-x: hidden;
 position: relative;
 }
+/* Animated Background Mesh */
 body::before {
 content: '';
 position: fixed;
-top: 0; left: 0;
-width: 100%; height: 100%;
-background: radial-gradient(ellipse at 15% 25%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
-radial-gradient(ellipse at 85% 75%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background:
+radial-gradient(ellipse at 15% 25%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+radial-gradient(ellipse at 85% 75%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%);
 pointer-events: none;
 z-index: -1;
+animation: meshPulse 8s ease-in-out infinite;
 }
+@keyframes meshPulse {
+0%, 100% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.8; transform: scale(1.02); }
+}
+/* Floating Particles */
 .particles {
 position: fixed;
-top: 0; left: 0;
-width: 100%; height: 100%;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
 pointer-events: none;
 z-index: -1;
 overflow: hidden;
 }
 .particle {
 position: absolute;
-width: 4px; height: 4px;
+width: 4px;
+height: 4px;
 background: var(--accent-purple);
 border-radius: 50%;
 opacity: 0.3;
@@ -72,9 +98,10 @@ animation: float 20s infinite;
 90% { opacity: 0.3; }
 100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
 }
+/* Header - Futuristic Design */
 .header {
 background: var(--bg-glass);
-backdrop-filter: blur(20px);
+backdrop-filter: blur(20px) saturate(180%);
 border-bottom: 1px solid var(--border-subtle);
 padding: 1.25rem 3rem;
 display: flex;
@@ -82,7 +109,8 @@ justify-content: space-between;
 align-items: center;
 position: sticky;
 top: 0;
-z-index: 100;
+z-index: 1000;
+box-shadow: var(--shadow-md);
 }
 .header h1 {
 font-family: 'Space Grotesk', sans-serif;
@@ -91,10 +119,39 @@ font-size: 1.85rem;
 background: var(--gradient-primary);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
+background-clip: text;
 cursor: pointer;
 flex: 1;
 text-align: center;
+letter-spacing: -0.5px;
+transition: all 0.4s var(--transition-smooth);
+position: relative;
 }
+.header h1::after {
+content: '';
+position: absolute;
+bottom: -8px;
+left: 50%;
+transform: translateX(-50%);
+width: 0;
+height: 2px;
+background: var(--gradient-primary);
+transition: width 0.4s var(--transition-smooth);
+}
+.header h1:hover::after {
+width: 80px;
+}
+.header h1:hover {
+transform: scale(1.02);
+text-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+}
+.header h1 i {
+margin-right: 0.75rem;
+background: var(--gradient-primary);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+/* Neon Buttons */
 .admin-btn {
 background: transparent;
 color: var(--text-primary);
@@ -108,17 +165,44 @@ display: flex;
 align-items: center;
 gap: 0.5rem;
 transition: all 0.4s var(--transition-smooth);
+position: relative;
+overflow: hidden;
 font-family: 'Space Grotesk', sans-serif;
+}
+.admin-btn::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: var(--gradient-primary);
+opacity: 0;
+transition: opacity 0.4s var(--transition-smooth);
+z-index: -1;
+}
+.admin-btn:hover::before {
+opacity: 1;
 }
 .admin-btn:hover {
 border-color: transparent;
-background: var(--gradient-primary);
 transform: translateY(-2px);
 box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
 }
+.admin-btn i {
+transition: transform 0.4s var(--transition-smooth);
+}
+.admin-btn:hover i {
+transform: rotate(90deg);
+}
 .admin-btn.logout {
 border-color: rgba(239, 68, 68, 0.5);
+}
+.admin-btn.logout::before {
 background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+.admin-btn.logout:hover {
+box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
 }
 .user-info {
 display: flex;
@@ -130,15 +214,26 @@ background: var(--bg-card);
 padding: 0.5rem 1.25rem;
 border-radius: var(--radius-md);
 border: 1px solid var(--border-subtle);
+font-family: 'Space Grotesk', sans-serif;
 }
+.user-info i {
+color: var(--accent-cyan);
+font-size: 1.1rem;
+}
+/* Filters - STICKY Modern Pill Design */
 .filters {
 padding: 2rem 3rem;
 display: flex;
 gap: 1rem;
 flex-wrap: wrap;
 align-items: center;
-background: var(--bg-card);
+background: var(--bg-glass);
+backdrop-filter: blur(20px) saturate(180%);
 border-bottom: 1px solid var(--border-subtle);
+position: sticky;
+top: 85px;
+z-index: 999;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 .filters select, .filters input {
 padding: 0.875rem 1.5rem;
@@ -147,19 +242,41 @@ border: 1px solid var(--border-subtle);
 background: var(--bg-dark);
 color: var(--text-primary);
 font-size: 0.9rem;
+font-weight: 500;
 min-width: 180px;
+transition: all 0.3s var(--transition-smooth);
 outline: none;
+font-family: 'Inter', sans-serif;
 }
 .filters select:focus, .filters input:focus {
 border-color: var(--accent-purple);
 box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+background: var(--bg-card-hover);
 }
+.filters input::placeholder {
+color: var(--text-muted);
+}
+.filters input {
+flex: 1;
+max-width: 400px;
+}
+.filters select {
+cursor: pointer;
+appearance: none;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a1a1aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+background-repeat: no-repeat;
+background-position: right 1rem center;
+padding-right: 3rem;
+}
+/* Video Grid - Asymmetric Layout */
 .video-grid {
 display: grid;
 grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
 gap: 2.5rem;
 padding: 3rem;
+position: relative;
 }
+/* Unique Video Card Design */
 .video-card {
 background: var(--bg-card);
 border-radius: var(--radius-xl);
@@ -169,10 +286,45 @@ transition: all 0.5s var(--transition-smooth);
 cursor: pointer;
 position: relative;
 }
+.video-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: var(--gradient-primary);
+opacity: 0;
+transition: opacity 0.5s var(--transition-smooth);
+pointer-events: none;
+z-index: 1;
+}
+.video-card::after {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: conic-gradient(from 0deg, transparent, rgba(124, 58, 237, 0.1), transparent 30%);
+animation: rotate 4s linear infinite;
+opacity: 0;
+transition: opacity 0.5s var(--transition-smooth);
+}
+@keyframes rotate {
+from { transform: rotate(0deg); }
+to { transform: rotate(360deg); }
+}
 .video-card:hover {
 transform: translateY(-12px) scale(1.02);
 box-shadow: var(--shadow-lg), var(--shadow-glow);
 border-color: var(--border-accent);
+}
+.video-card:hover::before {
+opacity: 0.05;
+}
+.video-card:hover::after {
+opacity: 1;
 }
 .card-thumb {
 width: 100%;
@@ -184,17 +336,59 @@ justify-content: center;
 position: relative;
 overflow: hidden;
 }
+.card-thumb::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%);
+z-index: 2;
+}
 .card-thumb img {
 width: 100%;
 height: 100%;
 object-fit: cover;
 display: none;
+transition: transform 0.6s var(--transition-smooth);
 }
-.card-thumb img.loaded { display: block; }
+.video-card:hover .card-thumb img.loaded {
+transform: scale(1.1);
+}
+.card-thumb img.loaded {
+display: block;
+}
 .card-thumb .placeholder {
 color: var(--text-muted);
 font-size: 5rem;
+z-index: 3;
+transition: all 0.5s var(--transition-smooth);
+position: relative;
 }
+.video-card:hover .card-thumb .placeholder {
+transform: scale(1.15) rotate(5deg);
+color: var(--accent-purple);
+text-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+}
+/* Corner Accent */
+.card-thumb::after {
+content: '';
+position: absolute;
+top: 0;
+right: 0;
+width: 80px;
+height: 80px;
+background: var(--gradient-primary);
+clip-path: polygon(100% 0, 0 0, 100% 100%);
+opacity: 0;
+transition: opacity 0.5s var(--transition-smooth);
+z-index: 4;
+}
+.video-card:hover .card-thumb::after {
+opacity: 0.8;
+}
+/* Type Badge - HIDDEN BY DEFAULT, SHOW ON HOVER */
 .type-badge {
 position: absolute;
 bottom: 12px;
@@ -204,11 +398,14 @@ border-radius: 50px;
 font-size: 0.8rem;
 font-weight: 600;
 text-transform: uppercase;
+letter-spacing: 0.5px;
 z-index: 5;
 backdrop-filter: blur(10px);
+font-family: 'Space Grotesk', sans-serif;
 opacity: 0;
 transform: translateY(10px);
 transition: all 0.4s var(--transition-smooth);
+pointer-events: none;
 }
 .video-card:hover .type-badge {
 opacity: 1;
@@ -218,11 +415,13 @@ transform: translateY(0);
 .type-drive { background: linear-gradient(135deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%); }
 .type-pdf { background: linear-gradient(135deg, rgba(234, 88, 12, 0.95) 0%, rgba(194, 65, 12, 0.95) 100%); }
 .type-playlist { background: linear-gradient(135deg, rgba(124, 58, 237, 0.95) 0%, rgba(99, 102, 241, 0.95) 100%); }
+/* Protected Badge - Holographic */
 .protected-badge {
 position: absolute;
 top: 16px;
 right: 16px;
 background: linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(234, 88, 12, 0.9) 100%);
+backdrop-filter: blur(10px);
 color: white;
 width: 42px;
 height: 42px;
@@ -230,8 +429,17 @@ border-radius: 50%;
 display: flex;
 align-items: center;
 justify-content: center;
+font-size: 1rem;
 z-index: 10;
+box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+border: 2px solid rgba(255, 255, 255, 0.1);
+transition: all 0.4s var(--transition-smooth);
 }
+.video-card:hover .protected-badge {
+transform: scale(1.1) rotate(10deg);
+box-shadow: 0 6px 24px rgba(245, 158, 11, 0.6);
+}
+/* Admin Actions - Floating */
 .admin-actions {
 position: absolute;
 top: 16px;
@@ -256,15 +464,32 @@ cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: center;
+font-size: 0.95rem;
 color: white;
 transition: all 0.3s var(--transition-smooth);
 backdrop-filter: blur(10px);
+box-shadow: var(--shadow-md);
 }
-.admin-btn-action:hover { transform: scale(1.2); }
-.notes-btn { background: linear-gradient(135deg, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.9) 100%); }
-.edit-btn { background: linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%); }
-.delete-btn { background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(220, 38, 38, 0.9) 100%); }
-.card-content { padding: 1.75rem; }
+.admin-btn-action:hover {
+transform: scale(1.2) rotate(5deg);
+}
+.delete-btn {
+background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(220, 38, 38, 0.9) 100%);
+}
+.delete-btn:hover {
+box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+}
+.edit-btn {
+background: linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%);
+}
+.edit-btn:hover {
+box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+}
+.card-content {
+padding: 1.75rem;
+position: relative;
+z-index: 2;
+}
 .card-title {
 font-family: 'Space Grotesk', sans-serif;
 font-size: 1.15rem;
@@ -275,12 +500,33 @@ overflow: hidden;
 display: -webkit-box;
 -webkit-line-clamp: 2;
 -webkit-box-orient: vertical;
+text-overflow: ellipsis;
+line-height: 1.4;
+transition: color 0.3s var(--transition-smooth);
+}
+.video-card:hover .card-title {
+color: var(--accent-cyan);
 }
 .card-meta {
 font-size: 0.85rem;
 color: var(--text-secondary);
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
 font-weight: 500;
+display: flex;
+align-items: center;
+gap: 0.5rem;
 }
+.card-meta::before {
+content: '';
+width: 6px;
+height: 6px;
+background: var(--accent-purple);
+border-radius: 50%;
+flex-shrink: 0;
+}
+/* Pagination - Unique Design */
 .pagination {
 padding: 2.5rem 3rem;
 display: flex;
@@ -295,35 +541,62 @@ color: var(--text-secondary);
 border-radius: var(--radius-md);
 cursor: pointer;
 font-weight: 600;
+font-family: 'Space Grotesk', sans-serif;
+transition: all 0.3s var(--transition-smooth);
+position: relative;
+overflow: hidden;
+}
+.pagination button::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: var(--gradient-primary);
+opacity: 0;
+transition: opacity 0.3s var(--transition-smooth);
+}
+.pagination button:hover:not(:disabled)::before {
+opacity: 1;
 }
 .pagination button:hover:not(:disabled) {
-background: var(--gradient-primary);
 color: white;
 border-color: transparent;
 transform: translateY(-3px);
+box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
 }
 .pagination button.active {
 background: var(--gradient-primary);
 color: white;
 border-color: transparent;
+box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
 }
-#videoPopupModal, #passwordModal, #notesModal, #addVideoModal, #editVideoModal, #authModal, #settingsModal {
+.pagination button:disabled {
+opacity: 0.3;
+cursor: not-allowed;
+}
+/* Video Popup Modal - Cinematic */
+#videoPopupModal {
 display: none;
 position: fixed;
-top: 0; left: 0;
+top: 0;
+left: 0;
 width: 100vw;
 height: 100vh;
-background: rgba(0, 0, 0, 0.9);
-backdrop-filter: blur(12px);
-z-index: 4000;
+background: rgba(0, 0, 0, 0.97);
+backdrop-filter: blur(15px);
+z-index: 3000;
 justify-content: center;
 align-items: center;
-}
-#videoPopupModal {
-background: rgba(0, 0, 0, 0.97);
-z-index: 3000;
 flex-direction: column;
 padding: 2rem;
+box-sizing: border-box;
+animation: fadeIn 0.4s var(--transition-smooth);
+}
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
 }
 #popupControls {
 display: flex;
@@ -332,6 +605,11 @@ justify-content: space-between;
 width: 90%;
 max-width: 1100px;
 margin-bottom: 2rem;
+opacity: 0;
+transition: opacity 0.4s var(--transition-smooth);
+}
+#videoPopupModal:hover #popupControls {
+opacity: 1;
 }
 #popupTitle {
 font-family: 'Space Grotesk', sans-serif;
@@ -340,6 +618,10 @@ font-size: 1.5rem;
 font-weight: 600;
 text-align: center;
 flex: 1;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+padding: 0 1.5rem;
 background: var(--gradient-primary);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
@@ -351,15 +633,20 @@ border: 1px solid var(--border-subtle);
 width: 50px;
 height: 50px;
 border-radius: 50%;
+font-weight: bold;
 cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: center;
 transition: all 0.3s var(--transition-smooth);
+backdrop-filter: blur(10px);
+font-size: 1.2rem;
 }
 #backToListBtn:hover, #closePopup:hover {
+background: var(--bg-card-hover);
 border-color: var(--accent-purple);
-transform: scale(1.15);
+transform: scale(1.15) rotate(5deg);
+box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
 }
 #popupVideoFrame {
 width: 90%;
@@ -368,10 +655,121 @@ height: 56.25vw;
 max-height: 60vh;
 border: none;
 border-radius: var(--radius-xl);
+box-shadow: var(--shadow-lg), 0 0 60px rgba(124, 58, 237, 0.2);
 }
-.modal-content {
+/* Password Modal - Secure Vault Design */
+#passwordModal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: rgba(0, 0, 0, 0.85);
+backdrop-filter: blur(12px);
+z-index: 2000;
+justify-content: center;
+align-items: center;
+animation: fadeIn 0.4s var(--transition-smooth);
+}
+#passwordModal .modal-content {
 background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-dark) 100%);
-backdrop-filter: blur(20px);
+backdrop-filter: blur(20px) saturate(180%);
+padding: 3rem;
+border-radius: var(--radius-xl);
+width: 90%;
+max-width: 480px;
+box-shadow: var(--shadow-lg), 0 0 60px rgba(124, 58, 237, 0.2);
+border: 1px solid var(--border-accent);
+color: var(--text-primary);
+animation: slideUp 0.5s var(--transition-smooth);
+position: relative;
+overflow: hidden;
+}
+#passwordModal .modal-content::before {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: conic-gradient(from 0deg, transparent, rgba(124, 58, 237, 0.05), transparent 30%);
+animation: rotate 10s linear infinite;
+pointer-events: none;
+}
+@keyframes slideUp {
+from {
+opacity: 0;
+transform: translateY(40px) scale(0.95);
+}
+to {
+opacity: 1;
+transform: translateY(0) scale(1);
+}
+}
+#passwordModal h5 {
+font-family: 'Space Grotesk', sans-serif;
+font-weight: 600;
+margin-bottom: 2rem;
+color: var(--text-primary);
+font-size: 1.5rem;
+text-align: center;
+position: relative;
+z-index: 1;
+}
+#passwordModal .form-control {
+background: var(--bg-dark);
+border: 1px solid var(--border-subtle);
+color: var(--text-primary);
+padding: 1rem 1.5rem;
+border-radius: var(--radius-md);
+font-size: 1rem;
+transition: all 0.3s var(--transition-smooth);
+font-family: 'Inter', sans-serif;
+position: relative;
+z-index: 1;
+}
+#passwordModal .form-control:focus {
+border-color: var(--accent-purple);
+box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+background: var(--bg-card-hover);
+color: var(--text-primary);
+}
+#passwordError {
+display: none;
+color: var(--accent-red);
+font-size: 0.9rem;
+margin-top: 1rem;
+padding: 1rem;
+background: rgba(239, 68, 68, 0.1);
+border-radius: var(--radius-md);
+border: 1px solid rgba(239, 68, 68, 0.2);
+text-align: center;
+position: relative;
+z-index: 1;
+}
+/* All Modals - Consistent Futuristic Design */
+#addVideoModal, #editVideoModal, #authModal, #settingsModal, #notesModal {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: rgba(0, 0, 0, 0.9);
+backdrop-filter: blur(12px);
+z-index: 4000;
+justify-content: center;
+align-items: center;
+animation: fadeIn 0.4s var(--transition-smooth);
+}
+#addVideoModal .modal-content,
+#editVideoModal .modal-content,
+#authModal .modal-content,
+#settingsModal .modal-content,
+#notesModal .modal-content {
+background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+backdrop-filter: blur(20px) saturate(180%);
 padding: 3rem;
 border-radius: var(--radius-xl);
 width: 90%;
@@ -381,8 +779,12 @@ border: 1px solid var(--border-accent);
 color: var(--text-primary);
 max-height: 90vh;
 overflow-y: auto;
+animation: slideUp 0.5s var(--transition-smooth);
+position: relative;
 }
-#notesModal .modal-content { max-width: 700px; }
+#notesModal .modal-content {
+max-width: 700px;
+}
 .modal-content h5 {
 font-family: 'Space Grotesk', sans-serif;
 font-weight: 600;
@@ -391,6 +793,7 @@ font-size: 1.65rem;
 background: var(--gradient-primary);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
+background-clip: text;
 text-align: center;
 }
 .modal-content .form-label {
@@ -398,18 +801,34 @@ color: var(--text-secondary);
 font-size: 0.9rem;
 font-weight: 500;
 margin-bottom: 0.75rem;
+font-family: 'Space Grotesk', sans-serif;
 }
-.modal-content .form-control, .modal-content .form-select {
+.modal-content .form-control,
+.modal-content .form-select {
 background: var(--bg-dark);
 border: 1px solid var(--border-subtle);
 color: var(--text-primary);
 padding: 1rem 1.5rem;
 border-radius: var(--radius-md);
 font-size: 0.95rem;
+transition: all 0.3s var(--transition-smooth);
+margin-bottom: 0.5rem;
+font-family: 'Inter', sans-serif;
 }
-.modal-content .form-control:focus, .modal-content .form-select:focus {
+.modal-content .form-control:focus,
+.modal-content .form-select:focus {
 border-color: var(--accent-purple);
 box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+background: var(--bg-card-hover);
+color: var(--text-primary);
+}
+.modal-content .form-select {
+cursor: pointer;
+appearance: none;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a1a1aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+background-repeat: no-repeat;
+background-position: right 1.25rem center;
+padding-right: 3.5rem;
 }
 .modal-content .form-check {
 padding: 1.25rem;
@@ -417,21 +836,39 @@ background: var(--bg-dark);
 border-radius: var(--radius-md);
 border: 1px solid var(--border-subtle);
 margin-top: 0.75rem;
+transition: all 0.3s var(--transition-smooth);
+}
+.modal-content .form-check:hover {
+border-color: var(--border-accent);
+background: var(--bg-card-hover);
+}
+.modal-content .form-check-input {
+width: 1.4rem;
+height: 1.4rem;
+background-color: var(--bg-dark);
+border: 1px solid var(--border-subtle);
+cursor: pointer;
 }
 .modal-content .form-check-input:checked {
 background-color: var(--accent-purple);
 border-color: var(--accent-purple);
+box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
 }
 .modal-content .form-check-label {
 color: var(--text-secondary);
 margin-left: 0.75rem;
+font-weight: 500;
+cursor: pointer;
+font-family: 'Space Grotesk', sans-serif;
 }
 #addVideoStatus, #editVideoStatus, #settingsStatus, #notesStatus {
 margin-top: 2rem;
 font-size: 0.95rem;
+font-weight: 500;
 padding: 1.25rem;
 border-radius: var(--radius-md);
 text-align: center;
+font-family: 'Space Grotesk', sans-serif;
 }
 .status-success {
 color: var(--accent-green);
@@ -443,11 +880,15 @@ color: var(--accent-red);
 background: rgba(239, 68, 68, 0.1);
 border: 1px solid rgba(239, 68, 68, 0.2);
 }
+/* Modern Buttons in Modals */
 .modal-content .btn {
 padding: 1rem 2.5rem;
 border-radius: var(--radius-md);
 font-weight: 600;
 transition: all 0.3s var(--transition-smooth);
+font-family: 'Space Grotesk', sans-serif;
+position: relative;
+overflow: hidden;
 }
 .modal-content .btn-primary {
 background: var(--gradient-primary);
@@ -463,6 +904,12 @@ background: var(--bg-dark);
 border: 1px solid var(--border-subtle);
 color: var(--text-primary);
 }
+.modal-content .btn-secondary:hover {
+background: var(--bg-card-hover);
+border-color: var(--accent-purple);
+transform: translateY(-2px);
+}
+/* Notes Section Styles */
 .notes-container { margin-top: 1.5rem; }
 .notes-list {
 max-height: 300px;
@@ -533,6 +980,63 @@ font-size: 3rem;
 margin-bottom: 1rem;
 opacity: 0.3;
 }
+/* Scrollbar Styling - Futuristic */
+::-webkit-scrollbar {
+width: 10px;
+}
+::-webkit-scrollbar-track {
+background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+background: var(--border-subtle);
+border-radius: 5px;
+transition: background 0.3s var(--transition-smooth);
+}
+::-webkit-scrollbar-thumb:hover {
+background: var(--accent-purple);
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+.header {
+flex-direction: column;
+gap: 1.25rem;
+padding: 1.25rem 1.5rem;
+}
+.filters {
+flex-direction: column;
+align-items: stretch;
+padding: 1.5rem;
+top: 140px;
+}
+.filters select, .filters input {
+min-width: auto;
+width: 100%;
+}
+.video-grid {
+grid-template-columns: 1fr;
+padding: 1.5rem;
+gap: 2rem;
+}
+.pagination {
+padding: 1.5rem;
+flex-wrap: wrap;
+}
+#popupVideoFrame {
+height: 45vh;
+}
+.modal-content {
+padding: 2rem;
+}
+}
+/* Loading Animation */
+@keyframes pulse {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.4; }
+}
+.loading {
+animation: pulse 2s var(--transition-smooth) infinite;
+}
+/* Empty State - Modern */
 .empty-state {
 text-align: center;
 padding: 5rem 2rem;
@@ -546,24 +1050,46 @@ background: var(--gradient-primary);
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 }
-@media (max-width: 768px) {
-.header { flex-direction: column; gap: 1.25rem; padding: 1.25rem 1.5rem; }
-.filters { flex-direction: column; padding: 1.5rem; }
-.filters select, .filters input { width: 100%; }
-.video-grid { grid-template-columns: 1fr; padding: 1.5rem; }
-#popupVideoFrame { height: 45vh; }
+.empty-state p {
+font-size: 1.2rem;
+font-family: 'Space Grotesk', sans-serif;
+}
+/* Glow Effect on Cards */
+.video-card .glow-effect {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 200px;
+height: 200px;
+background: var(--accent-purple);
+border-radius: 50%;
+filter: blur(80px);
+opacity: 0;
+transition: opacity 0.5s var(--transition-smooth);
+pointer-events: none;
+}
+.video-card:hover .glow-effect {
+opacity: 0.3;
 }
 </style>
 </head>
 <body>
+<!-- Floating Particles -->
 <div class="particles" id="particles"></div>
 <div class="header">
 <div style="display: flex; align-items: center; gap: 1rem;">
-<button id="adminBtn" class="admin-btn" style="display: none;"><i class="fas fa-plus"></i> Add Video</button>
-<button id="settingsBtn" class="admin-btn" style="display: none;"><i class="fas fa-cog"></i> Settings</button>
-<button id="authBtn" class="admin-btn"><i class="fas fa-sign-in-alt"></i> Admin Login</button>
+<button id="adminBtn" class="admin-btn" style="display: none;">
+<i class="fas fa-plus"></i> Add Video
+</button>
+<button id="settingsBtn" class="admin-btn" style="display: none;">
+<i class="fas fa-cog"></i> Settings
+</button>
+<button id="authBtn" class="admin-btn">
+<i class="fas fa-sign-in-alt"></i> Admin Login
+</button>
 </div>
-<h1 id="headerTitle"><i class="fa-solid fa-video"></i> NEXUS LIBRARY</h1>
+<h1 id="headerTitle"><i class="fa-solid fa-video"></i>NEXUS LIBRARY</h1>
 <div class="user-info" id="userInfo" style="display: none;">
 <i class="fas fa-user-circle"></i>
 <span id="userEmail"></span>
@@ -577,30 +1103,27 @@ background: var(--gradient-primary);
 </div>
 <div class="video-grid" id="videoGrid"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading library...</p></div></div>
 <div class="pagination" id="pagination"></div>
-
-<!-- Video Popup Modal -->
+<!-- Popup Video Modal -->
 <div id="videoPopupModal">
 <div id="popupControls">
-<button id="backToListBtn"><i class="fas fa-arrow-left"></i></button>
+<button id="backToListBtn" title="Back to list"><i class="fas fa-arrow-left"></i></button>
 <div id="popupTitle"></div>
-<button id="closePopup"><i class="fas fa-times"></i></button>
+<button id="closePopup" title="Close"><i class="fas fa-times"></i></button>
 </div>
 <iframe id="popupVideoFrame" allowfullscreen></iframe>
 </div>
-
 <!-- Password Modal -->
 <div id="passwordModal">
 <div class="modal-content">
 <h5><i class="fas fa-lock me-2"></i>Secure Access</h5>
 <input type="password" id="videoPassword" class="form-control" placeholder="Enter access code" autocomplete="off">
-<p id="passwordError" class="status-error" style="display:none;">Incorrect password</p>
+<p id="passwordError"><i class="fas fa-exclamation-triangle me-2"></i>Incorrect password. Please try again.</p>
 <div class="d-flex justify-content-between mt-4">
-<button id="cancelPassword" class="btn btn-secondary">Cancel</button>
-<button id="submitPassword" class="btn btn-primary">Unlock</button>
+<button id="cancelPassword" class="btn btn-secondary btn-sm">Cancel</button>
+<button id="submitPassword" class="btn btn-primary btn-sm">Unlock</button>
 </div>
 </div>
 </div>
-
 <!-- Notes Modal -->
 <div id="notesModal">
 <div class="modal-content">
@@ -622,13 +1145,12 @@ background: var(--gradient-primary);
 </div>
 </div>
 </div>
-
 <!-- Add Video Modal -->
 <div id="addVideoModal">
 <div class="modal-content">
 <h5><i class="fas fa-upload me-2"></i>Add New Video</h5>
 <form id="addVideoForm">
-<div class="mb-3"><label class="form-label">Title</label><input type="text" id="newTitle" class="form-control" required></div>
+<div class="mb-3"><label class="form-label">Title</label><input type="text" id="newTitle" class="form-control" required placeholder="Enter video title"></div>
 <div class="mb-3"><label class="form-label">Type</label>
 <select id="newType" class="form-select" required>
 <option value="youtube">YouTube</option>
@@ -637,15 +1159,18 @@ background: var(--gradient-primary);
 <option value="youtube-playlist">YouTube Playlist</option>
 </select>
 </div>
-<div class="mb-3"><label class="form-label">ID / URL</label><input type="text" id="newId" class="form-control" required></div>
+<div class="mb-3"><label class="form-label">ID / URL</label><input type="text" id="newId" class="form-control" placeholder="Drive ID or YouTube URL" required></div>
 <div class="mb-3" id="newFirstVideoIdGroup" style="display:none;">
-<label class="form-label">First Video ID (for Thumbnail)</label>
+<label class="form-label"><i class="fas fa-film me-2"></i>First Video ID (for Thumbnail)</label>
 <input type="text" id="newFirstVideoId" class="form-control" placeholder="e.g., dQw4w9WgXcQ">
+<small class="text-muted" style="font-size:0.75rem; color: var(--text-muted); display: block; margin-top: 0.5rem;">
+<i class="fas fa-info-circle me-1"></i>Enter the ID of the first video to display as the playlist thumbnail.
+</small>
 </div>
-<div class="mb-3"><label class="form-label">Category</label><input type="text" id="newCategory" class="form-control" list="categoryList" required><datalist id="categoryList"></datalist></div>
-<div class="mb-3"><label class="form-label">Subcategory</label><input type="text" id="newSubcategory" class="form-control" list="subcategoryList"><datalist id="subcategoryList"></datalist></div>
-<div class="mb-3"><label class="form-label">Topic</label><input type="text" id="newTopic" class="form-control" list="topicList"><datalist id="topicList"></datalist></div>
-<div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="newProtected"><label class="form-check-label">Password Protected</label></div>
+<div class="mb-3"><label class="form-label">Category</label><input type="text" id="newCategory" class="form-control" list="categoryList" required placeholder="Enter category"><datalist id="categoryList"></datalist></div>
+<div class="mb-3"><label class="form-label">Subcategory</label><input type="text" id="newSubcategory" class="form-control" list="subcategoryList" placeholder="Enter subcategory"><datalist id="subcategoryList"></datalist></div>
+<div class="mb-3"><label class="form-label">Topic</label><input type="text" id="newTopic" class="form-control" list="topicList" placeholder="Enter topic"><datalist id="topicList"></datalist></div>
+<div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="newProtected"><label class="form-check-label" for="newProtected"><i class="fas fa-lock me-2"></i>Password Protected</label></div>
 <div id="addVideoStatus"></div>
 <div class="d-flex justify-content-between mt-4">
 <button type="button" id="cancelAddVideo" class="btn btn-secondary">Cancel</button>
@@ -654,7 +1179,6 @@ background: var(--gradient-primary);
 </form>
 </div>
 </div>
-
 <!-- Edit Video Modal -->
 <div id="editVideoModal">
 <div class="modal-content">
@@ -672,13 +1196,13 @@ background: var(--gradient-primary);
 </div>
 <div class="mb-3"><label class="form-label">ID / URL</label><input type="text" id="editId" class="form-control" required></div>
 <div class="mb-3" id="editFirstVideoIdGroup" style="display:none;">
-<label class="form-label">First Video ID (for Thumbnail)</label>
-<input type="text" id="editFirstVideoId" class="form-control">
+<label class="form-label"><i class="fas fa-film me-2"></i>First Video ID (for Thumbnail)</label>
+<input type="text" id="editFirstVideoId" class="form-control" placeholder="e.g., dQw4w9WgXcQ">
 </div>
 <div class="mb-3"><label class="form-label">Category</label><input type="text" id="editCategory" class="form-control" list="categoryList" required></div>
 <div class="mb-3"><label class="form-label">Subcategory</label><input type="text" id="editSubcategory" class="form-control" list="subcategoryList"></div>
 <div class="mb-3"><label class="form-label">Topic</label><input type="text" id="editTopic" class="form-control" list="topicList"></div>
-<div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="editProtected"><label class="form-check-label">Password Protected</label></div>
+<div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="editProtected"><label class="form-check-label" for="editProtected"><i class="fas fa-lock me-2"></i>Password Protected</label></div>
 <div id="editVideoStatus"></div>
 <div class="d-flex justify-content-between mt-4">
 <button type="button" id="cancelEditVideo" class="btn btn-secondary">Cancel</button>
@@ -687,7 +1211,6 @@ background: var(--gradient-primary);
 </form>
 </div>
 </div>
-
 <!-- Settings Modal -->
 <div id="settingsModal">
 <div class="modal-content">
@@ -703,7 +1226,6 @@ background: var(--gradient-primary);
 </form>
 </div>
 </div>
-
 <!-- Auth Modal -->
 <div id="authModal">
 <div class="modal-content">
@@ -719,12 +1241,11 @@ background: var(--gradient-primary);
 </form>
 </div>
 </div>
-
+<!-- Firebase SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
 const firebaseConfig = {
 apiKey: "AIzaSyB82MwSrGp35eS2ZXBsBlhie6EL6s-5HK0",
 authDomain: "videolibrary-4709d.firebaseapp.com",
@@ -733,7 +1254,6 @@ storageBucket: "videolibrary-4709d.firebasestorage.app",
 messagingSenderId: "752788156798",
 appId: "1:752788156798:web:df6dc050abc7de4150432f"
 };
-
 let db, auth;
 try {
 const app = initializeApp(firebaseConfig);
@@ -744,7 +1264,6 @@ console.log("✅ Firebase initialized");
 console.error("Firebase init error:", e);
 document.getElementById('videoGrid').innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Firebase Config Error</p></div>`;
 }
-
 const VIDEOS_PER_PAGE = 100;
 let allVideos = [];
 let filteredVideos = [];
@@ -757,7 +1276,6 @@ let currentNotesVideoId = null;
 let currentNoteId = null;
 let notesUnsubscribe = null;
 let videosLoaded = false;
-
 // DOM Elements
 const categoryFilter = document.getElementById('categoryFilter');
 const subcategoryFilter = document.getElementById('subcategoryFilter');
@@ -817,7 +1335,6 @@ const saveNote = document.getElementById('saveNote');
 const cancelNotes = document.getElementById('cancelNotes');
 const notesStatus = document.getElementById('notesStatus');
 const notesVideoTitle = document.getElementById('notesVideoTitle');
-
 // Create Particles
 function createParticles() {
 const container = document.getElementById('particles');
@@ -830,7 +1347,6 @@ container.appendChild(particle);
 }
 }
 createParticles();
-
 // Load Password
 function loadVideoPassword() {
 if (!db) return;
@@ -844,7 +1360,6 @@ setDoc(doc(db, "settings", "videoPassword"), { password: "Animator", updatedAt: 
 });
 }
 loadVideoPassword();
-
 // Auth State
 if (auth) {
 onAuthStateChanged(auth, (user) => {
@@ -866,8 +1381,7 @@ userInfo.style.display = 'none';
 if (videosLoaded) renderVideos();
 });
 }
-
-// Load Videos - FIXED
+// Load Videos
 if (db) {
 console.log("📹 Setting up video listener...");
 onSnapshot(query(collection(db, "videos"), orderBy("createdAt", "desc")), 
@@ -888,14 +1402,12 @@ videoGrid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-tri
 } else {
 videoGrid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Database not connected</p></div>`;
 }
-
 // Helper Functions
 function getYouTubeId(url) {
 if (!url) return null;
 const match = url.trim().match(/^.*(youtu\.be\/|v\/|embed\/|watch\?v=)([^#&?]*).*/);
 return (match && match[2].length === 11) ? match[2] : null;
 }
-
 function getThumbnailUrl(item) {
 if (item.type === "youtube") {
 const id = getYouTubeId(item.url || item.id);
@@ -907,7 +1419,6 @@ return `https://drive.google.com/thumbnail?id=${item.id}&sz=w640`;
 }
 return null;
 }
-
 function getEmbedUrl(item) {
 if (item.type === "youtube") {
 const id = getYouTubeId(item.url || item.id);
@@ -919,19 +1430,15 @@ return `https://drive.google.com/file/d/${item.id}/preview`;
 }
 return null;
 }
-
 function getTypeBadge(type) {
 return { 'youtube': 'YouTube', 'drive': 'Drive', 'pdf': 'PDF', 'youtube-playlist': 'Playlist' }[type] || 'Video';
 }
-
 function getTypeClass(type) {
 return { 'youtube': 'type-youtube', 'drive': 'type-drive', 'pdf': 'type-pdf', 'youtube-playlist': 'type-playlist' }[type] || '';
 }
-
 function getTypeIcon(type) {
 return { 'youtube': 'fa-youtube', 'drive': 'fa-google-drive', 'pdf': 'fa-file-pdf', 'youtube-playlist': 'fa-list' }[type] || 'fa-video';
 }
-
 function updateDataLists() {
 const cats = [...new Set(allVideos.map(v => v.category).filter(Boolean))].sort();
 const subs = [...new Set(allVideos.map(v => v.subcategory).filter(Boolean))].sort();
@@ -940,7 +1447,6 @@ categoryList.innerHTML = cats.map(c => `<option value="${c}">`).join('');
 subcategoryList.innerHTML = subs.map(s => `<option value="${s}">`).join('');
 topicList.innerHTML = tops.map(t => `<option value="${t}">`).join('');
 }
-
 function populateFilters() {
 const cats = [...new Set(allVideos.map(v => (v.category || "Uncategorized").trim()))].sort();
 categoryFilter.innerHTML = '<option value="">All Categories</option>';
@@ -952,7 +1458,6 @@ categoryFilter.appendChild(opt);
 });
 updateSubcategories();
 }
-
 function updateSubcategories() {
 const cat = categoryFilter.value.trim();
 subcategoryFilter.innerHTML = '<option value="">All Subcategories</option>';
@@ -967,7 +1472,6 @@ subcategoryFilter.appendChild(opt);
 });
 updateTopics();
 }
-
 function updateTopics() {
 const cat = categoryFilter.value.trim();
 const sub = subcategoryFilter.value.trim();
@@ -981,30 +1485,24 @@ opt.textContent = top;
 topicFilter.appendChild(opt);
 });
 }
-
 function toggleFirstVideoIdField(type, prefix) {
 const group = prefix === 'new' ? newFirstVideoIdGroup : editFirstVideoIdGroup;
 group.style.display = type === 'youtube-playlist' ? 'block' : 'none';
 }
-
 // Create Video Card
 function createVideoCard(video) {
 const card = document.createElement('div');
 card.className = 'video-card';
 const thumbUrl = getThumbnailUrl(video);
 const meta = [video.category, video.subcategory, video.topic].filter(Boolean).join(' • ');
-
 let thumbHtml = thumbUrl ? `<img src="${thumbUrl}" class="loaded">` : `<div class="placeholder"><i class="fas ${getTypeIcon(video.type)}"></i></div>`;
-
 const typeBadge = `<div class="type-badge ${getTypeClass(video.type)}"><i class="fas ${getTypeIcon(video.type)} me-1"></i>${getTypeBadge(video.type)}</div>`;
-
 const adminActionsHtml = currentUser ? `
 <div class="admin-actions">
 <button class="admin-btn-action notes-btn" title="Notes"><i class="fas fa-sticky-note"></i></button>
 <button class="admin-btn-action edit-btn" title="Edit"><i class="fas fa-edit"></i></button>
 <button class="admin-btn-action delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
 </div>` : '';
-
 card.innerHTML = `
 <div class="card-thumb">
 ${thumbHtml}
@@ -1016,7 +1514,6 @@ ${adminActionsHtml}
 <div class="card-title">${video.title}</div>
 <div class="card-meta">${meta}</div>
 </div>`;
-
 if (currentUser) {
 card.querySelector('.notes-btn')?.addEventListener('click', (e) => {
 e.stopPropagation();
@@ -1033,16 +1530,13 @@ await deleteDoc(doc(db, "videos", video.firestoreId));
 }
 });
 }
-
 if (thumbUrl) {
 const img = card.querySelector('img');
 img.onerror = () => { img.style.display = 'none'; card.querySelector('.placeholder').style.display = 'flex'; };
 }
-
 card.addEventListener('click', () => openVideo(video));
 return card;
 }
-
 // NOTES FUNCTIONS
 function openNotesModal(video) {
 currentNotesVideoId = video.firestoreId;
@@ -1053,7 +1547,6 @@ notesStatus.textContent = '';
 notesModal.style.display = 'flex';
 loadNotesForVideo(video.firestoreId);
 }
-
 function loadNotesForVideo(videoId) {
 if (!db) {
 notesList.innerHTML = `<div class="empty-notes"><i class="fas fa-exclamation-triangle"></i><p>Database not connected</p></div>`;
@@ -1106,7 +1599,6 @@ console.error("Error loading notes:", error);
 notesList.innerHTML = `<div class="empty-notes"><i class="fas fa-exclamation-triangle"></i><p>Error loading notes</p></div>`;
 });
 }
-
 function formatDate(timestamp) {
 if (!timestamp) return 'Unknown';
 try {
@@ -1115,13 +1607,11 @@ return timestamp.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 
 return 'Unknown';
 }
 }
-
 function escapeHtml(text) {
 const div = document.createElement('div');
 div.textContent = text;
 return div.innerHTML;
 }
-
 saveNote.addEventListener('click', async () => {
 if (!currentUser) {
 notesStatus.textContent = '❌ Please login';
@@ -1158,14 +1648,12 @@ notesStatus.textContent = `❌ Failed: ${error.message}`;
 notesStatus.className = 'status-error';
 }
 });
-
 cancelNotes.addEventListener('click', () => {
 if (notesUnsubscribe) { notesUnsubscribe(); notesUnsubscribe = null; }
 notesModal.style.display = 'none';
 currentNotesVideoId = null;
 currentNoteId = null;
 });
-
 // Filtering & Rendering
 function applyFilters() {
 let list = [...allVideos];
@@ -1183,7 +1671,6 @@ filteredVideos = list;
 currentPage = 1;
 renderVideos();
 }
-
 function renderVideos() {
 console.log("📹 Rendering videos:", filteredVideos.length);
 if (!allVideos.length) {
@@ -1198,7 +1685,6 @@ videoGrid.innerHTML = '';
 pageVideos.forEach(v => videoGrid.appendChild(createVideoCard(v)));
 renderPagination(totalPages);
 }
-
 function renderPagination(totalPages) {
 paginationEl.innerHTML = '';
 if (totalPages <= 1) return;
@@ -1210,11 +1696,9 @@ btn.onclick = () => { currentPage = i; renderVideos(); };
 paginationEl.appendChild(btn);
 }
 }
-
-// Video Playback - FIXED WITH ADMIN BYPASS
+// Video Playback - Admin Bypass
 function openVideo(video) {
 console.log("🎬 Opening video:", video.title, "Protected:", video.protected, "User:", currentUser?.email);
-// ✅ Admin users bypass password protection
 if (video.protected && !currentUser) {
 currentVideo = video;
 passwordModal.style.display = 'flex';
@@ -1224,7 +1708,6 @@ passwordError.style.display = 'none';
 playInPopup(video);
 }
 }
-
 function playInPopup(video) {
 const url = getEmbedUrl(video);
 if (!url) { alert("Content not available"); return; }
@@ -1232,7 +1715,6 @@ popupTitle.textContent = video.title;
 popupFrame.src = url;
 popupModal.style.display = 'flex';
 }
-
 function validatePassword() {
 if (videoPasswordInput.value === videoPassword) {
 passwordModal.style.display = 'none';
@@ -1241,12 +1723,10 @@ if (currentVideo) { playInPopup(currentVideo); currentVideo = null; }
 passwordError.style.display = 'block';
 }
 }
-
 // Auth
 authBtn.addEventListener('click', () => {
 if (currentUser) { signOut(auth); } else { authModal.style.display = 'flex'; }
 });
-
 authForm.addEventListener('submit', async (e) => {
 e.preventDefault();
 try {
@@ -1257,7 +1737,6 @@ authError.textContent = error.message;
 authError.style.display = 'block';
 }
 });
-
 // Add Video
 adminBtn.addEventListener('click', () => {
 if (currentUser) {
@@ -1265,15 +1744,12 @@ addVideoModal.style.display = 'flex';
 toggleFirstVideoIdField(newTypeSelect.value, 'new');
 }
 });
-
 cancelAddVideo.addEventListener('click', () => {
 addVideoModal.style.display = 'none';
 addVideoForm.reset();
 });
-
 newTypeSelect.addEventListener('change', () => toggleFirstVideoIdField(newTypeSelect.value, 'new'));
 editTypeSelect.addEventListener('change', () => toggleFirstVideoIdField(editTypeSelect.value, 'edit'));
-
 addVideoForm.addEventListener('submit', async (e) => {
 e.preventDefault();
 const newVideo = {
@@ -1294,7 +1770,6 @@ addVideoStatus.textContent = '✅ Added!';
 addVideoStatus.className = 'status-success';
 setTimeout(() => { addVideoModal.style.display = 'none'; }, 1500);
 });
-
 // Edit Video
 function openEditModal(video) {
 editingVideoId = video.firestoreId;
@@ -1310,9 +1785,7 @@ document.getElementById('editProtected').checked = video.protected || false;
 toggleFirstVideoIdField(video.type, 'edit');
 editVideoModal.style.display = 'flex';
 }
-
 cancelEditVideo.addEventListener('click', () => { editVideoModal.style.display = 'none'; });
-
 editVideoForm.addEventListener('submit', async (e) => {
 e.preventDefault();
 await updateDoc(doc(db, "videos", editingVideoId), {
@@ -1331,11 +1804,9 @@ editVideoStatus.textContent = '✅ Updated!';
 editVideoStatus.className = 'status-success';
 setTimeout(() => { editVideoModal.style.display = 'none'; }, 1500);
 });
-
 // Settings
 settingsBtn.addEventListener('click', () => { if (currentUser) settingsModal.style.display = 'flex'; });
 cancelSettings.addEventListener('click', () => { settingsModal.style.display = 'none'; });
-
 settingsForm.addEventListener('submit', async (e) => {
 e.preventDefault();
 if (newVideoPassword.value !== confirmVideoPassword.value) {
@@ -1349,7 +1820,6 @@ settingsStatus.textContent = '✅ Password updated!';
 settingsStatus.className = 'status-success';
 setTimeout(() => { settingsModal.style.display = 'none'; }, 1500);
 });
-
 // Event Listeners
 categoryFilter.addEventListener('change', () => { updateSubcategories(); updateTopics(); applyFilters(); });
 subcategoryFilter.addEventListener('change', () => { updateTopics(); applyFilters(); });
@@ -1362,7 +1832,6 @@ submitPassword.addEventListener('click', validatePassword);
 videoPasswordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') validatePassword(); });
 cancelPassword.addEventListener('click', () => { passwordModal.style.display = 'none'; currentVideo = null; });
 cancelAuth.addEventListener('click', () => { authModal.style.display = 'none'; });
-
 document.addEventListener('keydown', (e) => {
 if (e.key === 'Escape') {
 passwordModal.style.display = 'none';
