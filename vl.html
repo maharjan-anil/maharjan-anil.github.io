@@ -66,188 +66,187 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f0f0f; colo
 </head>
 <body>
 <div class="header">
-    <div style="display: flex; align-items: center; gap: 1rem;">
-        <button id="adminBtn" class="admin-btn" style="display: none;">
-            <i class="fas fa-plus"></i> Add Video
-        </button>
-        <button id="settingsBtn" class="admin-btn" style="display: none;">
-            <i class="fas fa-cog"></i> Settings
-        </button>
-        <button id="authBtn" class="admin-btn">
-            <i class="fas fa-sign-in-alt"></i> Admin Login
-        </button>
-    </div>
-    <h1 id="headerTitle"><i class="fa-solid fa-video"></i>&nbsp;&nbsp;&nbsp;Video Library</h1>
-    <div class="user-info" id="userInfo" style="display: none;">
-        <i class="fas fa-user-circle"></i>
-        <span id="userEmail"></span>
-    </div>
+<div style="display: flex; align-items: center; gap: 1rem;">
+<button id="adminBtn" class="admin-btn" style="display: none;">
+<i class="fas fa-plus"></i> Add Video
+</button>
+<button id="settingsBtn" class="admin-btn" style="display: none;">
+<i class="fas fa-cog"></i> Settings
+</button>
+<button id="authBtn" class="admin-btn">
+<i class="fas fa-sign-in-alt"></i> Admin Login
+</button>
 </div>
-
+<h1 id="headerTitle"><i class="fa-solid fa-video"></i>&nbsp;&nbsp;&nbsp;Video Library</h1>
+<div class="user-info" id="userInfo" style="display: none;">
+<i class="fas fa-user-circle"></i>
+<span id="userEmail"></span>
+</div>
+</div>
 <div class="filters">
-    <select id="categoryFilter"><option value="">All Categories</option></select>
-    <select id="subcategoryFilter"><option value="">All Subcategories</option></select>
-    <select id="topicFilter"><option value="">All Topics</option></select>
-    <input type="text" id="searchBox" placeholder="Search videos..." autocomplete="off" style="flex:1; max-width:300px;">
+<select id="categoryFilter"><option value="">All Categories</option></select>
+<select id="subcategoryFilter"><option value="">All Subcategories</option></select>
+<select id="topicFilter"><option value="">All Topics</option></select>
+<input type="text" id="searchBox" placeholder="Search videos..." autocomplete="off" style="flex:1; max-width:300px;">
 </div>
-
 <div class="video-grid" id="videoGrid"><div style="grid-column:1/-1; text-align:center; padding:2rem; color:#666;">Loading library...</div></div>
 <div class="pagination" id="pagination"></div>
-
 <!-- Popup Video Modal -->
 <div id="videoPopupModal">
-    <div id="popupControls">
-        <button id="backToListBtn" title="Back to list"><i class="fas fa-arrow-left"></i></button>
-        <div id="popupTitle"></div>
-        <button id="closePopup" title="Close">×</button>
-    </div>
-    <iframe id="popupVideoFrame" allowfullscreen></iframe>
+<div id="popupControls">
+<button id="backToListBtn" title="Back to list"><i class="fas fa-arrow-left"></i></button>
+<div id="popupTitle"></div>
+<button id="closePopup" title="Close">×</button>
 </div>
-
+<iframe id="popupVideoFrame" allowfullscreen></iframe>
+</div>
 <!-- Password Modal -->
 <div id="passwordModal">
-    <div class="modal-content">
-        <h5 class="mb-3"><i class="fas fa-lock me-2"></i>Enter Password</h5>
-        <input type="password" id="videoPassword" class="form-control" placeholder="Password" autocomplete="off">
-        <p id="passwordError">Incorrect password. Please try again.</p>
-        <div class="d-flex justify-content-between mt-3">
-            <button id="cancelPassword" class="btn btn-secondary btn-sm">Cancel</button>
-            <button id="submitPassword" class="btn btn-primary btn-sm">Unlock Video</button>
-        </div>
-    </div>
+<div class="modal-content">
+<h5 class="mb-3"><i class="fas fa-lock me-2"></i>Enter Password</h5>
+<input type="password" id="videoPassword" class="form-control" placeholder="Password" autocomplete="off">
+<p id="passwordError">Incorrect password. Please try again.</p>
+<div class="d-flex justify-content-between mt-3">
+<button id="cancelPassword" class="btn btn-secondary btn-sm">Cancel</button>
+<button id="submitPassword" class="btn btn-primary btn-sm">Unlock Video</button>
 </div>
-
+</div>
+</div>
 <!-- Add Video Modal -->
 <div id="addVideoModal">
-    <div class="modal-content">
-        <h5 class="mb-3"><i class="fas fa-upload me-2"></i>Add New Video</h5>
-        <form id="addVideoForm">
-            <div class="mb-2"><label class="form-label">Title</label><input type="text" id="newTitle" class="form-control" required></div>
-            <div class="mb-2"><label class="form-label">Type</label>
-                <select id="newType" class="form-select" required>
-                    <option value="youtube">YouTube</option><option value="drive">Google Drive</option><option value="pdf">PDF</option><option value="youtube-playlist">YouTube Playlist</option>
-                </select>
-            </div>
-            <div class="mb-2"><label class="form-label">ID / URL</label><input type="text" id="newId" class="form-control" placeholder="Drive ID or YouTube URL" required></div>
-            <div class="mb-2"><label class="form-label">Category</label><input type="text" id="newCategory" class="form-control" list="categoryList" required><datalist id="categoryList"></datalist></div>
-            <div class="mb-2"><label class="form-label">Subcategory</label><input type="text" id="newSubcategory" class="form-control" list="subcategoryList"><datalist id="subcategoryList"></datalist></div>
-            <div class="mb-2"><label class="form-label">Topic</label><input type="text" id="newTopic" class="form-control" list="topicList"><datalist id="topicList"></datalist></div>
-            <div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="newProtected"><label class="form-check-label">Password Protected</label></div>
-            <div id="addVideoStatus"></div>
-            <div class="d-flex justify-content-between mt-3">
-                <button type="button" id="cancelAddVideo" class="btn btn-secondary btn-sm">Cancel</button>
-                <button type="submit" class="btn btn-primary btn-sm">Save Video</button>
-            </div>
-        </form>
-    </div>
+<div class="modal-content">
+<h5 class="mb-3"><i class="fas fa-upload me-2"></i>Add New Video</h5>
+<form id="addVideoForm">
+<div class="mb-2"><label class="form-label">Title</label><input type="text" id="newTitle" class="form-control" required></div>
+<div class="mb-2"><label class="form-label">Type</label>
+<select id="newType" class="form-select" required>
+<option value="youtube">YouTube</option><option value="drive">Google Drive</option><option value="pdf">PDF</option><option value="youtube-playlist">YouTube Playlist</option>
+</select>
 </div>
-
+<div class="mb-2"><label class="form-label">ID / URL</label><input type="text" id="newId" class="form-control" placeholder="Drive ID or YouTube URL" required></div>
+<!-- NEW FIELD FOR PLAYLIST THUMBNAIL -->
+<div class="mb-2" id="newFirstVideoIdGroup" style="display:none;">
+    <label class="form-label">First Video ID (for Thumbnail)</label>
+    <input type="text" id="newFirstVideoId" class="form-control" placeholder="e.g., dQw4w9WgXcQ">
+    <small class="text-muted" style="font-size:0.75rem;">Enter the ID of the first video to display as the playlist thumbnail.</small>
+</div>
+<div class="mb-2"><label class="form-label">Category</label><input type="text" id="newCategory" class="form-control" list="categoryList" required><datalist id="categoryList"></datalist></div>
+<div class="mb-2"><label class="form-label">Subcategory</label><input type="text" id="newSubcategory" class="form-control" list="subcategoryList"><datalist id="subcategoryList"></datalist></div>
+<div class="mb-2"><label class="form-label">Topic</label><input type="text" id="newTopic" class="form-control" list="topicList"><datalist id="topicList"></datalist></div>
+<div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="newProtected"><label class="form-check-label">Password Protected</label></div>
+<div id="addVideoStatus"></div>
+<div class="d-flex justify-content-between mt-3">
+<button type="button" id="cancelAddVideo" class="btn btn-secondary btn-sm">Cancel</button>
+<button type="submit" class="btn btn-primary btn-sm">Save Video</button>
+</div>
+</form>
+</div>
+</div>
 <!-- Edit Video Modal -->
 <div id="editVideoModal">
-    <div class="modal-content">
-        <h5 class="mb-3"><i class="fas fa-edit me-2"></i>Edit Video</h5>
-        <form id="editVideoForm">
-            <input type="hidden" id="editVideoId">
-            <div class="mb-2"><label class="form-label">Title</label><input type="text" id="editTitle" class="form-control" required></div>
-            <div class="mb-2"><label class="form-label">Type</label>
-                <select id="editType" class="form-select" required>
-                    <option value="youtube">YouTube</option><option value="drive">Google Drive</option><option value="pdf">PDF</option><option value="youtube-playlist">YouTube Playlist</option>
-                </select>
-            </div>
-            <div class="mb-2"><label class="form-label">ID / URL</label><input type="text" id="editId" class="form-control" required></div>
-            <div class="mb-2"><label class="form-label">Category</label><input type="text" id="editCategory" class="form-control" list="categoryList" required></div>
-            <div class="mb-2"><label class="form-label">Subcategory</label><input type="text" id="editSubcategory" class="form-control" list="subcategoryList"></div>
-            <div class="mb-2"><label class="form-label">Topic</label><input type="text" id="editTopic" class="form-control" list="topicList"></div>
-            <div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="editProtected"><label class="form-check-label">Password Protected</label></div>
-            <div id="editVideoStatus"></div>
-            <div class="d-flex justify-content-between mt-3">
-                <button type="button" id="cancelEditVideo" class="btn btn-secondary btn-sm">Cancel</button>
-                <button type="submit" class="btn btn-primary btn-sm">Update Video</button>
-            </div>
-        </form>
-    </div>
+<div class="modal-content">
+<h5 class="mb-3"><i class="fas fa-edit me-2"></i>Edit Video</h5>
+<form id="editVideoForm">
+<input type="hidden" id="editVideoId">
+<div class="mb-2"><label class="form-label">Title</label><input type="text" id="editTitle" class="form-control" required></div>
+<div class="mb-2"><label class="form-label">Type</label>
+<select id="editType" class="form-select" required>
+<option value="youtube">YouTube</option><option value="drive">Google Drive</option><option value="pdf">PDF</option><option value="youtube-playlist">YouTube Playlist</option>
+</select>
 </div>
-
+<div class="mb-2"><label class="form-label">ID / URL</label><input type="text" id="editId" class="form-control" required></div>
+<!-- NEW FIELD FOR PLAYLIST THUMBNAIL -->
+<div class="mb-2" id="editFirstVideoIdGroup" style="display:none;">
+    <label class="form-label">First Video ID (for Thumbnail)</label>
+    <input type="text" id="editFirstVideoId" class="form-control" placeholder="e.g., dQw4w9WgXcQ">
+</div>
+<div class="mb-2"><label class="form-label">Category</label><input type="text" id="editCategory" class="form-control" list="categoryList" required></div>
+<div class="mb-2"><label class="form-label">Subcategory</label><input type="text" id="editSubcategory" class="form-control" list="subcategoryList"></div>
+<div class="mb-2"><label class="form-label">Topic</label><input type="text" id="editTopic" class="form-control" list="topicList"></div>
+<div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="editProtected"><label class="form-check-label">Password Protected</label></div>
+<div id="editVideoStatus"></div>
+<div class="d-flex justify-content-between mt-3">
+<button type="button" id="cancelEditVideo" class="btn btn-secondary btn-sm">Cancel</button>
+<button type="submit" class="btn btn-primary btn-sm">Update Video</button>
+</div>
+</form>
+</div>
+</div>
 <!-- Settings Modal (Change Video Password) -->
 <div id="settingsModal">
-    <div class="modal-content">
-        <h5 class="mb-3"><i class="fas fa-cog me-2"></i>Video Password Settings</h5>
-        <form id="settingsForm">
-            <div class="mb-2">
-                <label class="form-label">Current Password Status</label>
-                <input type="text" id="currentVideoPassword" class="form-control" value="••••••••" readonly 
-                       style="cursor: not-allowed; opacity: 0.6;">
-                <small class="text-muted" style="font-size:0.75rem; color:#888;">
-                    <i class="fas fa-info-circle"></i> Current password is hidden for security
-                </small>
-            </div>
-            <div class="mb-2">
-                <label class="form-label">New Video Password</label>
-                <input type="text" id="newVideoPassword" class="form-control" 
-                       placeholder="Enter new password" required>
-                <small class="text-muted" style="font-size:0.75rem; color:#888;">
-                    <i class="fas fa-shield-alt"></i> This will be the new password for protected videos
-                </small>
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Confirm New Password</label>
-                <input type="text" id="confirmVideoPassword" class="form-control" 
-                       placeholder="Re-enter new password" required>
-            </div>
-            <div id="settingsStatus"></div>
-            <div class="d-flex justify-content-between mt-3">
-                <button type="button" id="cancelSettings" class="btn btn-secondary btn-sm">Cancel</button>
-                <button type="submit" class="btn btn-primary btn-sm">Update Password</button>
-            </div>
-        </form>
-    </div>
+<div class="modal-content">
+<h5 class="mb-3"><i class="fas fa-cog me-2"></i>Video Password Settings</h5>
+<form id="settingsForm">
+<div class="mb-2">
+<label class="form-label">Current Password Status</label>
+<input type="text" id="currentVideoPassword" class="form-control" value="••••••••" readonly
+style="cursor: not-allowed; opacity: 0.6;">
+<small class="text-muted" style="font-size:0.75rem; color:#888;">
+<i class="fas fa-info-circle"></i> Current password is hidden for security
+</small>
 </div>
-
+<div class="mb-2">
+<label class="form-label">New Video Password</label>
+<input type="text" id="newVideoPassword" class="form-control"
+placeholder="Enter new password" required>
+<small class="text-muted" style="font-size:0.75rem; color:#888;">
+<i class="fas fa-shield-alt"></i> This will be the new password for protected videos
+</small>
+</div>
+<div class="mb-2">
+<label class="form-label">Confirm New Password</label>
+<input type="text" id="confirmVideoPassword" class="form-control"
+placeholder="Re-enter new password" required>
+</div>
+<div id="settingsStatus"></div>
+<div class="d-flex justify-content-between mt-3">
+<button type="button" id="cancelSettings" class="btn btn-secondary btn-sm">Cancel</button>
+<button type="submit" class="btn btn-primary btn-sm">Update Password</button>
+</div>
+</form>
+</div>
+</div>
 <!-- Auth Modal -->
 <div id="authModal">
-    <div class="modal-content">
-        <h5 class="mb-3" id="authTitle"><i class="fas fa-sign-in-alt me-2"></i>Admin Login</h5>
-        <form id="authForm">
-            <div class="mb-2"><label class="form-label">Email</label><input type="email" id="authEmail" class="form-control" required></div>
-            <div class="mb-2"><label class="form-label">Password</label><input type="password" id="authPassword" class="form-control" required></div>
-            <p id="authError"></p>
-            <div class="d-flex justify-content-between mt-3">
-                <button type="button" id="cancelAuth" class="btn btn-secondary btn-sm">Cancel</button>
-                <button type="submit" class="btn btn-primary btn-sm" id="authSubmitBtn">Login</button>
-            </div>
-        </form>
-    </div>
+<div class="modal-content">
+<h5 class="mb-3" id="authTitle"><i class="fas fa-sign-in-alt me-2"></i>Admin Login</h5>
+<form id="authForm">
+<div class="mb-2"><label class="form-label">Email</label><input type="email" id="authEmail" class="form-control" required></div>
+<div class="mb-2"><label class="form-label">Password</label><input type="password" id="authPassword" class="form-control" required></div>
+<p id="authError"></p>
+<div class="d-flex justify-content-between mt-3">
+<button type="button" id="cancelAuth" class="btn btn-secondary btn-sm">Cancel</button>
+<button type="submit" class="btn btn-primary btn-sm" id="authSubmitBtn">Login</button>
 </div>
-
+</form>
+</div>
+</div>
 <!-- Firebase SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
 // ============================================
 // ⚙️ FIREBASE CONFIGURATION
 // ============================================
 const firebaseConfig = {
-    apiKey: "AIzaSyB82MwSrGp35eS2ZXBsBlhie6EL6s-5HK0",
-  authDomain: "videolibrary-4709d.firebaseapp.com",
-  projectId: "videolibrary-4709d",
-  storageBucket: "videolibrary-4709d.firebasestorage.app",
-  messagingSenderId: "752788156798",
-  appId: "1:752788156798:web:df6dc050abc7de4150432f"
+apiKey: "AIzaSyB82MwSrGp35eS2ZXBsBlhie6EL6s-5HK0",
+authDomain: "videolibrary-4709d.firebaseapp.com",
+projectId: "videolibrary-4709d",
+storageBucket: "videolibrary-4709d.firebasestorage.app",
+messagingSenderId: "752788156798",
+appId: "1:752788156798:web:df6dc050abc7de4150432f"
 };
-
 let db, auth;
 try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    auth = getAuth(app);
-    console.log("✅ Firebase initialized");
+const app = initializeApp(firebaseConfig);
+db = getFirestore(app);
+auth = getAuth(app);
+console.log("✅ Firebase initialized");
 } catch (e) {
-    console.error("Firebase init error:", e);
-    document.getElementById('videoGrid').innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#f87171;">Firebase Config Missing.</div>`;
+console.error("Firebase init error:", e);
+document.getElementById('videoGrid').innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#f87171;">Firebase Config Missing.</div>`;
 }
-
 // ============================================
 // GLOBAL VARIABLES
 // ============================================
@@ -258,7 +257,6 @@ let currentPage = 1;
 let videoPassword = "Animator"; // Default fallback
 let currentUser = null;
 let editingVideoId = null;
-
 // ============================================
 // DOM ELEMENTS
 // ============================================
@@ -309,646 +307,617 @@ const authError = document.getElementById('authError');
 const authSubmitBtn = document.getElementById('authSubmitBtn');
 const cancelAuth = document.getElementById('cancelAuth');
 const confirmVideoPassword = document.getElementById('confirmVideoPassword');
+// New Elements for First Video ID
+const newFirstVideoIdGroup = document.getElementById('newFirstVideoIdGroup');
+const newFirstVideoId = document.getElementById('newFirstVideoId');
+const editFirstVideoIdGroup = document.getElementById('editFirstVideoIdGroup');
+const editFirstVideoId = document.getElementById('editFirstVideoId');
+const newTypeSelect = document.getElementById('newType');
+const editTypeSelect = document.getElementById('editType');
 
 let currentVideo = null;
-
 // ============================================
 // 🔐 LOAD VIDEO PASSWORD FROM FIREBASE
 // ============================================
 function loadVideoPassword() {
-    if (!db) return;
-    
-    const passwordDoc = doc(db, "settings", "videoPassword");
-    onSnapshot(passwordDoc, (docSnap) => {
-        if (docSnap.exists()) {
-            videoPassword = docSnap.data().password || "Animator";
-            console.log("🔐 Video password loaded from Firebase");
-        } else {
-            // Create default password document if it doesn't exist
-            console.log("🔐 Creating default video password document");
-            setDoc(passwordDoc, { password: "Animator", updatedAt: serverTimestamp() });
-            videoPassword = "Animator";
-        }
-    }, (error) => {
-        console.error("❌ Error loading video password:", error);
-        videoPassword = "Animator"; // Fallback
-    });
+if (!db) return;
+const passwordDoc = doc(db, "settings", "videoPassword");
+onSnapshot(passwordDoc, (docSnap) => {
+if (docSnap.exists()) {
+videoPassword = docSnap.data().password || "Animator";
+console.log("🔐 Video password loaded from Firebase");
+} else {
+// Create default password document if it doesn't exist
+console.log("🔐 Creating default video password document");
+setDoc(passwordDoc, { password: "Animator", updatedAt: serverTimestamp() });
+videoPassword = "Animator";
 }
-
+}, (error) => {
+console.error("❌ Error loading video password:", error);
+videoPassword = "Animator"; // Fallback
+});
+}
 // ============================================
 // AUTH STATE LISTENER
 // ============================================
 if (auth) {
-    onAuthStateChanged(auth, (user) => {
-        currentUser = user;
-        console.log("🔐 Auth state changed:", user ? user.email : "Logged out");
-        
-        if (user) {
-            adminBtn.style.display = 'flex';
-            settingsBtn.style.display = 'flex';
-            authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-            authBtn.classList.add('logout');
-            userInfo.style.display = 'flex';
-            userEmail.textContent = user.email;
-        } else {
-            adminBtn.style.display = 'none';
-            settingsBtn.style.display = 'none';
-            authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Admin Login';
-            authBtn.classList.remove('logout');
-            userInfo.style.display = 'none';
-        }
-        
-        renderVideos();
-    });
+onAuthStateChanged(auth, (user) => {
+currentUser = user;
+console.log("🔐 Auth state changed:", user ? user.email : "Logged out");
+if (user) {
+adminBtn.style.display = 'flex';
+settingsBtn.style.display = 'flex';
+authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+authBtn.classList.add('logout');
+userInfo.style.display = 'flex';
+userEmail.textContent = user.email;
+} else {
+adminBtn.style.display = 'none';
+settingsBtn.style.display = 'none';
+authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Admin Login';
+authBtn.classList.remove('logout');
+userInfo.style.display = 'none';
 }
-
+renderVideos();
+});
+}
 // ============================================
 // FIREBASE DATA SYNC
 // ============================================
 if (db) {
-    const q = query(collection(db, "videos"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snapshot) => {
-        allVideos = snapshot.docs.map(doc => ({ 
-            firestoreId: doc.id,
-            ...doc.data()
-        }));
-        console.log(`📹 Loaded ${allVideos.length} videos from Firebase`);
-        updateDataLists();
-        populateFilters();
-        applyFilters(); 
-    }, (error) => {
-        console.error("❌ Error fetching videos:", error);
-        videoGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#f87171;">Error: ${error.message}</div>`;
-    });
+const q = query(collection(db, "videos"), orderBy("createdAt", "desc"));
+onSnapshot(q, (snapshot) => {
+allVideos = snapshot.docs.map(doc => ({
+firestoreId: doc.id,
+...doc.data()
+}));
+console.log(`📹 Loaded ${allVideos.length} videos from Firebase`);
+updateDataLists();
+populateFilters();
+applyFilters();
+}, (error) => {
+console.error("❌ Error fetching videos:", error);
+videoGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#f87171;">Error: ${error.message}</div>`;
+});
 }
-
 // Load video password on startup
 loadVideoPassword();
-
 // ============================================
 // HELPER FUNCTIONS
 // ============================================
 function getYouTubeId(url) {
-    if(!url) return null;
-    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.trim().match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+if(!url) return null;
+const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+const match = url.trim().match(regExp);
+return (match && match[2].length === 11) ? match[2] : null;
 }
-
 function getThumbnailUrl(item) {
-    if (item.type === "youtube") {
-        const id = getYouTubeId(item.url || item.id);
-        return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
-    } else if (item.type === "youtube-playlist") {
-        if (item.firstVideoId) {
-            return `https://img.youtube.com/vi/${item.firstVideoId}/mqdefault.jpg`;
-        }
-        return null;
-    } else if ((item.type === "drive" || item.type === "pdf") && item.id) {
-        return `https://drive.google.com/thumbnail?id=${item.id}&sz=w640`;
-    }
-    return null;
+if (item.type === "youtube") {
+const id = getYouTubeId(item.url || item.id);
+return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
+} else if (item.type === "youtube-playlist") {
+if (item.firstVideoId) {
+return `https://img.youtube.com/vi/${item.firstVideoId}/mqdefault.jpg`;
 }
-
+return null;
+} else if ((item.type === "drive" || item.type === "pdf") && item.id) {
+return `https://drive.google.com/thumbnail?id=${item.id}&sz=w640`;
+}
+return null;
+}
 function getEmbedUrl(item) {
-    if (item.type === "youtube") {
-        const id = getYouTubeId(item.url || item.id);
-        return id ? `https://www.youtube.com/embed/${id}?autoplay=1` : null;
-    } else if (item.type === "youtube-playlist") {
-        return `https://www.youtube.com/embed/videoseries?list=${item.id}&autoplay=1`;
-    } else if ((item.type === "drive" || item.type === "pdf") && item.id) {
-        return `https://drive.google.com/file/d/${item.id}/preview`;
-    }
-    return null;
+if (item.type === "youtube") {
+const id = getYouTubeId(item.url || item.id);
+return id ? `https://www.youtube.com/embed/${id}?autoplay=1` : null;
+} else if (item.type === "youtube-playlist") {
+return `https://www.youtube.com/embed/videoseries?list=${item.id}&autoplay=1`;
+} else if ((item.type === "drive" || item.type === "pdf") && item.id) {
+return `https://drive.google.com/file/d/${item.id}/preview`;
 }
-
+return null;
+}
 function updateDataLists() {
-    const cats = [...new Set(allVideos.map(v => v.category).filter(Boolean))].sort();
-    const subs = [...new Set(allVideos.map(v => v.subcategory).filter(Boolean))].sort();
-    const tops = [...new Set(allVideos.map(v => v.topic).filter(Boolean))].sort();
-    categoryList.innerHTML = cats.map(c => `<option value="${c}">`).join('');
-    subcategoryList.innerHTML = subs.map(s => `<option value="${s}">`).join('');
-    topicList.innerHTML = tops.map(t => `<option value="${t}">`).join('');
+const cats = [...new Set(allVideos.map(v => v.category).filter(Boolean))].sort();
+const subs = [...new Set(allVideos.map(v => v.subcategory).filter(Boolean))].sort();
+const tops = [...new Set(allVideos.map(v => v.topic).filter(Boolean))].sort();
+categoryList.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+subcategoryList.innerHTML = subs.map(s => `<option value="${s}">`).join('');
+topicList.innerHTML = tops.map(t => `<option value="${t}">`).join('');
 }
-
 function populateFilters() {
-    const cats = [...new Set(allVideos.map(v => (v.category || "Uncategorized").trim()))].sort();
-    const currentValue = categoryFilter.value;
-    categoryFilter.innerHTML = '<option value="">All Categories</option>';
-    cats.forEach(cat => {
-        if (cat && cat.trim()) {
-            const opt = document.createElement('option');
-            opt.value = cat.trim();
-            opt.textContent = cat.trim();
-            categoryFilter.appendChild(opt);
-        }
-    });
-    if (currentValue && cats.includes(currentValue)) {
-        categoryFilter.value = currentValue;
-    }
-    updateSubcategories();
+const cats = [...new Set(allVideos.map(v => (v.category || "Uncategorized").trim()))].sort();
+const currentValue = categoryFilter.value;
+categoryFilter.innerHTML = '<option value="">All Categories</option>';
+cats.forEach(cat => {
+if (cat && cat.trim()) {
+const opt = document.createElement('option');
+opt.value = cat.trim();
+opt.textContent = cat.trim();
+categoryFilter.appendChild(opt);
 }
-
+});
+if (currentValue && cats.includes(currentValue)) {
+categoryFilter.value = currentValue;
+}
+updateSubcategories();
+}
 function updateSubcategories() {
-    const cat = categoryFilter.value.trim();
-    const currentSubValue = subcategoryFilter.value;
-    subcategoryFilter.innerHTML = '<option value="">All Subcategories</option>';
-    topicFilter.innerHTML = '<option value="">All Topics</option>';
-    if (!cat) {
-        subcategoryFilter.value = '';
-        topicFilter.value = '';
-        return;
-    }
-    const subs = [...new Set(
-        allVideos.filter(v => (v.category || "Uncategorized").trim() === cat).map(v => (v.subcategory || "").trim()).filter(Boolean)
-    )].sort();
-    subs.forEach(sub => {
-        const opt = document.createElement('option');
-        opt.value = sub;
-        opt.textContent = sub;
-        subcategoryFilter.appendChild(opt);
-    });
-    if (currentSubValue && subs.includes(currentSubValue)) {
-        subcategoryFilter.value = currentSubValue;
-    } else {
-        subcategoryFilter.value = '';
-    }
-    updateTopics();
+const cat = categoryFilter.value.trim();
+const currentSubValue = subcategoryFilter.value;
+subcategoryFilter.innerHTML = '<option value="">All Subcategories</option>';
+topicFilter.innerHTML = '<option value="">All Topics</option>';
+if (!cat) {
+subcategoryFilter.value = '';
+topicFilter.value = '';
+return;
 }
-
+const subs = [...new Set(
+allVideos.filter(v => (v.category || "Uncategorized").trim() === cat).map(v => (v.subcategory || "").trim()).filter(Boolean)
+)].sort();
+subs.forEach(sub => {
+const opt = document.createElement('option');
+opt.value = sub;
+opt.textContent = sub;
+subcategoryFilter.appendChild(opt);
+});
+if (currentSubValue && subs.includes(currentSubValue)) {
+subcategoryFilter.value = currentSubValue;
+} else {
+subcategoryFilter.value = '';
+}
+updateTopics();
+}
 function updateTopics() {
-    const cat = categoryFilter.value.trim();
-    const sub = subcategoryFilter.value.trim();
-    const currentTopicValue = topicFilter.value;
-    topicFilter.innerHTML = '<option value="">All Topics</option>';
-    if (!cat || !sub) {
-        topicFilter.value = '';
-        return;
-    }
-    const topics = [...new Set(
-        allVideos.filter(v => (v.category || "Uncategorized").trim() === cat && (v.subcategory || "").trim() === sub).map(v => (v.topic || "").trim()).filter(Boolean)
-    )].sort();
-    topics.forEach(top => {
-        const opt = document.createElement('option');
-        opt.value = top;
-        opt.textContent = top;
-        topicFilter.appendChild(opt);
-    });
-    if (currentTopicValue && topics.includes(currentTopicValue)) {
-        topicFilter.value = currentTopicValue;
-    } else {
-        topicFilter.value = '';
-    }
+const cat = categoryFilter.value.trim();
+const sub = subcategoryFilter.value.trim();
+const currentTopicValue = topicFilter.value;
+topicFilter.innerHTML = '<option value="">All Topics</option>';
+if (!cat || !sub) {
+topicFilter.value = '';
+return;
 }
-
+const topics = [...new Set(
+allVideos.filter(v => (v.category || "Uncategorized").trim() === cat && (v.subcategory || "").trim() === sub).map(v => (v.topic || "").trim()).filter(Boolean)
+)].sort();
+topics.forEach(top => {
+const opt = document.createElement('option');
+opt.value = top;
+opt.textContent = top;
+topicFilter.appendChild(opt);
+});
+if (currentTopicValue && topics.includes(currentTopicValue)) {
+topicFilter.value = currentTopicValue;
+} else {
+topicFilter.value = '';
+}
+}
 // ============================================
 // CREATE VIDEO CARD
 // ============================================
 function createVideoCard(video) {
-    const card = document.createElement('div');
-    card.className = 'video-card';
-    const thumbUrl = getThumbnailUrl(video);
-    const meta = [video.category || '', video.subcategory, video.topic].filter(Boolean).join(' • ');
-    
-    let thumbHtml = '';
-    if (thumbUrl) {
-        thumbHtml = `<img src="${thumbUrl}" alt="Thumbnail">`;
-    } else {
-        let iconClass = "fa-video";
-        if (video.type === "pdf") iconClass = "fa-file-pdf";
-        else if (video.type === "youtube") iconClass = "fa-youtube";
-        else if (video.type === "youtube-playlist") iconClass = "fa-list";
-        else iconClass = "fa-google-drive";
-        thumbHtml = `<div class="placeholder"><i class="fas ${iconClass}"></i></div>`;
-    }
-    
-    const adminActionsHtml = currentUser ? `
-        <div class="admin-actions">
-            <button class="admin-btn-action edit-btn" data-firestore-id="${video.firestoreId}" title="Edit video">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button class="admin-btn-action delete-btn" data-firestore-id="${video.firestoreId}" title="Delete video">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    ` : '';
-    
-    card.innerHTML = `
-    <div class="card-thumb">
-    ${thumbHtml}
-    ${video.protected ? `<div class="protected-badge"><i class="fas fa-lock"></i></div>` : ''}
-    ${adminActionsHtml}
-    </div>
-    <div class="card-content">
-    <div class="card-title">${video.title}</div>
-    <div class="card-meta">${meta}</div>
-    </div>`;
-    
-    if (currentUser) {
-        const deleteBtn = card.querySelector('.delete-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const firestoreId = deleteBtn.getAttribute('data-firestore-id');
-                const videoTitle = video.title;
-                
-                if (confirm(`⚠️ Delete "${videoTitle}"?\n\nThis cannot be undone!`)) {
-                    try {
-                        console.log(`🗑️ Deleting Firestore ID: ${firestoreId}`);
-                        await deleteDoc(doc(db, "videos", firestoreId));
-                        console.log("✅ Video deleted successfully!");
-                    } catch (error) {
-                        console.error("❌ Error deleting video:", error);
-                        alert(`❌ Failed to delete: ${error.message}`);
-                    }
-                }
-            });
-        }
-        
-        const editBtn = card.querySelector('.edit-btn');
-        if (editBtn) {
-            editBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openEditModal(video);
-            });
-        }
-    }
-    
-    if (thumbUrl) {
-        const img = card.querySelector('img');
-        img.onload = () => img.classList.add('loaded');
-        img.onerror = () => { img.style.display = 'none'; card.querySelector('.placeholder').style.display = 'flex'; };
-    }
-    
-    card.addEventListener('click', () => openVideo(video));
-    return card;
+const card = document.createElement('div');
+card.className = 'video-card';
+const thumbUrl = getThumbnailUrl(video);
+const meta = [video.category || '', video.subcategory, video.topic].filter(Boolean).join(' • ');
+let thumbHtml = '';
+if (thumbUrl) {
+thumbHtml = `<img src="${thumbUrl}" alt="Thumbnail">`;
+} else {
+let iconClass = "fa-video";
+if (video.type === "pdf") iconClass = "fa-file-pdf";
+else if (video.type === "youtube") iconClass = "fa-youtube";
+else if (video.type === "youtube-playlist") iconClass = "fa-list";
+else iconClass = "fa-google-drive";
+thumbHtml = `<div class="placeholder"><i class="fas ${iconClass}"></i></div>`;
 }
-
+const adminActionsHtml = currentUser ? `
+<div class="admin-actions">
+<button class="admin-btn-action edit-btn" data-firestore-id="${video.firestoreId}" title="Edit video">
+<i class="fas fa-edit"></i>
+</button>
+<button class="admin-btn-action delete-btn" data-firestore-id="${video.firestoreId}" title="Delete video">
+<i class="fas fa-trash"></i>
+</button>
+</div>
+` : '';
+card.innerHTML = `
+<div class="card-thumb">
+${thumbHtml}
+${video.protected ? `<div class="protected-badge"><i class="fas fa-lock"></i></div>` : ''}
+${adminActionsHtml}
+</div>
+<div class="card-content">
+<div class="card-title">${video.title}</div>
+<div class="card-meta">${meta}</div>
+</div>`;
+if (currentUser) {
+const deleteBtn = card.querySelector('.delete-btn');
+if (deleteBtn) {
+deleteBtn.addEventListener('click', async (e) => {
+e.stopPropagation();
+const firestoreId = deleteBtn.getAttribute('data-firestore-id');
+const videoTitle = video.title;
+if (confirm(`⚠️ Delete "${videoTitle}"?
+This cannot be undone!`)) {
+try {
+console.log(`🗑️ Deleting Firestore ID: ${firestoreId}`);
+await deleteDoc(doc(db, "videos", firestoreId));
+console.log("✅ Video deleted successfully!");
+} catch (error) {
+console.error("❌ Error deleting video:", error);
+alert(`❌ Failed to delete: ${error.message}`);
+}
+}
+});
+}
+const editBtn = card.querySelector('.edit-btn');
+if (editBtn) {
+editBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+openEditModal(video);
+});
+}
+}
+if (thumbUrl) {
+const img = card.querySelector('img');
+img.onload = () => img.classList.add('loaded');
+img.onerror = () => { img.style.display = 'none'; card.querySelector('.placeholder').style.display = 'flex'; };
+}
+card.addEventListener('click', () => openVideo(video));
+return card;
+}
 // ============================================
 // FILTERING & RENDERING
 // ============================================
 function applyFilters() {
-    let list = [...allVideos];
-    const cat = categoryFilter.value.trim();
-    const sub = subcategoryFilter.value.trim();
-    const top = topicFilter.value.trim();
-    const query = searchBox.value.trim().toLowerCase();
-    
-    if (cat) list = list.filter(v => (v.category || "Uncategorized").trim() === cat);
-    if (sub) list = list.filter(v => (v.subcategory || "").trim() === sub);
-    if (top) list = list.filter(v => (v.topic || "").trim() === top);
-    if (query) {
-        list = list.filter(v => 
-            v.title.toLowerCase().includes(query) || 
-            (v.category && v.category.toLowerCase().includes(query)) || 
-            (v.subcategory && v.subcategory.toLowerCase().includes(query)) || 
-            (v.topic && v.topic.toLowerCase().includes(query))
-        );
-    }
-    filteredVideos = list;
-    currentPage = 1;
-    renderVideos();
+let list = [...allVideos];
+const cat = categoryFilter.value.trim();
+const sub = subcategoryFilter.value.trim();
+const top = topicFilter.value.trim();
+const query = searchBox.value.trim().toLowerCase();
+if (cat) list = list.filter(v => (v.category || "Uncategorized").trim() === cat);
+if (sub) list = list.filter(v => (v.subcategory || "").trim() === sub);
+if (top) list = list.filter(v => (v.topic || "").trim() === top);
+if (query) {
+list = list.filter(v =>
+v.title.toLowerCase().includes(query) ||
+(v.category && v.category.toLowerCase().includes(query)) ||
+(v.subcategory && v.subcategory.toLowerCase().includes(query)) ||
+(v.topic && v.topic.toLowerCase().includes(query))
+);
 }
-
+filteredVideos = list;
+currentPage = 1;
+renderVideos();
+}
 function renderVideos() {
-    if (!allVideos.length) {
-        videoGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#666;">No videos found in database.</div>`;
-        paginationEl.innerHTML = '';
-        return;
-    }
-    const total = filteredVideos.length;
-    const totalPages = Math.max(1, Math.ceil(total / VIDEOS_PER_PAGE));
-    currentPage = Math.min(currentPage, totalPages);
-    const start = (currentPage - 1) * VIDEOS_PER_PAGE;
-    const pageVideos = filteredVideos.slice(start, start + VIDEOS_PER_PAGE);
-    videoGrid.innerHTML = '';
-    if (pageVideos.length === 0) {
-        videoGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#666;">No videos found.</div>`;
-    } else {
-        pageVideos.forEach(v => videoGrid.appendChild(createVideoCard(v)));
-    }
-    renderPagination(totalPages);
+if (!allVideos.length) {
+videoGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#666;">No videos found in database.</div>`;
+paginationEl.innerHTML = '';
+return;
 }
-
+const total = filteredVideos.length;
+const totalPages = Math.max(1, Math.ceil(total / VIDEOS_PER_PAGE));
+currentPage = Math.min(currentPage, totalPages);
+const start = (currentPage - 1) * VIDEOS_PER_PAGE;
+const pageVideos = filteredVideos.slice(start, start + VIDEOS_PER_PAGE);
+videoGrid.innerHTML = '';
+if (pageVideos.length === 0) {
+videoGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem; color:#666;">No videos found.</div>`;
+} else {
+pageVideos.forEach(v => videoGrid.appendChild(createVideoCard(v)));
+}
+renderPagination(totalPages);
+}
 function renderPagination(totalPages) {
-    paginationEl.innerHTML = '';
-    if (totalPages <= 1) return;
-    const maxVisible = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-    if (endPage - startPage + 1 < maxVisible) startPage = Math.max(1, endPage - maxVisible + 1);
-    const prev = document.createElement('button');
-    prev.textContent = '«';
-    prev.disabled = currentPage === 1;
-    prev.onclick = () => { if (currentPage > 1) { currentPage--; renderVideos(); } };
-    paginationEl.appendChild(prev);
-    for (let i = startPage; i <= endPage; i++) {
-        const btn = document.createElement('button');
-        btn.textContent = i;
-        if (i === currentPage) btn.classList.add('active');
-        btn.onclick = () => { currentPage = i; renderVideos(); };
-        paginationEl.appendChild(btn);
-    }
-    const next = document.createElement('button');
-    next.textContent = '»';
-    next.disabled = currentPage === totalPages;
-    next.onclick = () => { if (currentPage < totalPages) { currentPage++; renderVideos(); } };
-    paginationEl.appendChild(next);
+paginationEl.innerHTML = '';
+if (totalPages <= 1) return;
+const maxVisible = 5;
+let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+if (endPage - startPage + 1 < maxVisible) startPage = Math.max(1, endPage - maxVisible + 1);
+const prev = document.createElement('button');
+prev.textContent = '«';
+prev.disabled = currentPage === 1;
+prev.onclick = () => { if (currentPage > 1) { currentPage--; renderVideos(); } };
+paginationEl.appendChild(prev);
+for (let i = startPage; i <= endPage; i++) {
+const btn = document.createElement('button');
+btn.textContent = i;
+if (i === currentPage) btn.classList.add('active');
+btn.onclick = () => { currentPage = i; renderVideos(); };
+paginationEl.appendChild(btn);
 }
-
+const next = document.createElement('button');
+next.textContent = '»';
+next.disabled = currentPage === totalPages;
+next.onclick = () => { if (currentPage < totalPages) { currentPage++; renderVideos(); } };
+paginationEl.appendChild(next);
+}
 // ============================================
 // VIDEO PLAYBACK
 // ============================================
 function openVideo(video) {
-    if (video.protected) {
-        currentVideo = video;
-        passwordModal.style.display = 'flex';
-        videoPasswordInput.value = '';
-        passwordError.style.display = 'none';
-        videoPasswordInput.focus();
-    } else {
-        playInPopup(video);
-    }
+if (video.protected) {
+currentVideo = video;
+passwordModal.style.display = 'flex';
+videoPasswordInput.value = '';
+passwordError.style.display = 'none';
+videoPasswordInput.focus();
+} else {
+playInPopup(video);
 }
-
+}
 function playInPopup(video) {
-    const url = getEmbedUrl(video);
-    if (!url) { alert("Content not available."); return; }
-    popupTitle.textContent = video.title;
-    popupFrame.src = url;
-    popupModal.style.display = 'flex';
+const url = getEmbedUrl(video);
+if (!url) { alert("Content not available."); return; }
+popupTitle.textContent = video.title;
+popupFrame.src = url;
+popupModal.style.display = 'flex';
 }
-
 function validatePassword() {
-    // ✅ Compare with password from Firebase
-    if (videoPasswordInput.value === videoPassword) {
-        passwordModal.style.display = 'none';
-        if (currentVideo) { playInPopup(currentVideo); currentVideo = null; }
-    } else {
-        passwordError.style.display = 'block';
-        setTimeout(() => passwordError.style.display = 'none', 2000);
-    }
+// ✅ Compare with password from Firebase
+if (videoPasswordInput.value === videoPassword) {
+passwordModal.style.display = 'none';
+if (currentVideo) { playInPopup(currentVideo); currentVideo = null; }
+} else {
+passwordError.style.display = 'block';
+setTimeout(() => passwordError.style.display = 'none', 2000);
 }
-
+}
 // ============================================
 // AUTHENTICATION
 // ============================================
 function openAuthModal() {
-    authModal.style.display = 'flex';
-    authError.style.display = 'none';
-    authError.textContent = '';
-    authEmail.value = '';
-    authPassword.value = '';
-    authEmail.focus();
+authModal.style.display = 'flex';
+authError.style.display = 'none';
+authError.textContent = '';
+authEmail.value = '';
+authPassword.value = '';
+authEmail.focus();
 }
-
 function handleAuth(e) {
-    e.preventDefault();
-    const email = authEmail.value.trim();
-    const password = authPassword.value;
-    authError.style.display = 'none';
-    authSubmitBtn.disabled = true;
-    authSubmitBtn.textContent = 'Logging in...';
-    
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => { 
-            console.log("✅ Logged in:", userCredential.user.email);
-            authModal.style.display = 'none'; 
-        })
-        .catch((error) => {
-            authError.textContent = "Error: " + error.message;
-            authError.style.display = 'block';
-            authSubmitBtn.disabled = false;
-            authSubmitBtn.textContent = 'Login';
-        });
+e.preventDefault();
+const email = authEmail.value.trim();
+const password = authPassword.value;
+authError.style.display = 'none';
+authSubmitBtn.disabled = true;
+authSubmitBtn.textContent = 'Logging in...';
+signInWithEmailAndPassword(auth, email, password)
+.then((userCredential) => {
+console.log("✅ Logged in:", userCredential.user.email);
+authModal.style.display = 'none';
+})
+.catch((error) => {
+authError.textContent = "Error: " + error.message;
+authError.style.display = 'block';
+authSubmitBtn.disabled = false;
+authSubmitBtn.textContent = 'Login';
+});
 }
-
 function handleLogout() {
-    signOut(auth).then(() => { console.log("👋 Logged out"); }).catch((error) => { console.error(error); });
+signOut(auth).then(() => { console.log("👋 Logged out"); }).catch((error) => { console.error(error); });
 }
-
 // ============================================
 // ADD VIDEO
 // ============================================
 adminBtn.addEventListener('click', () => {
-    if (currentUser) {
-        addVideoModal.style.display = 'flex';
-        updateDataLists();
-    }
+if (currentUser) {
+addVideoModal.style.display = 'flex';
+updateDataLists();
+toggleFirstVideoIdField(newTypeSelect.value, 'new');
+}
 });
-
 cancelAddVideo.addEventListener('click', () => {
-    addVideoModal.style.display = 'none';
-    addVideoForm.reset();
-    addVideoStatus.textContent = '';
+addVideoModal.style.display = 'none';
+addVideoForm.reset();
+addVideoStatus.textContent = '';
+toggleFirstVideoIdField('youtube', 'new'); // Reset visibility
 });
+// Toggle First Video ID Field Visibility
+function toggleFirstVideoIdField(type, prefix) {
+    const group = prefix === 'new' ? newFirstVideoIdGroup : editFirstVideoIdGroup;
+    if (type === 'youtube-playlist') {
+        group.style.display = 'block';
+    } else {
+        group.style.display = 'none';
+    }
+}
+// Listen for Type Changes
+newTypeSelect.addEventListener('change', () => toggleFirstVideoIdField(newTypeSelect.value, 'new'));
+editTypeSelect.addEventListener('change', () => toggleFirstVideoIdField(editTypeSelect.value, 'edit'));
 
 addVideoForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!db || !currentUser) { alert("Not authenticated"); return; }
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = "Saving...";
-    addVideoStatus.textContent = "";
-    
-    const newVideo = {
-        title: document.getElementById('newTitle').value,
-        type: document.getElementById('newType').value,
-        id: document.getElementById('newId').value,
-        url: document.getElementById('newId').value,
-        category: document.getElementById('newCategory').value,
-        subcategory: document.getElementById('newSubcategory').value,
-        topic: document.getElementById('newTopic').value,
-        protected: document.getElementById('newProtected').checked,
-        createdAt: serverTimestamp(),
-        addedBy: currentUser.email
-    };
-    
-    try {
-        await addDoc(collection(db, "videos"), newVideo);
-        addVideoStatus.textContent = "✅ Video added successfully!";
-        addVideoStatus.className = "status-success";
-        addVideoForm.reset();
-        setTimeout(() => { addVideoModal.style.display = 'none'; addVideoStatus.textContent = ""; }, 1500);
-    } catch (error) {
-        console.error("Error adding document: ", error);
-        addVideoStatus.textContent = "❌ Error: " + error.message;
-        addVideoStatus.className = "status-error";
-    } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
-    }
+e.preventDefault();
+if (!db || !currentUser) { alert("Not authenticated"); return; }
+const btn = e.target.querySelector('button[type="submit"]');
+const originalText = btn.textContent;
+btn.disabled = true;
+btn.textContent = "Saving...";
+addVideoStatus.textContent = "";
+const newVideo = {
+title: document.getElementById('newTitle').value,
+type: document.getElementById('newType').value,
+id: document.getElementById('newId').value,
+url: document.getElementById('newId').value,
+firstVideoId: document.getElementById('newFirstVideoId').value.trim(), // Save First Video ID
+category: document.getElementById('newCategory').value,
+subcategory: document.getElementById('newSubcategory').value,
+topic: document.getElementById('newTopic').value,
+protected: document.getElementById('newProtected').checked,
+createdAt: serverTimestamp(),
+addedBy: currentUser.email
+};
+try {
+await addDoc(collection(db, "videos"), newVideo);
+addVideoStatus.textContent = "✅ Video added successfully!";
+addVideoStatus.className = "status-success";
+addVideoForm.reset();
+toggleFirstVideoIdField('youtube', 'new'); // Reset visibility
+setTimeout(() => { addVideoModal.style.display = 'none'; addVideoStatus.textContent = ""; }, 1500);
+} catch (error) {
+console.error("Error adding document: ", error);
+addVideoStatus.textContent = "❌ Error: " + error.message;
+addVideoStatus.className = "status-error";
+} finally {
+btn.disabled = false;
+btn.textContent = originalText;
+}
 });
-
 // ============================================
 // EDIT VIDEO
 // ============================================
 function openEditModal(video) {
-    editingVideoId = video.firestoreId;
-    document.getElementById('editVideoId').value = video.firestoreId;
-    document.getElementById('editTitle').value = video.title;
-    document.getElementById('editType').value = video.type;
-    document.getElementById('editId').value = video.id || video.url;
-    document.getElementById('editCategory').value = video.category || '';
-    document.getElementById('editSubcategory').value = video.subcategory || '';
-    document.getElementById('editTopic').value = video.topic || '';
-    document.getElementById('editProtected').checked = video.protected || false;
-    editVideoStatus.textContent = '';
-    editVideoModal.style.display = 'flex';
+editingVideoId = video.firestoreId;
+document.getElementById('editVideoId').value = video.firestoreId;
+document.getElementById('editTitle').value = video.title;
+document.getElementById('editType').value = video.type;
+document.getElementById('editId').value = video.id || video.url;
+document.getElementById('editFirstVideoId').value = video.firstVideoId || ''; // Load First Video ID
+document.getElementById('editCategory').value = video.category || '';
+document.getElementById('editSubcategory').value = video.subcategory || '';
+document.getElementById('editTopic').value = video.topic || '';
+document.getElementById('editProtected').checked = video.protected || false;
+editVideoStatus.textContent = '';
+toggleFirstVideoIdField(video.type, 'edit'); // Set visibility
+editVideoModal.style.display = 'flex';
 }
-
 cancelEditVideo.addEventListener('click', () => {
-    editVideoModal.style.display = 'none';
-    editingVideoId = null;
-    editVideoStatus.textContent = '';
+editVideoModal.style.display = 'none';
+editingVideoId = null;
+editVideoStatus.textContent = '';
 });
-
 editVideoForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!db || !currentUser || !editingVideoId) { alert("Not authenticated or no video selected"); return; }
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = "Updating...";
-    editVideoStatus.textContent = "";
-    
-    const updatedVideo = {
-        title: document.getElementById('editTitle').value,
-        type: document.getElementById('editType').value,
-        id: document.getElementById('editId').value,
-        url: document.getElementById('editId').value,
-        category: document.getElementById('editCategory').value,
-        subcategory: document.getElementById('editSubcategory').value,
-        topic: document.getElementById('editTopic').value,
-        protected: document.getElementById('editProtected').checked,
-        updatedAt: serverTimestamp(),
-        updatedBy: currentUser.email
-    };
-    
-    try {
-        console.log(`✏️ Updating Firestore ID: ${editingVideoId}`);
-        await updateDoc(doc(db, "videos", editingVideoId), updatedVideo);
-        console.log("✅ Video updated successfully!");
-        editVideoStatus.textContent = "✅ Video updated successfully!";
-        editVideoStatus.className = "status-success";
-        setTimeout(() => { editVideoModal.style.display = 'none'; editVideoStatus.textContent = ""; editingVideoId = null; }, 1500);
-    } catch (error) {
-        console.error("Error updating document: ", error);
-        editVideoStatus.textContent = "❌ Error: " + error.message;
-        editVideoStatus.className = "status-error";
-    } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
-    }
+e.preventDefault();
+if (!db || !currentUser || !editingVideoId) { alert("Not authenticated or no video selected"); return; }
+const btn = e.target.querySelector('button[type="submit"]');
+const originalText = btn.textContent;
+btn.disabled = true;
+btn.textContent = "Updating...";
+editVideoStatus.textContent = "";
+const updatedVideo = {
+title: document.getElementById('editTitle').value,
+type: document.getElementById('editType').value,
+id: document.getElementById('editId').value,
+url: document.getElementById('editId').value,
+firstVideoId: document.getElementById('editFirstVideoId').value.trim(), // Save First Video ID
+category: document.getElementById('editCategory').value,
+subcategory: document.getElementById('editSubcategory').value,
+topic: document.getElementById('editTopic').value,
+protected: document.getElementById('editProtected').checked,
+updatedAt: serverTimestamp(),
+updatedBy: currentUser.email
+};
+try {
+console.log(`✏️ Updating Firestore ID: ${editingVideoId}`);
+await updateDoc(doc(db, "videos", editingVideoId), updatedVideo);
+console.log("✅ Video updated successfully!");
+editVideoStatus.textContent = "✅ Video updated successfully!";
+editVideoStatus.className = "status-success";
+setTimeout(() => { editVideoModal.style.display = 'none'; editVideoStatus.textContent = ""; editingVideoId = null; }, 1500);
+} catch (error) {
+console.error("Error updating document: ", error);
+editVideoStatus.textContent = "❌ Error: " + error.message;
+editVideoStatus.className = "status-error";
+} finally {
+btn.disabled = false;
+btn.textContent = originalText;
+}
 });
-
 // ============================================
 // ⚙️ SETTINGS - CHANGE VIDEO PASSWORD
 // ============================================
 settingsBtn.addEventListener('click', () => {
-    if (currentUser) {
-        // ✅ Don't show actual password - just show masked dots
-        currentVideoPassword.value = '••••••••';
-        newVideoPassword.value = '';
-        confirmVideoPassword.value = '';
-        settingsStatus.textContent = '';
-        settingsModal.style.display = 'flex';
-    }
+if (currentUser) {
+// ✅ Don't show actual password - just show masked dots
+currentVideoPassword.value = '••••••••';
+newVideoPassword.value = '';
+confirmVideoPassword.value = '';
+settingsStatus.textContent = '';
+settingsModal.style.display = 'flex';
+}
 });
-
 cancelSettings.addEventListener('click', () => {
-    settingsModal.style.display = 'none';
-    settingsStatus.textContent = '';
+settingsModal.style.display = 'none';
+settingsStatus.textContent = '';
 });
-
 settingsForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!db || !currentUser) { 
-        alert("Not authenticated"); 
-        return; 
-    }
-    
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = "Updating...";
-    settingsStatus.textContent = "";
-    
-    const newPassword = newVideoPassword.value.trim();
-    const confirmPassword = confirmVideoPassword.value.trim();
-    
-    // ✅ Validate password
-    if (!newPassword) {
-        settingsStatus.textContent = "❌ Password cannot be empty";
-        settingsStatus.className = "status-error";
-        btn.disabled = false;
-        btn.textContent = originalText;
-        return;
-    }
-    
-    if (newPassword.length < 4) {
-        settingsStatus.textContent = "❌ Password must be at least 4 characters";
-        settingsStatus.className = "status-error";
-        btn.disabled = false;
-        btn.textContent = originalText;
-        return;
-    }
-    
-    if (newPassword !== confirmPassword) {
-        settingsStatus.textContent = "❌ Passwords do not match";
-        settingsStatus.className = "status-error";
-        btn.disabled = false;
-        btn.textContent = originalText;
-        return;
-    }
-    
-    try {
-        const passwordDoc = doc(db, "settings", "videoPassword");
-        await updateDoc(passwordDoc, {
-            password: newPassword,
-            updatedAt: serverTimestamp(),
-            updatedBy: currentUser.email
-        });
-        
-        console.log("✅ Video password updated successfully!");
-        settingsStatus.textContent = "✅ Video password updated successfully!";
-        settingsStatus.className = "status-success";
-        videoPassword = newPassword; // Update local variable
-        
-        setTimeout(() => { 
-            settingsModal.style.display = 'none'; 
-            settingsStatus.textContent = ""; 
-        }, 2000);
-    } catch (error) {
-        console.error("Error updating password: ", error);
-        
-        // If document doesn't exist, create it
-        if (error.code === 'not-found') {
-            try {
-                await setDoc(doc(db, "settings", "videoPassword"), {
-                    password: newPassword,
-                    createdAt: serverTimestamp(),
-                    createdBy: currentUser.email
-                });
-                settingsStatus.textContent = "✅ Video password created successfully!";
-                settingsStatus.className = "status-success";
-                videoPassword = newPassword;
-                setTimeout(() => { settingsModal.style.display = 'none'; settingsStatus.textContent = ""; }, 2000);
-            } catch (createError) {
-                settingsStatus.textContent = "❌ Error: " + createError.message;
-                settingsStatus.className = "status-error";
-            }
-        } else {
-            settingsStatus.textContent = "❌ Error: " + error.message;
-            settingsStatus.className = "status-error";
-        }
-    } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
-    }
+e.preventDefault();
+if (!db || !currentUser) {
+alert("Not authenticated");
+return;
+}
+const btn = e.target.querySelector('button[type="submit"]');
+const originalText = btn.textContent;
+btn.disabled = true;
+btn.textContent = "Updating...";
+settingsStatus.textContent = "";
+const newPassword = newVideoPassword.value.trim();
+const confirmPassword = confirmVideoPassword.value.trim();
+// ✅ Validate password
+if (!newPassword) {
+settingsStatus.textContent = "❌ Password cannot be empty";
+settingsStatus.className = "status-error";
+btn.disabled = false;
+btn.textContent = originalText;
+return;
+}
+if (newPassword.length < 4) {
+settingsStatus.textContent = "❌ Password must be at least 4 characters";
+settingsStatus.className = "status-error";
+btn.disabled = false;
+btn.textContent = originalText;
+return;
+}
+if (newPassword !== confirmPassword) {
+settingsStatus.textContent = "❌ Passwords do not match";
+settingsStatus.className = "status-error";
+btn.disabled = false;
+btn.textContent = originalText;
+return;
+}
+try {
+const passwordDoc = doc(db, "settings", "videoPassword");
+await updateDoc(passwordDoc, {
+password: newPassword,
+updatedAt: serverTimestamp(),
+updatedBy: currentUser.email
 });
-
+console.log("✅ Video password updated successfully!");
+settingsStatus.textContent = "✅ Video password updated successfully!";
+settingsStatus.className = "status-success";
+videoPassword = newPassword; // Update local variable
+setTimeout(() => {
+settingsModal.style.display = 'none';
+settingsStatus.textContent = "";
+}, 2000);
+} catch (error) {
+console.error("Error updating password: ", error);
+// If document doesn't exist, create it
+if (error.code === 'not-found') {
+try {
+await setDoc(doc(db, "settings", "videoPassword"), {
+password: newPassword,
+createdAt: serverTimestamp(),
+createdBy: currentUser.email
+});
+settingsStatus.textContent = "✅ Video password created successfully!";
+settingsStatus.className = "status-success";
+videoPassword = newPassword;
+setTimeout(() => { settingsModal.style.display = 'none'; settingsStatus.textContent = ""; }, 2000);
+} catch (createError) {
+settingsStatus.textContent = "❌ Error: " + createError.message;
+settingsStatus.className = "status-error";
+}
+} else {
+settingsStatus.textContent = "❌ Error: " + error.message;
+settingsStatus.className = "status-error";
+}
+} finally {
+btn.disabled = false;
+btn.textContent = originalText;
+}
+});
 // ============================================
 // EVENT LISTENERS
 // ============================================
@@ -959,22 +928,22 @@ categoryFilter.addEventListener('change', () => { updateSubcategories(); updateT
 subcategoryFilter.addEventListener('change', () => { updateTopics(); applyFilters(); });
 topicFilter.addEventListener('change', () => { applyFilters(); });
 searchBox.addEventListener('input', () => { applyFilters(); });
-headerTitle.addEventListener('click', () => { 
-    categoryFilter.value = ''; subcategoryFilter.value = ''; topicFilter.value = ''; searchBox.value = ''; 
-    updateSubcategories(); updateTopics(); applyFilters(); 
-    popupModal.style.display = 'none'; popupFrame.src = ''; 
+headerTitle.addEventListener('click', () => {
+categoryFilter.value = ''; subcategoryFilter.value = ''; topicFilter.value = ''; searchBox.value = '';
+updateSubcategories(); updateTopics(); applyFilters();
+popupModal.style.display = 'none'; popupFrame.src = '';
 });
 closePopup.addEventListener('click', () => { popupModal.style.display = 'none'; popupFrame.src = ''; });
 backToListBtn.addEventListener('click', () => { popupModal.style.display = 'none'; popupFrame.src = ''; });
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        if (passwordModal.style.display === 'flex') passwordModal.style.display = 'none';
-        else if (popupModal.style.display === 'flex') { popupModal.style.display = 'none'; popupFrame.src = ''; }
-        else if (addVideoModal.style.display === 'flex') addVideoModal.style.display = 'none';
-        else if (editVideoModal.style.display === 'flex') editVideoModal.style.display = 'none';
-        else if (settingsModal.style.display === 'flex') settingsModal.style.display = 'none';
-        else if (authModal.style.display === 'flex') authModal.style.display = 'none';
-    }
+if (e.key === 'Escape') {
+if (passwordModal.style.display === 'flex') passwordModal.style.display = 'none';
+else if (popupModal.style.display === 'flex') { popupModal.style.display = 'none'; popupFrame.src = ''; }
+else if (addVideoModal.style.display === 'flex') addVideoModal.style.display = 'none';
+else if (editVideoModal.style.display === 'flex') editVideoModal.style.display = 'none';
+else if (settingsModal.style.display === 'flex') settingsModal.style.display = 'none';
+else if (authModal.style.display === 'flex') authModal.style.display = 'none';
+}
 });
 submitPassword.addEventListener('click', validatePassword);
 videoPasswordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') validatePassword(); });
