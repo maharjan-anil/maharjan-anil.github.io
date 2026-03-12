@@ -28,7 +28,7 @@
             background: #f1f5f9;
             min-height: 100vh;
             padding: 2rem 0;
-            padding-bottom: 100px; /* Space for FAB */
+            padding-bottom: 100px;
         }
 
         .main-container {
@@ -134,24 +134,27 @@
             background: #e2e8f0;
         }
 
+        /* Search Container with Clear Button */
         .search-container {
             position: relative;
             margin-bottom: 1.5rem;
         }
 
-        .search-container i {
+        .search-container i.search-icon {
             position: absolute;
             left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
             font-size: 1.1rem;
+            pointer-events: none;
+            z-index: 2;
         }
 
         .search-input-modern {
             border: 2px solid #e2e8f0;
             border-radius: 50px;
-            padding: 0.875rem 1.25rem 0.875rem 3rem;
+            padding: 0.875rem 3.5rem 0.875rem 3rem;
             font-size: 0.95rem;
             width: 100%;
             transition: var(--transition);
@@ -161,6 +164,44 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
             outline: none;
+        }
+
+        /* Clear Button (X) */
+        .search-clear-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #e2e8f0;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 2;
+            padding: 0;
+        }
+
+        .search-clear-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .search-clear-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .search-clear-btn i {
+            font-size: 0.75rem;
         }
 
         .contact-list {
@@ -464,6 +505,10 @@
                 bottom: 85px;
                 right: 20px;
             }
+
+            .search-input-modern {
+                padding: 0.875rem 3.5rem 0.875rem 3rem;
+            }
         }
     </style>
 </head>
@@ -489,10 +534,13 @@
         </div>
         <div class="card-body-custom">
             
-            <!-- Search Box -->
+            <!-- Search Box with Clear Button -->
             <div class="search-container">
-                <i class="fas fa-search"></i>
+                <i class="fas fa-search search-icon"></i>
                 <input type="text" class="search-input-modern" id="searchInput" placeholder="Search by name, phone, email, or address...">
+                <button class="search-clear-btn" id="searchClearBtn" title="Clear search">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
             <!-- Results Area -->
@@ -582,6 +630,7 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdWoL03Ysd2Mf67VNiPG3HLKWCRQ0j3El-3-nIOa4p4XAIvVRxvHL5o1k5ZzW8u8Ax/exec'; 
 
     const searchInput = document.getElementById('searchInput');
+    const searchClearBtn = document.getElementById('searchClearBtn');
     const contactsList = document.getElementById('contactsList');
     const loader = document.getElementById('loader');
     const placeholderText = document.getElementById('placeholderText');
@@ -605,9 +654,28 @@
         }
     });
 
+    // Clear Button - Show/Hide based on input
+    searchInput.addEventListener('input', function() {
+        if (this.value.length > 0) {
+            searchClearBtn.classList.add('visible');
+        } else {
+            searchClearBtn.classList.remove('visible');
+        }
+    });
+
+    // Clear Button - Click to clear search
+    searchClearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        searchClearBtn.classList.remove('visible');
+        contactsList.innerHTML = '';
+        placeholderText.style.display = 'block';
+        hideError();
+        contactCount.querySelector('span').textContent = '0';
+        searchInput.focus();
+    });
+
     // FAB Button Click - Open Modal for Add
     fabButton.addEventListener('click', () => {
-        // Reset form for new contact
         contactForm.reset();
         document.getElementById('actionType').value = 'add';
         document.getElementById('editRow').value = '';
@@ -724,7 +792,6 @@
 
         let html = '';
         contacts.forEach(contact => {
-            // Convert all fields to strings to prevent null/undefined errors
             const name = String(contact.name || '');
             const phone = String(contact.phone || '');
             const email = String(contact.email || '');
@@ -776,12 +843,10 @@
         contactsList.innerHTML = html;
     }
 
-    // ✅ FIXED: Handle null, undefined, and non-string values
     function escapeHtml(text) {
         if (text === null || text === undefined) {
             return '';
         }
-        // Convert to string first, then escape
         return String(text)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
