@@ -131,12 +131,21 @@
             letter-spacing: 1px;
         }
         
-        .summary-total-row {
-            background-color: var(--primary) !important;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 800;
-        }
+        .summary-loan-row {
+    background-color: #f0fdfa !important;
+    font-weight: 600;
+}
+.summary-loan-row td {
+    border-top: 1px solid var(--primary-light);
+}
+.summary-balance-row {
+    background-color: #fef3c7 !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+.summary-balance-row td {
+    border-top: 2px solid #f59e0b;
+}
         .summary-total-row td { border-top: 2px solid var(--primary-light); }
 
         .date-group { display: flex; gap: 4px; }
@@ -911,43 +920,127 @@
         }
 
         function loadSummary() {
-            if (allRecordsData.length === 0) {
-                summaryContainer.innerHTML = '<div class="text-center text-muted py-5">No data available.</div>';
-                return;
+    if (allRecordsData.length === 0) {
+        summaryContainer.innerHTML = '<div class="text-center text-muted py-5">No data available.</div>';
+        return;
+    }
+    
+    let memberStats = {};
+    members.forEach(m => { memberStats[m] = { deposit: 0, fine: 0, total: 0 }; });
+    
+    let grandTotalAll = 0;
+    allRecordsData.forEach(rec => {
+        members.forEach(m => {
+            const data = rec.members[m];
+            if (data) {
+                const dep = data.deposit || 0;
+                const fn = data.fine || 0;
+                memberStats[m].deposit += dep;
+                memberStats[m].fine += fn;
+                memberStats[m].total += (dep + fn);
+                grandTotalAll += (dep + fn);
             }
-            let memberStats = {};
-            members.forEach(m => { memberStats[m] = { deposit: 0, fine: 0, total: 0 }; });
-            let grandTotalAll = 0;
-
-            allRecordsData.forEach(rec => {
-                members.forEach(m => {
-                    const data = rec.members[m];
-                    if (data) {
-                        const dep = data.deposit || 0;
-                        const fn = data.fine || 0;
-                        memberStats[m].deposit += dep;
-                        memberStats[m].fine += fn;
-                        memberStats[m].total += (dep + fn);
-                        grandTotalAll += (dep + fn);
-                    }                });
-            });
-
-            let html = `<div class="table-responsive"><table class="summary-table"><thead><tr><th class="col-month" style="text-align:left !important;">Member Name</th><th class="text-primary">Total Deposit</th><th class="text-danger">Total Fine</th><th class="text-dark" style="background:#eef2ff !important;">Subtotal (Dep+Fine)</th></tr></thead><tbody>`;
-            members.forEach(m => {
-                const stats = memberStats[m];
-                // Make name clickable
-                html += `<tr>
-                    <td class="col-month" style="text-align:left !important; font-weight:600;">
-                        <span class="member-link" onclick="window.showMemberDetails('${m}')"><i class="fas fa-user-circle me-1"></i>${m}</span>
-                    </td>
-                    <td class="text-primary fw-bold">${stats.deposit.toLocaleString()}</td>
-                    <td class="text-danger fw-bold">${stats.fine.toLocaleString()}</td>
-                    <td class="fw-bold" style="background:#f9fafb;">${stats.total.toLocaleString()}</td>
-                </tr>`;
-            });
-            html += `</tbody><tfoot><tr class="summary-total-row"><td class="text-end" style="text-align:right !important; padding-right:15px;">GRAND TOTAL (All Members)</td><td colspan="3" style="font-size:1.2rem; text-align:center;">NPR ${grandTotalAll.toLocaleString()}</td></tr></tfoot></table></div>`;
-            summaryContainer.innerHTML = html;
-        }
+        });
+    });
+    
+    // === Calculate Active Loans & Paid Installments ===
+    let chronologicalData = [...allRecordsData].sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return nepaliMonthsOrder.indexOf(a.month) - nepaliMonthsOrder.indexOf(b.month);
+    });
+    
+    let activeLoans = [];
+    chronologicalData.forEach(rec => {
+        members.forEach(m => {
+            const data = rec.members[m];
+            if (data && data.loanAmount > 0 && data.takenDate) {
+                const takenDateNum = parseNepaliDateToNum(data.takenDate);
+                const maturityDateNum = parseNepaliDateToNum(data.maturityDate);
+                
+                // Calculate total paid installments for this loan
+                let totalPaid = 0;
+                chronologicalData.forEach(r => {
+                    const rMonthIdx = nepaliMonthsOrder.indexOf(r.month) + 1;
+                    const recNum = r.year * 10000 + rMonthIdx * 100 + 15;
+                    const rData = r.members[m];
+                    if (rData && rData.installment > 0 && recNum >= takenDateNum) {
+                        totalPaid += rData.installment;
+                    }
+                });
+                
+                // Determine loan status (same logic as loan summary)
+                const isClosed = totalPaid >= data.loanAmount;
+                const isOverdue = !isClosed && todayNP > maturityDateNum;
+                const isActive = !isClosed && !isOverdue;
+                
+                if (isActive) {
+                    activeLoans.push({
+                        member: m,
+                        loanAmount: data.loanAmount,
+                        totalPaid: totalPaid
+                    });
+                }
+            }
+        });
+    });
+    
+    // Calculate: Total Loan = Active Loan Amount - Paid Installments (for active loans only)
+    let totalActiveLoanAmount = 0;
+    let totalPaidForActive = 0;
+    activeLoans.forEach(loan => {
+        totalActiveLoanAmount += loan.loanAmount;
+        totalPaidForActive += loan.totalPaid;
+    });
+    const totalLoan = Math.max(0, totalActiveLoanAmount - totalPaidForActive);
+    
+    // Calculate: Remaining Balance = GRAND TOTAL - Total Loan
+    const remainingBalance = Math.max(0, grandTotalAll - totalLoan);
+    
+    // === Build HTML Table ===
+    let html = `<div class="table-responsive"><table class="summary-table"><thead><tr>
+        <th class="col-month" style="text-align:left !important;">Member Name</th>
+        <th class="text-primary">Total Deposit</th>
+        <th class="text-danger">Total Fine</th>
+        <th class="text-dark" style="background:#eef2ff !important;">Subtotal (Dep+Fine)</th>
+    </tr></thead><tbody>`;
+    
+    members.forEach(m => {
+        const stats = memberStats[m];
+        html += `<tr>
+            <td class="col-month" style="text-align:left !important; font-weight:600;">
+                <span class="member-link" onclick="window.showMemberDetails('${m}')">
+                    <i class="fas fa-user-circle me-1"></i>${m}
+                </span>
+            </td>
+            <td class="text-primary fw-bold">${stats.deposit.toLocaleString()}</td>
+            <td class="text-danger fw-bold">${stats.fine.toLocaleString()}</td>
+            <td class="fw-bold" style="background:#f9fafb;">${stats.total.toLocaleString()}</td>
+        </tr>`;
+    });
+    
+    // Footer with GRAND TOTAL, Total Loan, and Remaining Balance
+    html += `</tbody><tfoot>
+        <tr class="summary-total-row">
+            <td class="text-end" style="text-align:right !important; padding-right:15px;">GRAND TOTAL (All Members)</td>
+            <td colspan="3" style="font-size:1.2rem; text-align:center;">NPR ${grandTotalAll.toLocaleString()}</td>
+        </tr>
+        <tr class="summary-loan-row">
+            <td class="text-end" style="text-align:right !important; padding-right:15px;">Total Loan (Active)</td>
+            <td colspan="3" style="text-align:center; color: var(--primary);">
+                NPR ${totalLoan.toLocaleString()}
+                <small class="text-muted d-block" style="font-size:0.75rem; font-weight:400;">
+                    (Active Loans: NPR ${totalActiveLoanAmount.toLocaleString()} - Paid: NPR ${totalPaidForActive.toLocaleString()})
+                </small>
+            </td>
+        </tr>
+        <tr class="summary-balance-row">
+            <td class="text-end" style="text-align:right !important; padding-right:15px;">Remaining Balance</td>
+            <td colspan="3" style="text-align:center;">NPR ${remainingBalance.toLocaleString()}</td>
+        </tr>
+    </tfoot></table></div>`;
+    
+    summaryContainer.innerHTML = html;
+}
 
         function loadLoanSummary() {
             if (allRecordsData.length === 0) {
