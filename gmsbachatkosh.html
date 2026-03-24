@@ -851,6 +851,45 @@ console.error(error);
 historyContainer.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
 }
 }
+
+// ============================================================================
+// FIXED: Calculate installments PER LOAN (not across all loans)
+// ============================================================================
+function calculateInstallmentsForLoan(member, loan, allRecords) {
+let totalPaid = 0;
+let loanClosed = false;
+
+// Sort records chronologically
+const sorted = [...allRecords].sort((a, b) => {
+if (a.year !== b.year) return a.year - b.year;
+return nepaliMonthsOrder.indexOf(a.month) - nepaliMonthsOrder.indexOf(b.month);
+});
+
+for (const rec of sorted) {
+const rMonthIdx = nepaliMonthsOrder.indexOf(rec.month) + 1;
+const recNum = rec.year * 10000 + rMonthIdx * 100 + 15;
+const data = rec.members[member];
+
+// Only count installments AFTER loan taken date
+if (data && data.installment > 0 && recNum >= loan.takenDateNum) {
+// Stop counting if loan is already closed
+if (loanClosed) break;
+
+totalPaid += data.installment;
+
+// Check if loan is now closed
+if (totalPaid >= loan.loanAmount) {
+loanClosed = true;
+// Cap at loan amount (don't count excess)
+totalPaid = loan.loanAmount;
+break;
+}
+}
+}
+
+return totalPaid;
+}
+
 function loadSummary() {
 if (allRecordsData.length === 0) {
 summaryContainer.innerHTML = '<div class="text-center text-muted py-5">No data available.</div>';
@@ -876,42 +915,47 @@ totalInterestAll += intr;
 }
 });
 });
-// === Calculate Active Loans & Paid Installments ===
+
+// === Calculate Active Loans & Paid Installments (PER LOAN) ===
 let chronologicalData = [...allRecordsData].sort((a, b) => {
 if (a.year !== b.year) return a.year - b.year;
 return nepaliMonthsOrder.indexOf(a.month) - nepaliMonthsOrder.indexOf(b.month);
 });
-let activeLoans = [];
+
+// Collect all loans with unique identifiers
+let allLoans = [];
 chronologicalData.forEach(rec => {
 members.forEach(m => {
 const data = rec.members[m];
 if (data && data.loanAmount > 0 && data.takenDate) {
-const takenDateNum = parseNepaliDateToNum(data.takenDate);
-const maturityDateNum = parseNepaliDateToNum(data.maturityDate);
-// Calculate total paid installments for this loan
-let totalPaid = 0;
-chronologicalData.forEach(r => {
-const rMonthIdx = nepaliMonthsOrder.indexOf(r.month) + 1;
-const recNum = r.year * 10000 + rMonthIdx * 100 + 15;
-const rData = r.members[m];
-if (rData && rData.installment > 0 && recNum >= takenDateNum) {
-totalPaid += rData.installment;
-}
-});
-// Determine loan status
-const isClosed = totalPaid >= data.loanAmount;
-const isOverdue = !isClosed && todayNP > maturityDateNum;
-const isActive = !isClosed && !isOverdue;
-if (isActive) {
-activeLoans.push({
+allLoans.push({
 member: m,
 loanAmount: data.loanAmount,
-totalPaid: totalPaid
+takenDate: data.takenDate,
+maturityDate: data.maturityDate,
+takenDateNum: parseNepaliDateToNum(data.takenDate),
+maturityDateNum: parseNepaliDateToNum(data.maturityDate)
 });
 }
+});
+});
+
+// Calculate paid installment for EACH loan separately
+allLoans.forEach(loan => {
+loan.totalPaid = calculateInstallmentsForLoan(loan.member, loan, chronologicalData);
+});
+
+// Filter only active loans
+let activeLoans = [];
+allLoans.forEach(loan => {
+const isClosed = loan.totalPaid >= loan.loanAmount;
+const isOverdue = !isClosed && todayNP > loan.maturityDateNum;
+const isActive = !isClosed && !isOverdue;
+if (isActive) {
+activeLoans.push(loan);
 }
 });
-});
+
 // Calculate: Total Loan = Active Loan Amount - Paid Installments (for active loans only)
 let totalActiveLoanAmount = 0;
 let totalPaidForActive = 0;
@@ -920,8 +964,10 @@ totalActiveLoanAmount += loan.loanAmount;
 totalPaidForActive += loan.totalPaid;
 });
 const totalLoan = Math.max(0, totalActiveLoanAmount - totalPaidForActive);
+
 // Calculate: Remaining Balance = (GRAND TOTAL + Total Interest) - Total Loan
 const remainingBalance = Math.max(0, (grandTotalAll + totalInterestAll) - totalLoan);
+
 // === Build HTML Table ===
 let html = `<div class="table-responsive"><table class="summary-table"><thead><tr>
 <th class="col-month" style="text-align:left !important;">Member Name</th>
@@ -975,6 +1021,7 @@ NPR ${totalLoan.toLocaleString()}
 </tfoot></table></div>`;
 summaryContainer.innerHTML = html;
 }
+
 function loadLoanSummary() {
 if (allRecordsData.length === 0) {
 loanContainer.innerHTML = '<div class="text-center text-muted py-5">No data available.</div>';
@@ -984,6 +1031,8 @@ let chronologicalData = [...allRecordsData].sort((a, b) => {
 if (a.year !== b.year) return a.year - b.year;
 return nepaliMonthsOrder.indexOf(a.month) - nepaliMonthsOrder.indexOf(b.month);
 });
+
+// Collect all loans
 let loans = [];
 chronologicalData.forEach(rec => {
 members.forEach(m => {
@@ -1003,16 +1052,12 @@ status: 'Active'
 }
 });
 });
+
+// FIXED: Calculate paid installment for EACH loan separately
 loans.forEach(loan => {
-chronologicalData.forEach(rec => {
-const rMonthIdx = nepaliMonthsOrder.indexOf(rec.month) + 1;
-const recNum = rec.year * 10000 + rMonthIdx * 100 + 15;
-const data = rec.members[loan.member];
-if (data && data.installment > 0 && recNum >= loan.takenDateNum) {
-loan.totalPaid += data.installment;
-}
+loan.totalPaid = calculateInstallmentsForLoan(loan.member, loan, chronologicalData);
 });
-});
+
 let html = `<div class="table-responsive"><table class="loan-table"><thead><tr>
 <th class="col-month" style="text-align:left !important;">Member</th>
 <th>Loan Amount</th>
@@ -1051,6 +1096,7 @@ html += `
 html += `</tbody></table></div>`;
 loanContainer.innerHTML = html;
 }
+
 window.switchTab = (tabName) => {
 const sections = ['history', 'summary', 'loan', 'bank'];
 sections.forEach(t => {
