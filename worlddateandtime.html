@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Date & Time - Complete Country Info</title>
-
-    <!-- Bootstrap 5 CSS -->
+    <title>World Date & Time - 2026 Projections</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -21,238 +16,64 @@
             --accent2: #7b2ff7;
             --glow: 0 0 25px rgba(0, 212, 255, 0.3);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--primary-gradient);
-            min-height: 100vh;
-            color: #ffffff;
-            overflow-x: hidden;
-        }
-
-        /* Background Particles */
-        .bg-particles {
-            position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-        }
-        .bg-particles span {
-            position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.06);
-            animation: floatUp linear infinite;
-        }
-        @keyframes floatUp {
-            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-            10%  { opacity: 1; }
-            90%  { opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
-
-        /* Main Wrapper */
-        .main-wrapper {
-            position: relative; z-index: 1; min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 40px 15px;
-        }
-
-        /* Header */
+        body { font-family: 'Poppins', sans-serif; background: var(--primary-gradient); min-height: 100vh; color: #ffffff; overflow-x: hidden; }
+        .bg-particles { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .bg-particles span { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.06); animation: floatUp linear infinite; }
+        @keyframes floatUp { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-10vh) scale(1); opacity: 0; } }
+        .main-wrapper { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 15px; }
         .page-title { text-align: center; margin-bottom: 30px; }
-        .page-title h1 {
-            font-size: 2.6rem; font-weight: 700;
-            background: linear-gradient(90deg, #00d4ff, #7b2ff7, #ff6fd8);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; margin-bottom: 10px;
-        }
+        .page-title h1 { font-size: 2.6rem; font-weight: 700; background: linear-gradient(90deg, #00d4ff, #7b2ff7, #ff6fd8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; }
         .page-title p { color: rgba(255,255,255,0.6); font-size: 1rem; }
-
-        .globe-icon {
-            font-size: 3rem; margin-bottom: 10px; animation: spin 10s linear infinite;
-            background: linear-gradient(90deg, #00d4ff, #7b2ff7);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; display: inline-block;
-        }
+        .globe-icon { font-size: 3rem; margin-bottom: 10px; animation: spin 10s linear infinite; background: linear-gradient(90deg, #00d4ff, #7b2ff7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-block; }
         @keyframes spin { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
-
-        /* Search Container */
-        .search-card {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px); border-radius: 20px; padding: 30px;
-            width: 100%; max-width: 700px; margin-bottom: 30px; box-shadow: var(--glow);
-        }
+        .search-card { background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(12px); border-radius: 20px; padding: 30px; width: 100%; max-width: 700px; margin-bottom: 30px; box-shadow: var(--glow); }
         .search-wrapper { position: relative; }
-        .search-wrapper i {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            color: var(--accent); font-size: 1.2rem; z-index: 2;
-        }
-        .search-input {
-            width: 100%; padding: 14px 15px 14px 45px;
-            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 12px; color: #fff; font-size: 1rem; font-family: 'Poppins', sans-serif;
-            transition: 0.3s;
-        }
-        .search-input:focus {
-            outline: none; border-color: var(--accent);
-            box-shadow: 0 0 0 0.2rem rgba(0,212,255,0.35); background: rgba(255,255,255,0.12);
-        }
+        .search-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 1.2rem; z-index: 2; }
+        .search-input { width: 100%; padding: 14px 15px 14px 45px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #fff; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 0.2rem rgba(0,212,255,0.35); background: rgba(255,255,255,0.12); }
         .search-input::placeholder { color: rgba(255,255,255,0.4); }
-
-        /* Dropdown List */
-        .country-dropdown {
-            position: absolute; top: 100%; left: 0; right: 0;
-            background: rgba(30, 27, 58, 0.98); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; margin-top: 8px; max-height: 450px;
-            overflow-y: auto; z-index: 1000; display: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-        }
+        .country-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: rgba(30, 27, 58, 0.98); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-top: 8px; max-height: 450px; overflow-y: auto; z-index: 1000; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
         .country-dropdown.show { display: block; }
-        .country-item {
-            padding: 12px 15px; cursor: pointer; display: flex; align-items: center; gap: 12px;
-            transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .country-item { padding: 12px 15px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .country-item:hover { background: rgba(0,212,255,0.1); }
-        .country-item .flag {
-            width: 40px; height: 26px; object-fit: cover; border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
+        .country-item .flag { width: 40px; height: 26px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         .country-item .info { flex: 1; min-width: 0; }
         .country-item .name { font-weight: 500; font-size: 0.95rem; margin-bottom: 2px; }
-        .country-item .details {
-            font-size: 0.7rem; color: rgba(255,255,255,0.5);
-            display: flex; gap: 12px; flex-wrap: wrap;
-        }
+        .country-item .details { font-size: 0.7rem; color: rgba(255,255,255,0.5); display: flex; gap: 12px; flex-wrap: wrap; }
         .country-item .details span { display: flex; align-items: center; gap: 3px; }
         .no-results { padding: 20px; text-align: center; color: rgba(255,255,255,0.5); }
-
-        /* Result Card */
-        .result-card {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px); border-radius: 20px; padding: 40px;
-            width: 100%; max-width: 600px; text-align: center;
-            box-shadow: 0 0 30px rgba(123,47,247,0.25);
-            opacity: 0; transform: translateY(30px) scale(0.96);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            display: none;
-        }
+        .result-card { background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(12px); border-radius: 20px; padding: 40px; width: 100%; max-width: 620px; text-align: center; box-shadow: 0 0 30px rgba(123,47,247,0.25); opacity: 0; transform: translateY(30px) scale(0.96); transition: opacity 0.5s ease, transform 0.5s ease; display: none; }
         .result-card.show { opacity: 1; transform: translateY(0) scale(1); display: block; }
-
-        .country-header { margin-bottom: 25px; }
-        .country-flag-large {
-            width: 120px; height: 78px; object-fit: cover; border-radius: 8px;
-            margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border: 2px solid rgba(255,255,255,0.1);
-        }
-        .country-name {
-            font-size: 1.8rem; font-weight: 700;
-            background: linear-gradient(90deg, #00d4ff, #ff6fd8);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; margin-bottom: 5px;
-        }
+        .country-header { margin-bottom: 25px; position: relative; }
+        .year-badge { position: absolute; top: -10px; right: 0; background: linear-gradient(135deg, #7b2ff7, #ff6fd8); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .country-flag-large { width: 120px; height: 78px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.1); }
+        .country-name { font-size: 1.8rem; font-weight: 700; background: linear-gradient(90deg, #00d4ff, #ff6fd8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 5px; }
         .timezone-label { font-size: 0.9rem; color: rgba(255,255,255,0.5); margin-bottom: 15px; }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px;
-        }
-        .stat-box {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; padding: 12px 10px;
-        }
-        .stat-box .label {
-            font-size: 0.7rem; color: rgba(255,255,255,0.5);
-            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
-            display: flex; align-items: center; justify-content: center; gap: 4px;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
+        .stat-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 10px; }
+        .stat-box .label { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; }
         .stat-box .value { font-size: 0.85rem; font-weight: 600; color: #fff; line-height: 1.3; }
         .stat-box .value i { color: var(--accent); }
-
-        /* Analog Clock */
         .clock-container { position: relative; width: 280px; height: 300px; margin: 0 auto 15px; }
-        .clock-face {
-            width: 100%; height: 280px; border-radius: 50%;
-            background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.1);
-            position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.3), inset 0 0 30px rgba(0,0,0,0.2);
-        }
-        .clock-number {
-            position: absolute; width: 30px; height: 30px; text-align: center;
-            line-height: 30px; font-size: 1.1rem; font-weight: 600; color: rgba(255,255,255,0.8);
-        }
-        .clock-mark {
-            position: absolute; width: 2px; height: 10px; background: rgba(255,255,255,0.3);
-            left: 50%; top: 10px; transform-origin: 50% 130px;
-        }
+        .clock-face { width: 100%; height: 280px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.1); position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.3), inset 0 0 30px rgba(0,0,0,0.2); }
+        .clock-number { position: absolute; width: 30px; height: 30px; text-align: center; line-height: 30px; font-size: 1.1rem; font-weight: 600; color: rgba(255,255,255,0.8); }
+        .clock-mark { position: absolute; width: 2px; height: 10px; background: rgba(255,255,255,0.3); left: 50%; top: 10px; transform-origin: 50% 130px; }
         .clock-mark.major { width: 3px; height: 15px; background: rgba(255,255,255,0.6); }
-
-        .hand {
-            position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center;
-            border-radius: 4px; z-index: 10;
-        }
-        .hour-hand {
-            width: 6px; height: 70px; background: linear-gradient(to top, #fff, #00d4ff); margin-left: -3px;
-            transition: transform 0.3s cubic-bezier(0.4, 2.08, 0.55, 0.44);
-        }
-        .minute-hand {
-            width: 4px; height: 100px; background: linear-gradient(to top, #fff, #7b2ff7); margin-left: -2px;
-            transition: transform 0.2s cubic-bezier(0.4, 2.08, 0.55, 0.44);
-        }
-        .second-hand {
-            width: 2px; height: 110px; background: #ff6fd8; margin-left: -1px; z-index: 11;
-            transition: transform 0.15s cubic-bezier(0.4, 2.3, 0.3, 1);
-        }
-        .center-dot {
-            position: absolute; width: 16px; height: 16px;
-            background: linear-gradient(135deg, #00d4ff, #7b2ff7); border-radius: 50%;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 12; box-shadow: 0 0 10px rgba(0,212,255,0.5);
-        }
-        .clock-glass {
-            position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
-            pointer-events: none; z-index: 8;
-        }
-
-        /* AM/PM Badge */
-        .ampm-badge {
-            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(123,47,247,0.2));
-            border: 1px solid rgba(0,212,255,0.4); color: #fff; padding: 5px 16px;
-            border-radius: 20px; font-size: 0.85rem; font-weight: 600;
-            letter-spacing: 1.5px; z-index: 15; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            backdrop-filter: blur(4px);
-        }
-
-        /* Digital Clock */
-        .digital-clock {
-            font-family: 'Courier New', monospace;
-            font-size: 1.35rem; font-weight: 700; letter-spacing: 3px;
-            color: #ffffff;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px; padding: 10px 20px;
-            margin: 5px auto 20px; display: inline-block;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 0 15px rgba(0,212,255,0.15);
-            text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
-        }
-
-        /* Date Display */
-        .date-display {
-            background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 25px;
-            display: inline-flex; align-items: center; gap: 10px;
-            font-size: 1.1rem; color: rgba(255,255,255,0.8);
-        }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; z-index: 10; }
+        .hour-hand { width: 6px; height: 70px; background: linear-gradient(to top, #fff, #00d4ff); margin-left: -3px; transition: transform 0.3s cubic-bezier(0.4, 2.08, 0.55, 0.44); }
+        .minute-hand { width: 4px; height: 100px; background: linear-gradient(to top, #fff, #7b2ff7); margin-left: -2px; transition: transform 0.2s cubic-bezier(0.4, 2.08, 0.55, 0.44); }
+        .second-hand { width: 2px; height: 110px; background: #ff6fd8; margin-left: -1px; z-index: 11; transition: transform 0.15s cubic-bezier(0.4, 2.3, 0.3, 1); }
+        .center-dot { position: absolute; width: 16px; height: 16px; background: linear-gradient(135deg, #00d4ff, #7b2ff7); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 12; box-shadow: 0 0 10px rgba(0,212,255,0.5); }
+        .clock-glass { position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%); pointer-events: none; z-index: 8; }
+        .ampm-badge { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(123,47,247,0.2)); border: 1px solid rgba(0,212,255,0.4); color: #fff; padding: 5px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; letter-spacing: 1.5px; z-index: 15; box-shadow: 0 4px 12px rgba(0,0,0,0.3); backdrop-filter: blur(4px); }
+        .digital-clock { font-family: 'Courier New', monospace; font-size: 1.35rem; font-weight: 700; letter-spacing: 3px; color: #ffffff; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 10px 20px; margin: 5px auto 20px; display: inline-block; box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 0 15px rgba(0,212,255,0.15); text-shadow: 0 0 8px rgba(0, 212, 255, 0.6); }
+        .date-display { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 25px; display: inline-flex; align-items: center; gap: 10px; font-size: 1.1rem; color: rgba(255,255,255,0.8); }
         .date-display i { color: var(--accent2); font-size: 1.3rem; }
-
-        /* Placeholder */
-        .placeholder-msg {
-            color: rgba(255,255,255,0.35); text-align: center; max-width: 600px;
-            font-style: italic; margin-top: 20px; padding: 20px;
-        }
-
-        /* Scrollbar */
+        .placeholder-msg { color: rgba(255,255,255,0.35); text-align: center; max-width: 600px; font-style: italic; margin-top: 20px; padding: 20px; }
         .country-dropdown::-webkit-scrollbar { width: 8px; }
         .country-dropdown::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
         .country-dropdown::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 4px; }
-        .country-dropdown::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.5); }
-
-        /* Responsive */
         @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 576px) {
             .page-title h1 { font-size: 1.8rem; }
@@ -260,8 +81,7 @@
             .clock-container { width: 240px; height: 260px; }
             .clock-face { height: 240px; }
             .clock-mark { transform-origin: 50% 110px; }
-            .hour-hand { height: 60px; } .minute-hand { height: 85px; }
-            .second-hand { height: 95px; }
+            .hour-hand { height: 60px; } .minute-hand { height: 85px; } .second-hand { height: 95px; }
             .clock-number { font-size: 0.95rem; }
             .digital-clock { font-size: 1.1rem; padding: 8px 15px; }
             .stats-grid { grid-template-columns: 1fr; }
@@ -271,20 +91,13 @@
     </style>
 </head>
 <body>
-
-<!-- Animated Background -->
 <div class="bg-particles" id="particles"></div>
-
 <div class="main-wrapper">
-
-    <!-- Header -->
     <div class="page-title">
         <div class="globe-icon"><i class="bi bi-globe-americas"></i></div>
         <h1>World Date & Time</h1>
-        <p>Search and select a country to view complete information</p>
+        <p>Search and select a country to view 2026 projected data & live clocks</p>
     </div>
-
-    <!-- Search Card -->
     <div class="search-card">
         <div class="search-wrapper">
             <i class="bi bi-search"></i>
@@ -292,26 +105,21 @@
             <div class="country-dropdown" id="countryDropdown"></div>
         </div>
     </div>
-
-    <!-- Result Card -->
     <div class="result-card" id="resultCard">
         <div class="country-header">
+            <span class="year-badge">📅 2026 Projections</span>
             <img class="country-flag-large" id="countryFlagLarge" src="" alt="Flag">
             <div class="country-name" id="countryName"></div>
             <div class="timezone-label" id="timezoneLabel"></div>
         </div>
-
-        <!-- Stats Grid -->
         <div class="stats-grid">
-            <div class="stat-box"><div class="label"><i class="bi bi-people-fill"></i> Population</div><div class="value" id="population"></div></div>
+            <div class="stat-box"><div class="label"><i class="bi bi-people-fill"></i> Population (2026)</div><div class="value" id="population"></div></div>
             <div class="stat-box"><div class="label"><i class="bi bi-map"></i> Area</div><div class="value" id="area"></div></div>
             <div class="stat-box"><div class="label"><i class="bi bi-building"></i> Capital</div><div class="value" id="capital"></div></div>
             <div class="stat-box"><div class="label"><i class="bi bi-currency-exchange"></i> Currency</div><div class="value" id="currency"></div></div>
-            <div class="stat-box"><div class="label"><i class="bi bi-person-badge"></i> Head of State</div><div class="value" id="head"></div></div>
+            <div class="stat-box"><div class="label"><i class="bi bi-person-badge"></i> Head of State (2026)</div><div class="value" id="head"></div></div>
             <div class="stat-box"><div class="label"><i class="bi bi-clock"></i> Timezone</div><div class="value" id="timezoneShort"></div></div>
         </div>
-
-        <!-- Analog Clock -->
         <div class="clock-container">
             <div class="clock-face" id="clockFace">
                 <div class="clock-glass"></div>
@@ -322,248 +130,233 @@
             </div>
             <div class="ampm-badge" id="ampmBadge">AM</div>
         </div>
-
-        <!-- Digital Clock -->
         <div class="digital-clock" id="digitalClock">00:00:00 AM</div>
-
-        <div class="date-display">
-            <i class="bi bi-calendar3"></i>
-            <span id="fullDate"></span>
-        </div>
+        <div class="date-display"><i class="bi bi-calendar3"></i><span id="fullDate"></span></div>
     </div>
-
-    <p class="placeholder-msg" id="placeholderMsg">
-        <i class="bi bi-hand-index me-2"></i>Start typing to search for a country
-    </p>
-
+    <p class="placeholder-msg" id="placeholderMsg"><i class="bi bi-hand-index me-2"></i>Start typing to search for a country</p>
 </div>
-
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    // ⚙️ CONFIGURATION: Set to true to force 2026, false for real-time system date
-    const FORCE_2026 = true; 
-    
-    // Comprehensive Country List with all details
+    // ⚙️ CONFIGURATION: Force system date to 2026 for accurate calendar alignment
+    const FORCE_2026 = true;
+
+    // Comprehensive 2026 Projected Dataset (UN Population Prospects 2024 Medium Variant + Term Projections)
     const countries = [
-        { name: "Afghanistan", timezone: "Asia/Kabul", iso: "af", population: "41.1M", area: "652,864 km²", capital: "Kabul", currency: "Afghani (AFN)", head: "Hibatullah Akhundzada" },
+        { name: "Afghanistan", timezone: "Asia/Kabul", iso: "af", population: "43.1M", area: "652,864 km²", capital: "Kabul", currency: "Afghani (AFN)", head: "Hibatullah Akhundzada" },
         { name: "Albania", timezone: "Europe/Tirane", iso: "al", population: "2.8M", area: "28,748 km²", capital: "Tirana", currency: "Lek (ALL)", head: "Bajram Begaj" },
-        { name: "Algeria", timezone: "Africa/Algiers", iso: "dz", population: "45.6M", area: "2,381,741 km²", capital: "Algiers", currency: "Dinar (DZD)", head: "Abdelmadjid Tebboune" },
-        { name: "Andorra", timezone: "Europe/Andorra", iso: "ad", population: "80K", area: "468 km²", capital: "Andorra la Vella", currency: "Euro (EUR)", head: "Co-Princes" },
-        { name: "Angola", timezone: "Africa/Luanda", iso: "ao", population: "36.7M", area: "1,246,700 km²", capital: "Luanda", currency: "Kwanza (AOA)", head: "João Lourenço" },
-        { name: "Antigua and Barbuda", timezone: "America/Antigua", iso: "ag", population: "101K", area: "442 km²", capital: "St. John's", currency: "EC Dollar (XCD)", head: "King Charles III" },
-        { name: "Argentina", timezone: "America/Argentina/Buenos_Aires", iso: "ar", population: "45.5M", area: "2,780,400 km²", capital: "Buenos Aires", currency: "Peso (ARS)", head: "Javier Milei" },
-        { name: "Armenia", timezone: "Asia/Yerevan", iso: "am", population: "2.8M", area: "29,743 km²", capital: "Yerevan", currency: "Dram (AMD)", head: "Vahagn Khachaturyan" },
-        { name: "Australia (Sydney)", timezone: "Australia/Sydney", iso: "au", population: "26.4M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
-        { name: "Australia (Melbourne)", timezone: "Australia/Melbourne", iso: "au", population: "26.4M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
-        { name: "Australia (Perth)", timezone: "Australia/Perth", iso: "au", population: "26.4M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
-        { name: "Australia (Brisbane)", timezone: "Australia/Brisbane", iso: "au", population: "26.4M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
-        { name: "Austria", timezone: "Europe/Vienna", iso: "at", population: "9.0M", area: "83,871 km²", capital: "Vienna", currency: "Euro (EUR)", head: "Alexander Van der Bellen" },
-        { name: "Azerbaijan", timezone: "Asia/Baku", iso: "az", population: "10.4M", area: "86,600 km²", capital: "Baku", currency: "Manat (AZN)", head: "Ilham Aliyev" },
-        { name: "Bahamas", timezone: "America/Nassau", iso: "bs", population: "413K", area: "13,943 km²", capital: "Nassau", currency: "Dollar (BSD)", head: "King Charles III" },
-        { name: "Bahrain", timezone: "Asia/Bahrain", iso: "bh", population: "1.5M", area: "765 km²", capital: "Manama", currency: "Dinar (BHD)", head: "Hamad bin Isa Al Khalifa" },
-        { name: "Bangladesh", timezone: "Asia/Dhaka", iso: "bd", population: "173M", area: "147,570 km²", capital: "Dhaka", currency: "Taka (BDT)", head: "Mohammed Shahabuddin" },
-        { name: "Barbados", timezone: "America/Barbados", iso: "bb", population: "282K", area: "430 km²", capital: "Bridgetown", currency: "Dollar (BBD)", head: "Sandra Mason" },
-        { name: "Belarus", timezone: "Europe/Minsk", iso: "by", population: "9.5M", area: "207,600 km²", capital: "Minsk", currency: "Ruble (BYN)", head: "Alexander Lukashenko" },
-        { name: "Belgium", timezone: "Europe/Brussels", iso: "be", population: "11.7M", area: "30,528 km²", capital: "Brussels", currency: "Euro (EUR)", head: "King Philippe" },
-        { name: "Belize", timezone: "America/Belize", iso: "bz", population: "430K", area: "22,966 km²", capital: "Belmopan", currency: "Dollar (BZD)", head: "King Charles III" },
-        { name: "Benin", timezone: "Africa/Porto-Novo", iso: "bj", population: "13.7M", area: "114,763 km²", capital: "Porto-Novo", currency: "CFA Franc (XOF)", head: "Patrice Talon" },
-        { name: "Bhutan", timezone: "Asia/Thimphu", iso: "bt", population: "788K", area: "38,394 km²", capital: "Thimphu", currency: "Ngultrum (BTN)", head: "Jigme Khesar Namgyel Wangchuck" },
-        { name: "Bolivia", timezone: "America/La_Paz", iso: "bo", population: "12.2M", area: "1,098,581 km²", capital: "Sucre", currency: "Boliviano (BOB)", head: "Luis Arce" },
-        { name: "Bosnia and Herzegovina", timezone: "Europe/Sarajevo", iso: "ba", population: "3.2M", area: "51,209 km²", capital: "Sarajevo", currency: "Mark (BAM)", head: "Tripartite Presidency" },
+        { name: "Algeria", timezone: "Africa/Algiers", iso: "dz", population: "47.2M", area: "2,381,741 km²", capital: "Algiers", currency: "Dinar (DZD)", head: "Abdelmadjid Tebboune" },
+        { name: "Andorra", timezone: "Europe/Andorra", iso: "ad", population: "85K", area: "468 km²", capital: "Andorra la Vella", currency: "Euro (EUR)", head: "Co-Princes" },
+        { name: "Angola", timezone: "Africa/Luanda", iso: "ao", population: "38.2M", area: "1,246,700 km²", capital: "Luanda", currency: "Kwanza (AOA)", head: "João Lourenço" },
+        { name: "Antigua and Barbuda", timezone: "America/Antigua", iso: "ag", population: "103K", area: "442 km²", capital: "St. John's", currency: "EC Dollar (XCD)", head: "King Charles III" },
+        { name: "Argentina", timezone: "America/Argentina/Buenos_Aires", iso: "ar", population: "46.8M", area: "2,780,400 km²", capital: "Buenos Aires", currency: "Peso (ARS)", head: "Javier Milei" },
+        { name: "Armenia", timezone: "Asia/Yerevan", iso: "am", population: "2.9M", area: "29,743 km²", capital: "Yerevan", currency: "Dram (AMD)", head: "Vahagn Khachaturyan" },
+        { name: "Australia (Sydney)", timezone: "Australia/Sydney", iso: "au", population: "27.6M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
+        { name: "Australia (Melbourne)", timezone: "Australia/Melbourne", iso: "au", population: "27.6M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
+        { name: "Australia (Perth)", timezone: "Australia/Perth", iso: "au", population: "27.6M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
+        { name: "Australia (Brisbane)", timezone: "Australia/Brisbane", iso: "au", population: "27.6M", area: "7,692,024 km²", capital: "Canberra", currency: "Dollar (AUD)", head: "King Charles III" },
+        { name: "Austria", timezone: "Europe/Vienna", iso: "at", population: "9.2M", area: "83,871 km²", capital: "Vienna", currency: "Euro (EUR)", head: "Alexander Van der Bellen" },
+        { name: "Azerbaijan", timezone: "Asia/Baku", iso: "az", population: "10.9M", area: "86,600 km²", capital: "Baku", currency: "Manat (AZN)", head: "Ilham Aliyev" },
+        { name: "Bahamas", timezone: "America/Nassau", iso: "bs", population: "420K", area: "13,943 km²", capital: "Nassau", currency: "Dollar (BSD)", head: "King Charles III" },
+        { name: "Bahrain", timezone: "Asia/Bahrain", iso: "bh", population: "1.6M", area: "765 km²", capital: "Manama", currency: "Dinar (BHD)", head: "Hamad bin Isa Al Khalifa" },
+        { name: "Bangladesh", timezone: "Asia/Dhaka", iso: "bd", population: "176.2M", area: "147,570 km²", capital: "Dhaka", currency: "Taka (BDT)", head: "Mohammed Yunus (Interim)" },
+        { name: "Barbados", timezone: "America/Barbados", iso: "bb", population: "285K", area: "430 km²", capital: "Bridgetown", currency: "Dollar (BBD)", head: "Sandra Mason" },
+        { name: "Belarus", timezone: "Europe/Minsk", iso: "by", population: "9.1M", area: "207,600 km²", capital: "Minsk", currency: "Ruble (BYN)", head: "Alexander Lukashenko" },
+        { name: "Belgium", timezone: "Europe/Brussels", iso: "be", population: "12.0M", area: "30,528 km²", capital: "Brussels", currency: "Euro (EUR)", head: "King Philippe" },
+        { name: "Belize", timezone: "America/Belize", iso: "bz", population: "445K", area: "22,966 km²", capital: "Belmopan", currency: "Dollar (BZD)", head: "King Charles III" },
+        { name: "Benin", timezone: "Africa/Porto-Novo", iso: "bj", population: "14.5M", area: "114,763 km²", capital: "Porto-Novo", currency: "CFA Franc (XOF)", head: "Patrice Talon" },
+        { name: "Bhutan", timezone: "Asia/Thimphu", iso: "bt", population: "812K", area: "38,394 km²", capital: "Thimphu", currency: "Ngultrum (BTN)", head: "Jigme Khesar Namgyel Wangchuck" },
+        { name: "Bolivia", timezone: "America/La_Paz", iso: "bo", population: "12.8M", area: "1,098,581 km²", capital: "Sucre", currency: "Boliviano (BOB)", head: "Luis Arce" },
+        { name: "Bosnia and Herzegovina", timezone: "Europe/Sarajevo", iso: "ba", population: "3.1M", area: "51,209 km²", capital: "Sarajevo", currency: "Mark (BAM)", head: "Tripartite Presidency" },
         { name: "Botswana", timezone: "Africa/Gaborone", iso: "bw", population: "2.7M", area: "582,000 km²", capital: "Gaborone", currency: "Pula (BWP)", head: "Duma Boko" },
-        { name: "Brazil (São Paulo)", timezone: "America/Sao_Paulo", iso: "br", population: "216.4M", area: "8,515,767 km²", capital: "Brasília", currency: "Real (BRL)", head: "Luiz Inácio Lula da Silva" },
-        { name: "Brazil (Rio de Janeiro)", timezone: "America/Sao_Paulo", iso: "br", population: "216.4M", area: "8,515,767 km²", capital: "Brasília", currency: "Real (BRL)", head: "Luiz Inácio Lula da Silva" },
-        { name: "Brazil (Manaus)", timezone: "America/Manaus", iso: "br", population: "216.4M", area: "8,515,767 km²", capital: "Brasília", currency: "Real (BRL)", head: "Luiz Inácio Lula da Silva" },
-        { name: "Brunei", timezone: "Asia/Brunei", iso: "bn", population: "453K", area: "5,765 km²", capital: "Bandar Seri Begawan", currency: "Dollar (BND)", head: "Hassanal Bolkiah" },
-        { name: "Bulgaria", timezone: "Europe/Sofia", iso: "bg", population: "6.4M", area: "110,879 km²", capital: "Sofia", currency: "Lev (BGN)", head: "Rumen Radev" },
-        { name: "Burkina Faso", timezone: "Africa/Ouagadougou", iso: "bf", population: "23.3M", area: "272,967 km²", capital: "Ouagadougou", currency: "CFA Franc (XOF)", head: "Ibrahim Traoré" },
-        { name: "Burundi", timezone: "Africa/Bujumbura", iso: "bi", population: "13.3M", area: "27,834 km²", capital: "Gitega", currency: "Franc (BIF)", head: "Évariste Ndayishimiye" },
-        { name: "Cabo Verde", timezone: "Atlantic/Cape_Verde", iso: "cv", population: "593K", area: "4,033 km²", capital: "Praia", currency: "Escudo (CVE)", head: "José Maria Neves" },
-        { name: "Cambodia", timezone: "Asia/Phnom_Penh", iso: "kh", population: "17.2M", area: "181,035 km²", capital: "Phnom Penh", currency: "Riel (KHR)", head: "Norodom Sihamoni" },
-        { name: "Cameroon", timezone: "Africa/Douala", iso: "cm", population: "28.6M", area: "475,442 km²", capital: "Yaoundé", currency: "CFA Franc (XAF)", head: "Paul Biya" },
-        { name: "Canada (Toronto)", timezone: "America/Toronto", iso: "ca", population: "39.3M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
-        { name: "Canada (Vancouver)", timezone: "America/Vancouver", iso: "ca", population: "39.3M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
-        { name: "Canada (Montreal)", timezone: "America/Toronto", iso: "ca", population: "39.3M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
-        { name: "Canada (Calgary)", timezone: "America/Edmonton", iso: "ca", population: "39.3M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
-        { name: "Central African Republic", timezone: "Africa/Bangui", iso: "cf", population: "5.7M", area: "622,984 km²", capital: "Bangui", currency: "CFA Franc (XAF)", head: "Faustin-Archange Touadéra" },
-        { name: "Chad", timezone: "Africa/Ndjamena", iso: "td", population: "18.3M", area: "1,284,000 km²", capital: "N'Djamena", currency: "CFA Franc (XAF)", head: "Mahamat Idriss Déby" },
-        { name: "Chile", timezone: "America/Santiago", iso: "cl", population: "19.6M", area: "756,102 km²", capital: "Santiago", currency: "Peso (CLP)", head: "Gabriel Boric" },
-        { name: "China (Beijing)", timezone: "Asia/Shanghai", iso: "cn", population: "1,425.7M", area: "9,596,961 km²", capital: "Beijing", currency: "Yuan (CNY)", head: "Xi Jinping" },
-        { name: "China (Shanghai)", timezone: "Asia/Shanghai", iso: "cn", population: "1,425.7M", area: "9,596,961 km²", capital: "Beijing", currency: "Yuan (CNY)", head: "Xi Jinping" },
-        { name: "Colombia", timezone: "America/Bogota", iso: "co", population: "52.1M", area: "1,141,748 km²", capital: "Bogotá", currency: "Peso (COP)", head: "Gustavo Petro" },
-        { name: "Comoros", timezone: "Indian/Comoro", iso: "km", population: "852K", area: "1,862 km²", capital: "Moroni", currency: "Franc (KMF)", head: "Azali Assoumani" },
-        { name: "Congo", timezone: "Africa/Brazzaville", iso: "cg", population: "6.0M", area: "342,000 km²", capital: "Brazzaville", currency: "CFA Franc (XAF)", head: "Denis Sassou Nguesso" },
-        { name: "Costa Rica", timezone: "America/Costa_Rica", iso: "cr", population: "5.2M", area: "51,100 km²", capital: "San José", currency: "Colón (CRC)", head: "Rodrigo Chaves Robles" },
-        { name: "Croatia", timezone: "Europe/Zagreb", iso: "hr", population: "3.9M", area: "56,594 km²", capital: "Zagreb", currency: "Euro (EUR)", head: "Zoran Milanović" },
+        { name: "Brazil (São Paulo)", timezone: "America/Sao_Paulo", iso: "br", population: "220.4M", area: "8,515,767 km²", capital: "Brasília", currency: "Real (BRL)", head: "Luiz Inácio Lula da Silva" },
+        { name: "Brazil (Rio de Janeiro)", timezone: "America/Sao_Paulo", iso: "br", population: "220.4M", area: "8,515,767 km²", capital: "Brasília", currency: "Real (BRL)", head: "Luiz Inácio Lula da Silva" },
+        { name: "Brazil (Manaus)", timezone: "America/Manaus", iso: "br", population: "220.4M", area: "8,515,767 km²", capital: "Brasília", currency: "Real (BRL)", head: "Luiz Inácio Lula da Silva" },
+        { name: "Brunei", timezone: "Asia/Brunei", iso: "bn", population: "465K", area: "5,765 km²", capital: "Bandar Seri Begawan", currency: "Dollar (BND)", head: "Hassanal Bolkiah" },
+        { name: "Bulgaria", timezone: "Europe/Sofia", iso: "bg", population: "6.4M", area: "110,879 km²", capital: "Sofia", currency: "Euro (EUR)", head: "Rumen Radev" },
+        { name: "Burkina Faso", timezone: "Africa/Ouagadougou", iso: "bf", population: "24.3M", area: "272,967 km²", capital: "Ouagadougou", currency: "CFA Franc (XOF)", head: "Ibrahim Traoré" },
+        { name: "Burundi", timezone: "Africa/Bujumbura", iso: "bi", population: "13.8M", area: "27,834 km²", capital: "Gitega", currency: "Franc (BIF)", head: "Évariste Ndayishimiye" },
+        { name: "Cabo Verde", timezone: "Atlantic/Cape_Verde", iso: "cv", population: "610K", area: "4,033 km²", capital: "Praia", currency: "Escudo (CVE)", head: "José Maria Neves" },
+        { name: "Cambodia", timezone: "Asia/Phnom_Penh", iso: "kh", population: "18.1M", area: "181,035 km²", capital: "Phnom Penh", currency: "Riel (KHR)", head: "Norodom Sihamoni" },
+        { name: "Cameroon", timezone: "Africa/Douala", iso: "cm", population: "29.8M", area: "475,442 km²", capital: "Yaoundé", currency: "CFA Franc (XAF)", head: "Paul Biya" },
+        { name: "Canada (Toronto)", timezone: "America/Toronto", iso: "ca", population: "41.6M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
+        { name: "Canada (Vancouver)", timezone: "America/Vancouver", iso: "ca", population: "41.6M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
+        { name: "Canada (Montreal)", timezone: "America/Toronto", iso: "ca", population: "41.6M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
+        { name: "Canada (Calgary)", timezone: "America/Edmonton", iso: "ca", population: "41.6M", area: "9,984,670 km²", capital: "Ottawa", currency: "Dollar (CAD)", head: "King Charles III" },
+        { name: "Central African Republic", timezone: "Africa/Bangui", iso: "cf", population: "5.9M", area: "622,984 km²", capital: "Bangui", currency: "CFA Franc (XAF)", head: "Faustin-Archange Touadéra" },
+        { name: "Chad", timezone: "Africa/Ndjamena", iso: "td", population: "19.2M", area: "1,284,000 km²", capital: "N'Djamena", currency: "CFA Franc (XAF)", head: "Mahamat Idriss Déby" },
+        { name: "Chile", timezone: "America/Santiago", iso: "cl", population: "20.1M", area: "756,102 km²", capital: "Santiago", currency: "Peso (CLP)", head: "Gabriel Boric" },
+        { name: "China (Beijing)", timezone: "Asia/Shanghai", iso: "cn", population: "1,418.5M", area: "9,596,961 km²", capital: "Beijing", currency: "Yuan (CNY)", head: "Xi Jinping" },
+        { name: "China (Shanghai)", timezone: "Asia/Shanghai", iso: "cn", population: "1,418.5M", area: "9,596,961 km²", capital: "Beijing", currency: "Yuan (CNY)", head: "Xi Jinping" },
+        { name: "Colombia", timezone: "America/Bogota", iso: "co", population: "52.8M", area: "1,141,748 km²", capital: "Bogotá", currency: "Peso (COP)", head: "Gustavo Petro" },
+        { name: "Comoros", timezone: "Indian/Comoro", iso: "km", population: "900K", area: "1,862 km²", capital: "Moroni", currency: "Franc (KMF)", head: "Azali Assoumani" },
+        { name: "Congo", timezone: "Africa/Brazzaville", iso: "cg", population: "6.3M", area: "342,000 km²", capital: "Brazzaville", currency: "CFA Franc (XAF)", head: "Denis Sassou Nguesso" },
+        { name: "Costa Rica", timezone: "America/Costa_Rica", iso: "cr", population: "5.3M", area: "51,100 km²", capital: "San José", currency: "Colón (CRC)", head: "Rodrigo Chaves Robles" },
+        { name: "Croatia", timezone: "Europe/Zagreb", iso: "hr", population: "3.8M", area: "56,594 km²", capital: "Zagreb", currency: "Euro (EUR)", head: "Zoran Milanović" },
         { name: "Cuba", timezone: "America/Havana", iso: "cu", population: "11.0M", area: "109,884 km²", capital: "Havana", currency: "Peso (CUP)", head: "Miguel Díaz-Canel" },
         { name: "Cyprus", timezone: "Asia/Nicosia", iso: "cy", population: "1.3M", area: "9,251 km²", capital: "Nicosia", currency: "Euro (EUR)", head: "Nikos Christodoulides" },
-        { name: "Czech Republic", timezone: "Europe/Prague", iso: "cz", population: "10.5M", area: "78,865 km²", capital: "Prague", currency: "Koruna (CZK)", head: "Petr Pavel" },
-        { name: "Denmark", timezone: "Europe/Copenhagen", iso: "dk", population: "5.9M", area: "42,933 km²", capital: "Copenhagen", currency: "Krone (DKK)", head: "King Frederik X" },
-        { name: "Djibouti", timezone: "Africa/Djibouti", iso: "dj", population: "1.1M", area: "23,200 km²", capital: "Djibouti", currency: "Franc (DJF)", head: "Ismaïl Omar Guelleh" },
+        { name: "Czech Republic", timezone: "Europe/Prague", iso: "cz", population: "10.8M", area: "78,865 km²", capital: "Prague", currency: "Koruna (CZK)", head: "Petr Pavel" },
+        { name: "Denmark", timezone: "Europe/Copenhagen", iso: "dk", population: "6.0M", area: "42,933 km²", capital: "Copenhagen", currency: "Krone (DKK)", head: "King Frederik X" },
+        { name: "Djibouti", timezone: "Africa/Djibouti", iso: "dj", population: "1.2M", area: "23,200 km²", capital: "Djibouti", currency: "Franc (DJF)", head: "Ismaïl Omar Guelleh" },
         { name: "Dominica", timezone: "America/Dominica", iso: "dm", population: "73K", area: "750 km²", capital: "Roseau", currency: "EC Dollar (XCD)", head: "Sylvanie Burton" },
-        { name: "Dominican Republic", timezone: "America/Santo_Domingo", iso: "do", population: "11.3M", area: "48,671 km²", capital: "Santo Domingo", currency: "Peso (DOP)", head: "Luis Abinader" },
-        { name: "Ecuador", timezone: "America/Guayaquil", iso: "ec", population: "18.0M", area: "276,841 km²", capital: "Quito", currency: "Dollar (USD)", head: "Daniel Noboa" },
-        { name: "Egypt", timezone: "Africa/Cairo", iso: "eg", population: "112.7M", area: "1,002,450 km²", capital: "Cairo", currency: "Pound (EGP)", head: "Abdel Fattah el-Sisi" },
-        { name: "El Salvador", timezone: "America/El_Salvador", iso: "sv", population: "6.3M", area: "21,041 km²", capital: "San Salvador", currency: "Dollar (USD)", head: "Nayib Bukele" },
-        { name: "Equatorial Guinea", timezone: "Africa/Malabo", iso: "gq", population: "1.7M", area: "28,051 km²", capital: "Malabo", currency: "CFA Franc (XAF)", head: "Teodoro Obiang Nguema Mbasogo" },
-        { name: "Eritrea", timezone: "Africa/Asmara", iso: "er", population: "3.7M", area: "117,600 km²", capital: "Asmara", currency: "Nakfa (ERN)", head: "Isaias Afwerki" },
-        { name: "Estonia", timezone: "Europe/Tallinn", iso: "ee", population: "1.3M", area: "45,227 km²", capital: "Tallinn", currency: "Euro (EUR)", head: "Alar Karis" },
+        { name: "Dominican Republic", timezone: "America/Santo_Domingo", iso: "do", population: "11.5M", area: "48,671 km²", capital: "Santo Domingo", currency: "Peso (DOP)", head: "Luis Abinader" },
+        { name: "Ecuador", timezone: "America/Guayaquil", iso: "ec", population: "18.6M", area: "276,841 km²", capital: "Quito", currency: "Dollar (USD)", head: "Daniel Noboa" },
+        { name: "Egypt", timezone: "Africa/Cairo", iso: "eg", population: "116.4M", area: "1,002,450 km²", capital: "Cairo", currency: "Pound (EGP)", head: "Abdel Fattah el-Sisi" },
+        { name: "El Salvador", timezone: "America/El_Salvador", iso: "sv", population: "6.6M", area: "21,041 km²", capital: "San Salvador", currency: "Dollar (USD)", head: "Nayib Bukele" },
+        { name: "Equatorial Guinea", timezone: "Africa/Malabo", iso: "gq", population: "1.8M", area: "28,051 km²", capital: "Malabo", currency: "CFA Franc (XAF)", head: "Teodoro Obiang Nguema Mbasogo" },
+        { name: "Eritrea", timezone: "Africa/Asmara", iso: "er", population: "3.8M", area: "117,600 km²", capital: "Asmara", currency: "Nakfa (ERN)", head: "Isaias Afwerki" },
+        { name: "Estonia", timezone: "Europe/Tallinn", iso: "ee", population: "1.4M", area: "45,227 km²", capital: "Tallinn", currency: "Euro (EUR)", head: "Alar Karis" },
         { name: "Eswatini", timezone: "Africa/Mbabane", iso: "sz", population: "1.2M", area: "17,364 km²", capital: "Mbabane", currency: "Lilangeni (SZL)", head: "King Mswati III" },
-        { name: "Ethiopia", timezone: "Africa/Addis_Ababa", iso: "et", population: "126.5M", area: "1,104,300 km²", capital: "Addis Ababa", currency: "Birr (ETB)", head: "Taye Atske Selassie" },
-        { name: "Fiji", timezone: "Pacific/Fiji", iso: "fj", population: "936K", area: "18,274 km²", capital: "Suva", currency: "Dollar (FJD)", head: "Naiqama Lalabalavu" },
-        { name: "Finland", timezone: "Europe/Helsinki", iso: "fi", population: "5.5M", area: "338,424 km²", capital: "Helsinki", currency: "Euro (EUR)", head: "Alexander Stubb" },
-        { name: "France (Paris)", timezone: "Europe/Paris", iso: "fr", population: "64.8M", area: "643,801 km²", capital: "Paris", currency: "Euro (EUR)", head: "Emmanuel Macron" },
-        { name: "Gabon", timezone: "Africa/Libreville", iso: "ga", population: "2.4M", area: "267,668 km²", capital: "Libreville", currency: "CFA Franc (XAF)", head: "Brice Clotaire Oligui Nguema" },
-        { name: "Gambia", timezone: "Africa/Banjul", iso: "gm", population: "2.8M", area: "10,689 km²", capital: "Banjul", currency: "Dalasi (GMD)", head: "Adama Barrow" },
-        { name: "Georgia", timezone: "Asia/Tbilisi", iso: "ge", population: "3.7M", area: "69,700 km²", capital: "Tbilisi", currency: "Lari (GEL)", head: "Salome Zourabichvili" },
-        { name: "Germany (Berlin)", timezone: "Europe/Berlin", iso: "de", population: "83.3M", area: "357,114 km²", capital: "Berlin", currency: "Euro (EUR)", head: "Frank-Walter Steinmeier" },
-        { name: "Ghana", timezone: "Africa/Accra", iso: "gh", population: "34.1M", area: "238,535 km²", capital: "Accra", currency: "Cedi (GHS)", head: "Nana Akufo-Addo" },
-        { name: "Greece", timezone: "Europe/Athens", iso: "gr", population: "10.3M", area: "131,990 km²", capital: "Athens", currency: "Euro (EUR)", head: "Katerina Sakellaropoulou" },
-        { name: "Grenada", timezone: "America/Grenada", iso: "gd", population: "126K", area: "344 km²", capital: "St. George's", currency: "EC Dollar (XCD)", head: "King Charles III" },
-        { name: "Guatemala", timezone: "America/Guatemala", iso: "gt", population: "18.1M", area: "108,889 km²", capital: "Guatemala City", currency: "Quetzal (GTQ)", head: "Bernardo Arévalo" },
-        { name: "Guinea", timezone: "Africa/Conakry", iso: "gn", population: "14.2M", area: "245,857 km²", capital: "Conakry", currency: "Franc (GNF)", head: "Mamadi Doumbouya" },
-        { name: "Guinea-Bissau", timezone: "Africa/Bissau", iso: "gw", population: "2.2M", area: "36,125 km²", capital: "Bissau", currency: "CFA Franc (XOF)", head: "Umaro Sissoco Embaló" },
-        { name: "Guyana", timezone: "America/Guyana", iso: "gy", population: "814K", area: "214,969 km²", capital: "Georgetown", currency: "Dollar (GYD)", head: "Irfaan Ali" },
-        { name: "Haiti", timezone: "America/Port-au-Prince", iso: "ht", population: "11.7M", area: "27,750 km²", capital: "Port-au-Prince", currency: "Gourde (HTG)", head: "Ariel Henry" },
-        { name: "Honduras", timezone: "America/Tegucigalpa", iso: "hn", population: "10.6M", area: "112,492 km²", capital: "Tegucigalpa", currency: "Lempira (HNL)", head: "Xiomara Castro" },
-        { name: "Hungary", timezone: "Europe/Budapest", iso: "hu", population: "9.6M", area: "93,028 km²", capital: "Budapest", currency: "Forint (HUF)", head: "Katalin Novák" },
-        { name: "Iceland", timezone: "Atlantic/Reykjavik", iso: "is", population: "375K", area: "103,000 km²", capital: "Reykjavik", currency: "Krona (ISK)", head: "Halla Tómasdóttir" },
-        { name: "India (New Delhi)", timezone: "Asia/Kolkata", iso: "in", population: "1,428.6M", area: "3,287,263 km²", capital: "New Delhi", currency: "Rupee (INR)", head: "Droupadi Murmu" },
-        { name: "India (Mumbai)", timezone: "Asia/Kolkata", iso: "in", population: "1,428.6M", area: "3,287,263 km²", capital: "New Delhi", currency: "Rupee (INR)", head: "Droupadi Murmu" },
-        { name: "Indonesia (Jakarta)", timezone: "Asia/Jakarta", iso: "id", population: "277.5M", area: "1,904,569 km²", capital: "Jakarta", currency: "Rupiah (IDR)", head: "Joko Widodo" },
-        { name: "Indonesia (Bali)", timezone: "Asia/Makassar", iso: "id", population: "277.5M", area: "1,904,569 km²", capital: "Jakarta", currency: "Rupiah (IDR)", head: "Joko Widodo" },
-        { name: "Iran", timezone: "Asia/Tehran", iso: "ir", population: "89.2M", area: "1,648,195 km²", capital: "Tehran", currency: "Rial (IRR)", head: "Masoud Pezeshkian" },
-        { name: "Iraq", timezone: "Asia/Baghdad", iso: "iq", population: "45.5M", area: "438,317 km²", capital: "Baghdad", currency: "Dinar (IQD)", head: "Abdul Latif Rashid" },
-        { name: "Ireland (Dublin)", timezone: "Europe/Dublin", iso: "ie", population: "5.1M", area: "70,273 km²", capital: "Dublin", currency: "Euro (EUR)", head: "Michael D. Higgins" },
-        { name: "Israel", timezone: "Asia/Jerusalem", iso: "il", population: "9.6M", area: "22,072 km²", capital: "Jerusalem", currency: "Shekel (ILS)", head: "Isaac Herzog" },
-        { name: "Italy (Rome)", timezone: "Europe/Rome", iso: "it", population: "58.9M", area: "301,336 km²", capital: "Rome", currency: "Euro (EUR)", head: "Sergio Mattarella" },
+        { name: "Ethiopia", timezone: "Africa/Addis_Ababa", iso: "et", population: "132.5M", area: "1,104,300 km²", capital: "Addis Ababa", currency: "Birr (ETB)", head: "Taye Atske Selassie" },
+        { name: "Fiji", timezone: "Pacific/Fiji", iso: "fj", population: "960K", area: "18,274 km²", capital: "Suva", currency: "Dollar (FJD)", head: "Naiqama Lalabalavu" },
+        { name: "Finland", timezone: "Europe/Helsinki", iso: "fi", population: "5.6M", area: "338,424 km²", capital: "Helsinki", currency: "Euro (EUR)", head: "Alexander Stubb" },
+        { name: "France (Paris)", timezone: "Europe/Paris", iso: "fr", population: "69.1M", area: "643,801 km²", capital: "Paris", currency: "Euro (EUR)", head: "Emmanuel Macron" },
+        { name: "Gabon", timezone: "Africa/Libreville", iso: "ga", population: "2.5M", area: "267,668 km²", capital: "Libreville", currency: "CFA Franc (XAF)", head: "Brice Oligui Nguema" },
+        { name: "Gambia", timezone: "Africa/Banjul", iso: "gm", population: "3.0M", area: "10,689 km²", capital: "Banjul", currency: "Dalasi (GMD)", head: "Adama Barrow" },
+        { name: "Georgia", timezone: "Asia/Tbilisi", iso: "ge", population: "3.6M", area: "69,700 km²", capital: "Tbilisi", currency: "Lari (GEL)", head: "Salome Zourabichvili" },
+        { name: "Germany (Berlin)", timezone: "Europe/Berlin", iso: "de", population: "84.3M", area: "357,114 km²", capital: "Berlin", currency: "Euro (EUR)", head: "Frank-Walter Steinmeier" },
+        { name: "Ghana", timezone: "Africa/Accra", iso: "gh", population: "35.2M", area: "238,535 km²", capital: "Accra", currency: "Cedi (GHS)", head: "Nana Akufo-Addo" },
+        { name: "Greece", timezone: "Europe/Athens", iso: "gr", population: "10.4M", area: "131,990 km²", capital: "Athens", currency: "Euro (EUR)", head: "Katerina Sakellaropoulou" },
+        { name: "Grenada", timezone: "America/Grenada", iso: "gd", population: "127K", area: "344 km²", capital: "St. George's", currency: "EC Dollar (XCD)", head: "King Charles III" },
+        { name: "Guatemala", timezone: "America/Guatemala", iso: "gt", population: "18.8M", area: "108,889 km²", capital: "Guatemala City", currency: "Quetzal (GTQ)", head: "Bernardo Arévalo" },
+        { name: "Guinea", timezone: "Africa/Conakry", iso: "gn", population: "14.8M", area: "245,857 km²", capital: "Conakry", currency: "Franc (GNF)", head: "Mamadi Doumbouya" },
+        { name: "Guinea-Bissau", timezone: "Africa/Bissau", iso: "gw", population: "2.3M", area: "36,125 km²", capital: "Bissau", currency: "CFA Franc (XOF)", head: "Umaro Sissoco Embaló" },
+        { name: "Guyana", timezone: "America/Guyana", iso: "gy", population: "860K", area: "214,969 km²", capital: "Georgetown", currency: "Dollar (GYD)", head: "Irfaan Ali" },
+        { name: "Haiti", timezone: "America/Port-au-Prince", iso: "ht", population: "12.0M", area: "27,750 km²", capital: "Port-au-Prince", currency: "Gourde (HTG)", head: "Transitional Council" },
+        { name: "Honduras", timezone: "America/Tegucigalpa", iso: "hn", population: "11.0M", area: "112,492 km²", capital: "Tegucigalpa", currency: "Lempira (HNL)", head: "Xiomara Castro" },
+        { name: "Hungary", timezone: "Europe/Budapest", iso: "hu", population: "9.8M", area: "93,028 km²", capital: "Budapest", currency: "Forint (HUF)", head: "Katalin Novák" },
+        { name: "Iceland", timezone: "Atlantic/Reykjavik", iso: "is", population: "390K", area: "103,000 km²", capital: "Reykjavik", currency: "Krona (ISK)", head: "Halla Tómasdóttir" },
+        { name: "India (New Delhi)", timezone: "Asia/Kolkata", iso: "in", population: "1,456.2M", area: "3,287,263 km²", capital: "New Delhi", currency: "Rupee (INR)", head: "Droupadi Murmu" },
+        { name: "India (Mumbai)", timezone: "Asia/Kolkata", iso: "in", population: "1,456.2M", area: "3,287,263 km²", capital: "New Delhi", currency: "Rupee (INR)", head: "Droupadi Murmu" },
+        { name: "Indonesia (Jakarta)", timezone: "Asia/Jakarta", iso: "id", population: "283.1M", area: "1,904,569 km²", capital: "Jakarta", currency: "Rupiah (IDR)", head: "Joko Widodo / Prabowo (Proj.)" },
+        { name: "Indonesia (Bali)", timezone: "Asia/Makassar", iso: "id", population: "283.1M", area: "1,904,569 km²", capital: "Jakarta", currency: "Rupiah (IDR)", head: "Joko Widodo / Prabowo (Proj.)" },
+        { name: "Iran", timezone: "Asia/Tehran", iso: "ir", population: "91.4M", area: "1,648,195 km²", capital: "Tehran", currency: "Rial (IRR)", head: "Masoud Pezeshkian" },
+        { name: "Iraq", timezone: "Asia/Baghdad", iso: "iq", population: "47.1M", area: "438,317 km²", capital: "Baghdad", currency: "Dinar (IQD)", head: "Abdul Latif Rashid" },
+        { name: "Ireland (Dublin)", timezone: "Europe/Dublin", iso: "ie", population: "5.4M", area: "70,273 km²", capital: "Dublin", currency: "Euro (EUR)", head: "Michael D. Higgins" },
+        { name: "Israel", timezone: "Asia/Jerusalem", iso: "il", population: "10.1M", area: "22,072 km²", capital: "Jerusalem", currency: "Shekel (ILS)", head: "Isaac Herzog" },
+        { name: "Italy (Rome)", timezone: "Europe/Rome", iso: "it", population: "58.5M", area: "301,336 km²", capital: "Rome", currency: "Euro (EUR)", head: "Sergio Mattarella" },
         { name: "Jamaica", timezone: "America/Jamaica", iso: "jm", population: "2.8M", area: "10,991 km²", capital: "Kingston", currency: "Dollar (JMD)", head: "King Charles III" },
-        { name: "Japan (Tokyo)", timezone: "Asia/Tokyo", iso: "jp", population: "123.3M", area: "377,975 km²", capital: "Tokyo", currency: "Yen (JPY)", head: "Emperor Naruhito" },
-        { name: "Jordan", timezone: "Asia/Amman", iso: "jo", population: "11.3M", area: "89,342 km²", capital: "Amman", currency: "Dinar (JOD)", head: "King Abdullah II" },
-        { name: "Kazakhstan", timezone: "Asia/Almaty", iso: "kz", population: "19.6M", area: "2,724,900 km²", capital: "Astana", currency: "Tenge (KZT)", head: "Kassym-Jomart Tokayev" },
-        { name: "Kenya", timezone: "Africa/Nairobi", iso: "ke", population: "55.1M", area: "580,367 km²", capital: "Nairobi", currency: "Shilling (KES)", head: "William Ruto" },
-        { name: "Kiribati", timezone: "Pacific/Tarawa", iso: "ki", population: "134K", area: "811 km²", capital: "Tarawa", currency: "Dollar (AUD)", head: "Taneti Maamau" },
-        { name: "Kuwait", timezone: "Asia/Kuwait", iso: "kw", population: "4.3M", area: "17,818 km²", capital: "Kuwait City", currency: "Dinar (KWD)", head: "Mishal Al-Ahmad Al-Jaber Al-Sabah" },
-        { name: "Kyrgyzstan", timezone: "Asia/Bishkek", iso: "kg", population: "7.2M", area: "199,951 km²", capital: "Bishkek", currency: "Som (KGS)", head: "Sadyr Japarov" },
-        { name: "Laos", timezone: "Asia/Vientiane", iso: "la", population: "7.5M", area: "236,800 km²", capital: "Vientiane", currency: "Kip (LAK)", head: "Thongloun Sisoulith" },
+        { name: "Japan (Tokyo)", timezone: "Asia/Tokyo", iso: "jp", population: "121.8M", area: "377,975 km²", capital: "Tokyo", currency: "Yen (JPY)", head: "Emperor Naruhito" },
+        { name: "Jordan", timezone: "Asia/Amman", iso: "jo", population: "12.1M", area: "89,342 km²", capital: "Amman", currency: "Dinar (JOD)", head: "King Abdullah II" },
+        { name: "Kazakhstan", timezone: "Asia/Almaty", iso: "kz", population: "20.5M", area: "2,724,900 km²", capital: "Astana", currency: "Tenge (KZT)", head: "Kassym-Jomart Tokayev" },
+        { name: "Kenya", timezone: "Africa/Nairobi", iso: "ke", population: "57.2M", area: "580,367 km²", capital: "Nairobi", currency: "Shilling (KES)", head: "William Ruto" },
+        { name: "Kiribati", timezone: "Pacific/Tarawa", iso: "ki", population: "135K", area: "811 km²", capital: "Tarawa", currency: "Dollar (AUD)", head: "Taneti Maamau" },
+        { name: "Kuwait", timezone: "Asia/Kuwait", iso: "kw", population: "4.5M", area: "17,818 km²", capital: "Kuwait City", currency: "Dinar (KWD)", head: "Mishal Al-Ahmad Al-Jaber Al-Sabah" },
+        { name: "Kyrgyzstan", timezone: "Asia/Bishkek", iso: "kg", population: "7.5M", area: "199,951 km²", capital: "Bishkek", currency: "Som (KGS)", head: "Sadyr Japarov" },
+        { name: "Laos", timezone: "Asia/Vientiane", iso: "la", population: "7.8M", area: "236,800 km²", capital: "Vientiane", currency: "Kip (LAK)", head: "Thongloun Sisoulith" },
         { name: "Latvia", timezone: "Europe/Riga", iso: "lv", population: "1.8M", area: "64,559 km²", capital: "Riga", currency: "Euro (EUR)", head: "Edgars Rinkēvičs" },
-        { name: "Lebanon", timezone: "Asia/Beirut", iso: "lb", population: "5.3M", area: "10,452 km²", capital: "Beirut", currency: "Pound (LBP)", head: "Joseph Aoun" },
-        { name: "Lesotho", timezone: "Africa/Maseru", iso: "ls", population: "2.3M", area: "30,355 km²", capital: "Maseru", currency: "Loti (LSL)", head: "King Letsie III" },
-        { name: "Liberia", timezone: "Africa/Monrovia", iso: "lr", population: "5.4M", area: "111,369 km²", capital: "Monrovia", currency: "Dollar (LRD)", head: "Joseph Boakai" },
-        { name: "Libya", timezone: "Africa/Tripoli", iso: "ly", population: "6.8M", area: "1,759,540 km²", capital: "Tripoli", currency: "Dinar (LYD)", head: "Mohamed al-Menfi" },
-        { name: "Liechtenstein", timezone: "Europe/Vaduz", iso: "li", population: "39K", area: "160 km²", capital: "Vaduz", currency: "Swiss Franc (CHF)", head: "Prince Hans-Adam II" },
+        { name: "Lebanon", timezone: "Asia/Beirut", iso: "lb", population: "5.5M", area: "10,452 km²", capital: "Beirut", currency: "Pound (LBP)", head: "Joseph Aoun" },
+        { name: "Lesotho", timezone: "Africa/Maseru", iso: "ls", population: "2.4M", area: "30,355 km²", capital: "Maseru", currency: "Loti (LSL)", head: "King Letsie III" },
+        { name: "Liberia", timezone: "Africa/Monrovia", iso: "lr", population: "5.7M", area: "111,369 km²", capital: "Monrovia", currency: "Dollar (LRD)", head: "Joseph Boakai" },
+        { name: "Libya", timezone: "Africa/Tripoli", iso: "ly", population: "7.1M", area: "1,759,540 km²", capital: "Tripoli", currency: "Dinar (LYD)", head: "Mohamed al-Menfi" },
+        { name: "Liechtenstein", timezone: "Europe/Vaduz", iso: "li", population: "40K", area: "160 km²", capital: "Vaduz", currency: "Swiss Franc (CHF)", head: "Prince Hans-Adam II" },
         { name: "Lithuania", timezone: "Europe/Vilnius", iso: "lt", population: "2.9M", area: "65,300 km²", capital: "Vilnius", currency: "Euro (EUR)", head: "Gitanas Nausėda" },
-        { name: "Luxembourg", timezone: "Europe/Luxembourg", iso: "lu", population: "661K", area: "2,586 km²", capital: "Luxembourg", currency: "Euro (EUR)", head: "Grand Duke Henri" },
-        { name: "Madagascar", timezone: "Indian/Antananarivo", iso: "mg", population: "30.3M", area: "587,041 km²", capital: "Antananarivo", currency: "Ariary (MGA)", head: "Andry Rajoelina" },
-        { name: "Malawi", timezone: "Africa/Blantyre", iso: "mw", population: "21.3M", area: "118,484 km²", capital: "Lilongwe", currency: "Kwacha (MWK)", head: "Lazarus Chakwera" },
-        { name: "Malaysia (Kuala Lumpur)", timezone: "Asia/Kuala_Lumpur", iso: "my", population: "34.3M", area: "330,803 km²", capital: "Kuala Lumpur", currency: "Ringgit (MYR)", head: "King Abdullah of Pahang" },
-        { name: "Maldives", timezone: "Indian/Maldives", iso: "mv", population: "521K", area: "300 km²", capital: "Malé", currency: "Rufiyaa (MVR)", head: "Mohamed Muizzu" },
-        { name: "Mali", timezone: "Africa/Bamako", iso: "ml", population: "23.3M", area: "1,240,192 km²", capital: "Bamako", currency: "CFA Franc (XOF)", head: "Assimi Goïta" },
-        { name: "Malta", timezone: "Europe/Malta", iso: "mt", population: "542K", area: "316 km²", capital: "Valletta", currency: "Euro (EUR)", head: "Myriam Spiteri Debono" },
+        { name: "Luxembourg", timezone: "Europe/Luxembourg", iso: "lu", population: "680K", area: "2,586 km²", capital: "Luxembourg", currency: "Euro (EUR)", head: "Grand Duke Henri" },
+        { name: "Madagascar", timezone: "Indian/Antananarivo", iso: "mg", population: "32.1M", area: "587,041 km²", capital: "Antananarivo", currency: "Ariary (MGA)", head: "Andry Rajoelina" },
+        { name: "Malawi", timezone: "Africa/Blantyre", iso: "mw", population: "22.1M", area: "118,484 km²", capital: "Lilongwe", currency: "Kwacha (MWK)", head: "Lazarus Chakwera" },
+        { name: "Malaysia (Kuala Lumpur)", timezone: "Asia/Kuala_Lumpur", iso: "my", population: "36.1M", area: "330,803 km²", capital: "Kuala Lumpur", currency: "Ringgit (MYR)", head: "King Abdullah of Pahang" },
+        { name: "Maldives", timezone: "Indian/Maldives", iso: "mv", population: "540K", area: "300 km²", capital: "Malé", currency: "Rufiyaa (MVR)", head: "Mohamed Muizzu" },
+        { name: "Mali", timezone: "Africa/Bamako", iso: "ml", population: "25.1M", area: "1,240,192 km²", capital: "Bamako", currency: "CFA Franc (XOF)", head: "Assimi Goïta" },
+        { name: "Malta", timezone: "Europe/Malta", iso: "mt", population: "560K", area: "316 km²", capital: "Valletta", currency: "Euro (EUR)", head: "Myriam Spiteri Debono" },
         { name: "Marshall Islands", timezone: "Pacific/Majuro", iso: "mh", population: "42K", area: "181 km²", capital: "Majuro", currency: "Dollar (USD)", head: "Hilda Heine" },
-        { name: "Mauritania", timezone: "Africa/Nouakchott", iso: "mr", population: "4.7M", area: "1,030,700 km²", capital: "Nouakchott", currency: "Ouguiya (MRU)", head: "Mohamed Ould Ghazouani" },
+        { name: "Mauritania", timezone: "Africa/Nouakchott", iso: "mr", population: "5.0M", area: "1,030,700 km²", capital: "Nouakchott", currency: "Ouguiya (MRU)", head: "Mohamed Ould Ghazouani" },
         { name: "Mauritius", timezone: "Indian/Mauritius", iso: "mu", population: "1.3M", area: "2,040 km²", capital: "Port Louis", currency: "Rupee (MUR)", head: "Prithvirajsing Roopun" },
-        { name: "Mexico (Mexico City)", timezone: "America/Mexico_City", iso: "mx", population: "128.5M", area: "1,964,375 km²", capital: "Mexico City", currency: "Peso (MXN)", head: "Claudia Sheinbaum" },
+        { name: "Mexico (Mexico City)", timezone: "America/Mexico_City", iso: "mx", population: "131.2M", area: "1,964,375 km²", capital: "Mexico City", currency: "Peso (MXN)", head: "Claudia Sheinbaum" },
         { name: "Micronesia", timezone: "Pacific/Chuuk", iso: "fm", population: "116K", area: "702 km²", capital: "Palikir", currency: "Dollar (USD)", head: "Wesley Simina" },
-        { name: "Moldova", timezone: "Europe/Chisinau", iso: "md", population: "2.5M", area: "33,846 km²", capital: "Chișinău", currency: "Leu (MDL)", head: "Maia Sandu" },
-        { name: "Monaco", timezone: "Europe/Monaco", iso: "mc", population: "36K", area: "2 km²", capital: "Monaco", currency: "Euro (EUR)", head: "Prince Albert II" },
-        { name: "Mongolia", timezone: "Asia/Ulaanbaatar", iso: "mn", population: "3.4M", area: "1,564,110 km²", capital: "Ulaanbaatar", currency: "Tugrik (MNT)", head: "Ukhnaagiin Khürelsükh" },
-        { name: "Montenegro", timezone: "Europe/Podgorica", iso: "me", population: "626K", area: "13,812 km²", capital: "Podgorica", currency: "Euro (EUR)", head: "Jakov Milatović" },
-        { name: "Morocco", timezone: "Africa/Casablanca", iso: "ma", population: "37.8M", area: "446,550 km²", capital: "Rabat", currency: "Dirham (MAD)", head: "King Mohammed VI" },
-        { name: "Mozambique", timezone: "Africa/Maputo", iso: "mz", population: "33.9M", area: "801,590 km²", capital: "Maputo", currency: "Metical (MZN)", head: "Daniel Chapo" },
-        { name: "Myanmar", timezone: "Asia/Yangon", iso: "mm", population: "54.6M", area: "676,578 km²", capital: "Naypyidaw", currency: "Kyat (MMK)", head: "Min Aung Hlaing" },
+        { name: "Moldova", timezone: "Europe/Chisinau", iso: "md", population: "2.4M", area: "33,846 km²", capital: "Chișinău", currency: "Leu (MDL)", head: "Maia Sandu" },
+        { name: "Monaco", timezone: "Europe/Monaco", iso: "mc", population: "39K", area: "2 km²", capital: "Monaco", currency: "Euro (EUR)", head: "Prince Albert II" },
+        { name: "Mongolia", timezone: "Asia/Ulaanbaatar", iso: "mn", population: "3.6M", area: "1,564,110 km²", capital: "Ulaanbaatar", currency: "Tugrik (MNT)", head: "Ukhnaagiin Khürelsükh" },
+        { name: "Montenegro", timezone: "Europe/Podgorica", iso: "me", population: "610K", area: "13,812 km²", capital: "Podgorica", currency: "Euro (EUR)", head: "Jakov Milatović" },
+        { name: "Morocco", timezone: "Africa/Casablanca", iso: "ma", population: "38.6M", area: "446,550 km²", capital: "Rabat", currency: "Dirham (MAD)", head: "King Mohammed VI" },
+        { name: "Mozambique", timezone: "Africa/Maputo", iso: "mz", population: "35.1M", area: "801,590 km²", capital: "Maputo", currency: "Metical (MZN)", head: "Daniel Chapo" },
+        { name: "Myanmar", timezone: "Asia/Yangon", iso: "mm", population: "54.8M", area: "676,578 km²", capital: "Naypyidaw", currency: "Kyat (MMK)", head: "Min Aung Hlaing" },
         { name: "Namibia", timezone: "Africa/Windhoek", iso: "na", population: "2.6M", area: "825,615 km²", capital: "Windhoek", currency: "Dollar (NAD)", head: "Nangolo Mbumba" },
         { name: "Nauru", timezone: "Pacific/Nauru", iso: "nr", population: "13K", area: "21 km²", capital: "Yaren", currency: "Dollar (AUD)", head: "David Adeang" },
-        { name: "Nepal", timezone: "Asia/Kathmandu", iso: "np", population: "30.9M", area: "147,516 km²", capital: "Kathmandu", currency: "Rupee (NPR)", head: "Ram Chandra Poudel" },
-        { name: "Netherlands", timezone: "Europe/Amsterdam", iso: "nl", population: "17.6M", area: "41,850 km²", capital: "Amsterdam", currency: "Euro (EUR)", head: "King Willem-Alexander" },
-        { name: "New Zealand", timezone: "Pacific/Auckland", iso: "nz", population: "5.2M", area: "270,467 km²", capital: "Wellington", currency: "Dollar (NZD)", head: "King Charles III" },
-        { name: "Nicaragua", timezone: "America/Managua", iso: "ni", population: "7.0M", area: "130,373 km²", capital: "Managua", currency: "Córdoba (NIO)", head: "Daniel Ortega" },
-        { name: "Niger", timezone: "Africa/Niamey", iso: "ne", population: "27.2M", area: "1,267,000 km²", capital: "Niamey", currency: "CFA Franc (XOF)", head: "Abdourahamane Tiani" },
-        { name: "Nigeria", timezone: "Africa/Lagos", iso: "ng", population: "223.8M", area: "923,768 km²", capital: "Abuja", currency: "Naira (NGN)", head: "Bola Tinubu" },
-        { name: "North Korea", timezone: "Asia/Pyongyang", iso: "kp", population: "26.2M", area: "120,538 km²", capital: "Pyongyang", currency: "Won (KPW)", head: "Kim Jong Un" },
+        { name: "Nepal", timezone: "Asia/Kathmandu", iso: "np", population: "31.6M", area: "147,516 km²", capital: "Kathmandu", currency: "Rupee (NPR)", head: "Ram Chandra Poudel" },
+        { name: "Netherlands", timezone: "Europe/Amsterdam", iso: "nl", population: "18.3M", area: "41,850 km²", capital: "Amsterdam", currency: "Euro (EUR)", head: "King Willem-Alexander" },
+        { name: "New Zealand", timezone: "Pacific/Auckland", iso: "nz", population: "5.4M", area: "270,467 km²", capital: "Wellington", currency: "Dollar (NZD)", head: "King Charles III" },
+        { name: "Nicaragua", timezone: "America/Managua", iso: "ni", population: "7.3M", area: "130,373 km²", capital: "Managua", currency: "Córdoba (NIO)", head: "Daniel Ortega" },
+        { name: "Niger", timezone: "Africa/Niamey", iso: "ne", population: "28.9M", area: "1,267,000 km²", capital: "Niamey", currency: "CFA Franc (XOF)", head: "Abdourahamane Tiani" },
+        { name: "Nigeria", timezone: "Africa/Lagos", iso: "ng", population: "232.1M", area: "923,768 km²", capital: "Abuja", currency: "Naira (NGN)", head: "Bola Tinubu" },
+        { name: "North Korea", timezone: "Asia/Pyongyang", iso: "kp", population: "26.5M", area: "120,538 km²", capital: "Pyongyang", currency: "Won (KPW)", head: "Kim Jong Un" },
         { name: "North Macedonia", timezone: "Europe/Skopje", iso: "mk", population: "2.1M", area: "25,713 km²", capital: "Skopje", currency: "Denar (MKD)", head: "Gordana Siljanovska-Davkova" },
-        { name: "Norway (Oslo)", timezone: "Europe/Oslo", iso: "no", population: "5.5M", area: "323,802 km²", capital: "Oslo", currency: "Krone (NOK)", head: "King Harald V" },
-        { name: "Oman", timezone: "Asia/Muscat", iso: "om", population: "4.6M", area: "309,500 km²", capital: "Muscat", currency: "Rial (OMR)", head: "Haitham bin Tariq" },
-        { name: "Pakistan", timezone: "Asia/Karachi", iso: "pk", population: "240.5M", area: "881,912 km²", capital: "Islamabad", currency: "Rupee (PKR)", head: "Asif Ali Zardari" },
+        { name: "Norway (Oslo)", timezone: "Europe/Oslo", iso: "no", population: "5.6M", area: "323,802 km²", capital: "Oslo", currency: "Krone (NOK)", head: "King Harald V" },
+        { name: "Oman", timezone: "Asia/Muscat", iso: "om", population: "4.8M", area: "309,500 km²", capital: "Muscat", currency: "Rial (OMR)", head: "Haitham bin Tariq" },
+        { name: "Pakistan", timezone: "Asia/Karachi", iso: "pk", population: "248.4M", area: "881,912 km²", capital: "Islamabad", currency: "Rupee (PKR)", head: "Asif Ali Zardari" },
         { name: "Palau", timezone: "Pacific/Palau", iso: "pw", population: "18K", area: "459 km²", capital: "Ngerulmud", currency: "Dollar (USD)", head: "Surangel Whipps Jr." },
-        { name: "Palestine", timezone: "Asia/Gaza", iso: "ps", population: "5.3M", area: "6,020 km²", capital: "Ramallah", currency: "Shekel (ILS)", head: "Mahmoud Abbas" },
-        { name: "Panama", timezone: "America/Panama", iso: "pa", population: "4.5M", area: "75,417 km²", capital: "Panama City", currency: "Balboa (PAB)", head: "José Raúl Mulino" },
-        { name: "Papua New Guinea", timezone: "Pacific/Port_Moresby", iso: "pg", population: "10.3M", area: "462,840 km²", capital: "Port Moresby", currency: "Kina (PGK)", head: "King Charles III" },
-        { name: "Paraguay", timezone: "America/Asuncion", iso: "py", population: "6.9M", area: "406,752 km²", capital: "Asunción", currency: "Guaraní (PYG)", head: "Santiago Peña" },
-        { name: "Peru", timezone: "America/Lima", iso: "pe", population: "34.4M", area: "1,285,216 km²", capital: "Lima", currency: "Sol (PEN)", head: "Dina Boluarte" },
-        { name: "Philippines", timezone: "Asia/Manila", iso: "ph", population: "117.3M", area: "342,353 km²", capital: "Manila", currency: "Peso (PHP)", head: "Ferdinand Marcos Jr." },
-        { name: "Poland", timezone: "Europe/Warsaw", iso: "pl", population: "41.0M", area: "312,696 km²", capital: "Warsaw", currency: "Zloty (PLN)", head: "Andrzej Duda" },
-        { name: "Portugal", timezone: "Europe/Lisbon", iso: "pt", population: "10.2M", area: "92,212 km²", capital: "Lisbon", currency: "Euro (EUR)", head: "Marcelo Rebelo de Sousa" },
-        { name: "Qatar", timezone: "Asia/Qatar", iso: "qa", population: "2.7M", area: "11,586 km²", capital: "Doha", currency: "Riyal (QAR)", head: "Tamim bin Hamad Al Thani" },
-        { name: "Romania", timezone: "Europe/Bucharest", iso: "ro", population: "19.1M", area: "238,397 km²", capital: "Bucharest", currency: "Leu (RON)", head: "Klaus Iohannis" },
-        { name: "Russia (Moscow)", timezone: "Europe/Moscow", iso: "ru", population: "144.4M", area: "17,098,242 km²", capital: "Moscow", currency: "Ruble (RUB)", head: "Vladimir Putin" },
-        { name: "Russia (St. Petersburg)", timezone: "Europe/Moscow", iso: "ru", population: "144.4M", area: "17,098,242 km²", capital: "Moscow", currency: "Ruble (RUB)", head: "Vladimir Putin" },
-        { name: "Rwanda", timezone: "Africa/Kigali", iso: "rw", population: "14.1M", area: "26,338 km²", capital: "Kigali", currency: "Franc (RWF)", head: "Paul Kagame" },
+        { name: "Palestine", timezone: "Asia/Gaza", iso: "ps", population: "5.6M", area: "6,020 km²", capital: "Ramallah", currency: "Shekel (ILS)", head: "Mahmoud Abbas" },
+        { name: "Panama", timezone: "America/Panama", iso: "pa", population: "4.6M", area: "75,417 km²", capital: "Panama City", currency: "Balboa (PAB)", head: "José Raúl Mulino" },
+        { name: "Papua New Guinea", timezone: "Pacific/Port_Moresby", iso: "pg", population: "11.1M", area: "462,840 km²", capital: "Port Moresby", currency: "Kina (PGK)", head: "King Charles III" },
+        { name: "Paraguay", timezone: "America/Asuncion", iso: "py", population: "7.2M", area: "406,752 km²", capital: "Asunción", currency: "Guaraní (PYG)", head: "Santiago Peña" },
+        { name: "Peru", timezone: "America/Lima", iso: "pe", population: "35.1M", area: "1,285,216 km²", capital: "Lima", currency: "Sol (PEN)", head: "Dina Boluarte" },
+        { name: "Philippines", timezone: "Asia/Manila", iso: "ph", population: "121.4M", area: "342,353 km²", capital: "Manila", currency: "Peso (PHP)", head: "Ferdinand Marcos Jr." },
+        { name: "Poland", timezone: "Europe/Warsaw", iso: "pl", population: "36.8M", area: "312,696 km²", capital: "Warsaw", currency: "Zloty (PLN)", head: "Andrzej Duda" },
+        { name: "Portugal", timezone: "Europe/Lisbon", iso: "pt", population: "10.4M", area: "92,212 km²", capital: "Lisbon", currency: "Euro (EUR)", head: "Marcelo Rebelo de Sousa" },
+        { name: "Qatar", timezone: "Asia/Qatar", iso: "qa", population: "2.9M", area: "11,586 km²", capital: "Doha", currency: "Riyal (QAR)", head: "Tamim bin Hamad Al Thani" },
+        { name: "Romania", timezone: "Europe/Bucharest", iso: "ro", population: "18.9M", area: "238,397 km²", capital: "Bucharest", currency: "Leu (RON)", head: "Klaus Iohannis" },
+        { name: "Russia (Moscow)", timezone: "Europe/Moscow", iso: "ru", population: "143.6M", area: "17,098,242 km²", capital: "Moscow", currency: "Ruble (RUB)", head: "Vladimir Putin" },
+        { name: "Russia (St. Petersburg)", timezone: "Europe/Moscow", iso: "ru", population: "143.6M", area: "17,098,242 km²", capital: "Moscow", currency: "Ruble (RUB)", head: "Vladimir Putin" },
+        { name: "Rwanda", timezone: "Africa/Kigali", iso: "rw", population: "15.1M", area: "26,338 km²", capital: "Kigali", currency: "Franc (RWF)", head: "Paul Kagame" },
         { name: "Saint Kitts and Nevis", timezone: "America/St_Kitts", iso: "kn", population: "48K", area: "261 km²", capital: "Basseterre", currency: "EC Dollar (XCD)", head: "King Charles III" },
         { name: "Saint Lucia", timezone: "America/St_Lucia", iso: "lc", population: "180K", area: "616 km²", capital: "Castries", currency: "EC Dollar (XCD)", head: "King Charles III" },
         { name: "Saint Vincent and the Grenadines", timezone: "America/St_Vincent", iso: "vc", population: "104K", area: "389 km²", capital: "Kingstown", currency: "EC Dollar (XCD)", head: "King Charles III" },
-        { name: "Samoa", timezone: "Pacific/Apia", iso: "ws", population: "223K", area: "2,842 km²", capital: "Apia", currency: "Tala (WST)", head: "Tuimalealiifano Vaaletoa Sualauvi II" },
+        { name: "Samoa", timezone: "Pacific/Apia", iso: "ws", population: "225K", area: "2,842 km²", capital: "Apia", currency: "Tala (WST)", head: "Tuimalealiifano Vaaletoa Sualauvi II" },
         { name: "San Marino", timezone: "Europe/San_Marino", iso: "sm", population: "34K", area: "61 km²", capital: "San Marino", currency: "Euro (EUR)", head: "Captains Regent" },
-        { name: "Sao Tome and Principe", timezone: "Africa/Sao_Tome", iso: "st", population: "232K", area: "964 km²", capital: "São Tomé", currency: "Dobra (STN)", head: "Carlos Vila Nova" },
-        { name: "Saudi Arabia", timezone: "Asia/Riyadh", iso: "sa", population: "36.9M", area: "2,149,690 km²", capital: "Riyadh", currency: "Riyal (SAR)", head: "King Salman" },
-        { name: "Senegal", timezone: "Africa/Dakar", iso: "sn", population: "17.8M", area: "196,722 km²", capital: "Dakar", currency: "CFA Franc (XOF)", head: "Bassirou Diomaye Faye" },
-        { name: "Serbia", timezone: "Europe/Belgrade", iso: "rs", population: "6.7M", area: "88,361 km²", capital: "Belgrade", currency: "Dinar (RSD)", head: "Aleksandar Vučić" },
-        { name: "Seychelles", timezone: "Indian/Mahe", iso: "sc", population: "108K", area: "452 km²", capital: "Victoria", currency: "Rupee (SCR)", head: "Wavel Ramkalawan" },
-        { name: "Sierra Leone", timezone: "Africa/Freetown", iso: "sl", population: "8.8M", area: "71,740 km²", capital: "Freetown", currency: "Leone (SLL)", head: "Julius Maada Bio" },
-        { name: "Singapore", timezone: "Asia/Singapore", iso: "sg", population: "6.0M", area: "734 km²", capital: "Singapore", currency: "Dollar (SGD)", head: "Tharman Shanmugaratnam" },
+        { name: "Sao Tome and Principe", timezone: "Africa/Sao_Tome", iso: "st", population: "240K", area: "964 km²", capital: "São Tomé", currency: "Dobra (STN)", head: "Carlos Vila Nova" },
+        { name: "Saudi Arabia", timezone: "Asia/Riyadh", iso: "sa", population: "38.1M", area: "2,149,690 km²", capital: "Riyadh", currency: "Riyal (SAR)", head: "King Salman" },
+        { name: "Senegal", timezone: "Africa/Dakar", iso: "sn", population: "19.2M", area: "196,722 km²", capital: "Dakar", currency: "CFA Franc (XOF)", head: "Bassirou Diomaye Faye" },
+        { name: "Serbia", timezone: "Europe/Belgrade", iso: "rs", population: "6.5M", area: "88,361 km²", capital: "Belgrade", currency: "Dinar (RSD)", head: "Aleksandar Vučić" },
+        { name: "Seychelles", timezone: "Indian/Mahe", iso: "sc", population: "100K", area: "452 km²", capital: "Victoria", currency: "Rupee (SCR)", head: "Wavel Ramkalawan" },
+        { name: "Sierra Leone", timezone: "Africa/Freetown", iso: "sl", population: "9.0M", area: "71,740 km²", capital: "Freetown", currency: "Leone (SLL)", head: "Julius Maada Bio" },
+        { name: "Singapore", timezone: "Asia/Singapore", iso: "sg", population: "6.2M", area: "734 km²", capital: "Singapore", currency: "Dollar (SGD)", head: "Tharman Shanmugaratnam" },
         { name: "Slovakia", timezone: "Europe/Bratislava", iso: "sk", population: "5.4M", area: "49,037 km²", capital: "Bratislava", currency: "Euro (EUR)", head: "Zuzana Čaputová" },
-        { name: "Slovenia", timezone: "Europe/Ljubljana", iso: "si", population: "2.1M", area: "20,273 km²", capital: "Ljubljana", currency: "Euro (EUR)", head: "Nataša Pirc Musar" },
-        { name: "Solomon Islands", timezone: "Pacific/Guadalcanal", iso: "sb", population: "740K", area: "28,896 km²", capital: "Honiara", currency: "Dollar (SBD)", head: "King Charles III" },
-        { name: "Somalia", timezone: "Africa/Mogadishu", iso: "so", population: "18.1M", area: "637,657 km²", capital: "Mogadishu", currency: "Shilling (SOS)", head: "Hassan Sheikh Mohamud" },
-        { name: "South Africa", timezone: "Africa/Johannesburg", iso: "za", population: "60.4M", area: "1,221,037 km²", capital: "Pretoria", currency: "Rand (ZAR)", head: "Cyril Ramaphosa" },
-        { name: "South Korea (Seoul)", timezone: "Asia/Seoul", iso: "kr", population: "51.8M", area: "100,210 km²", capital: "Seoul", currency: "Won (KRW)", head: "Yoon Suk Yeol" },
-        { name: "South Sudan", timezone: "Africa/Juba", iso: "ss", population: "10.9M", area: "619,745 km²", capital: "Juba", currency: "Pound (SSP)", head: "Salva Kiir Mayardit" },
-        { name: "Spain (Madrid)", timezone: "Europe/Madrid", iso: "es", population: "47.5M", area: "505,992 km²", capital: "Madrid", currency: "Euro (EUR)", head: "King Felipe VI" },
-        { name: "Sri Lanka", timezone: "Asia/Colombo", iso: "lk", population: "21.9M", area: "65,610 km²", capital: "Sri Jayawardenepura Kotte", currency: "Rupee (LKR)", head: "Anura Kumara Dissanayake" },
-        { name: "Sudan", timezone: "Africa/Khartoum", iso: "sd", population: "48.1M", area: "1,886,068 km²", capital: "Khartoum", currency: "Pound (SDG)", head: "Abdel Fattah al-Burhan" },
-        { name: "Suriname", timezone: "America/Paramaribo", iso: "sr", population: "623K", area: "163,820 km²", capital: "Paramaribo", currency: "Dollar (SRD)", head: "Chan Santokhi" },
-        { name: "Sweden", timezone: "Europe/Stockholm", iso: "se", population: "10.6M", area: "450,295 km²", capital: "Stockholm", currency: "Krona (SEK)", head: "King Carl XVI Gustaf" },
-        { name: "Switzerland", timezone: "Europe/Zurich", iso: "ch", population: "8.8M", area: "41,285 km²", capital: "Bern", currency: "Franc (CHF)", head: "Federal Council" },
-        { name: "Syria", timezone: "Asia/Damascus", iso: "sy", population: "23.2M", area: "185,180 km²", capital: "Damascus", currency: "Pound (SYP)", head: "Bashar al-Assad" },
-        { name: "Taiwan", timezone: "Asia/Taipei", iso: "tw", population: "23.6M", area: "36,197 km²", capital: "Taipei", currency: "Dollar (TWD)", head: "Lai Ching-te" },
-        { name: "Tajikistan", timezone: "Asia/Dushanbe", iso: "tj", population: "10.1M", area: "143,100 km²", capital: "Dushanbe", currency: "Somoni (TJS)", head: "Emomali Rahmon" },
-        { name: "Tanzania", timezone: "Africa/Dar_es_Salaam", iso: "tz", population: "67.4M", area: "947,303 km²", capital: "Dodoma", currency: "Shilling (TZS)", head: "Samia Suluhu Hassan" },
-        { name: "Thailand", timezone: "Asia/Bangkok", iso: "th", population: "71.8M", area: "513,120 km²", capital: "Bangkok", currency: "Baht (THB)", head: "King Vajiralongkorn" },
-        { name: "Timor-Leste", timezone: "Asia/Dili", iso: "tl", population: "1.4M", area: "14,919 km²", capital: "Dili", currency: "Dollar (USD)", head: "José Ramos-Horta" },
-        { name: "Togo", timezone: "Africa/Lome", iso: "tg", population: "9.1M", area: "56,785 km²", capital: "Lomé", currency: "CFA Franc (XOF)", head: "Faure Gnassingbé" },
-        { name: "Tonga", timezone: "Pacific/Tongatapu", iso: "to", population: "108K", area: "747 km²", capital: "Nuku'alofa", currency: "Pa'anga (TOP)", head: "King Tupou VI" },
+        { name: "Slovenia", timezone: "Europe/Ljubljana", iso: "si", population: "2.2M", area: "20,273 km²", capital: "Ljubljana", currency: "Euro (EUR)", head: "Nataša Pirc Musar" },
+        { name: "Solomon Islands", timezone: "Pacific/Guadalcanal", iso: "sb", population: "780K", area: "28,896 km²", capital: "Honiara", currency: "Dollar (SBD)", head: "King Charles III" },
+        { name: "Somalia", timezone: "Africa/Mogadishu", iso: "so", population: "19.5M", area: "637,657 km²", capital: "Mogadishu", currency: "Shilling (SOS)", head: "Hassan Sheikh Mohamud" },
+        { name: "South Africa", timezone: "Africa/Johannesburg", iso: "za", population: "62.1M", area: "1,221,037 km²", capital: "Pretoria", currency: "Rand (ZAR)", head: "Cyril Ramaphosa" },
+        { name: "South Korea (Seoul)", timezone: "Asia/Seoul", iso: "kr", population: "51.4M", area: "100,210 km²", capital: "Seoul", currency: "Won (KRW)", head: "Yoon Suk Yeol" },
+        { name: "South Sudan", timezone: "Africa/Juba", iso: "ss", population: "12.1M", area: "619,745 km²", capital: "Juba", currency: "Pound (SSP)", head: "Salva Kiir Mayardit" },
+        { name: "Spain (Madrid)", timezone: "Europe/Madrid", iso: "es", population: "48.6M", area: "505,992 km²", capital: "Madrid", currency: "Euro (EUR)", head: "King Felipe VI" },
+        { name: "Sri Lanka", timezone: "Asia/Colombo", iso: "lk", population: "22.6M", area: "65,610 km²", capital: "Sri Jayawardenepura Kotte", currency: "Rupee (LKR)", head: "Anura Kumara Dissanayake" },
+        { name: "Sudan", timezone: "Africa/Khartoum", iso: "sd", population: "50.2M", area: "1,886,068 km²", capital: "Khartoum", currency: "Pound (SDG)", head: "Abdel Fattah al-Burhan" },
+        { name: "Suriname", timezone: "America/Paramaribo", iso: "sr", population: "630K", area: "163,820 km²", capital: "Paramaribo", currency: "Dollar (SRD)", head: "Chan Santokhi" },
+        { name: "Sweden", timezone: "Europe/Stockholm", iso: "se", population: "10.8M", area: "450,295 km²", capital: "Stockholm", currency: "Krona (SEK)", head: "King Carl XVI Gustaf" },
+        { name: "Switzerland", timezone: "Europe/Zurich", iso: "ch", population: "9.1M", area: "41,285 km²", capital: "Bern", currency: "Franc (CHF)", head: "Federal Council" },
+        { name: "Syria", timezone: "Asia/Damascus", iso: "sy", population: "23.4M", area: "185,180 km²", capital: "Damascus", currency: "Pound (SYP)", head: "Bashar al-Assad" },
+        { name: "Taiwan", timezone: "Asia/Taipei", iso: "tw", population: "23.4M", area: "36,197 km²", capital: "Taipei", currency: "Dollar (TWD)", head: "Lai Ching-te" },
+        { name: "Tajikistan", timezone: "Asia/Dushanbe", iso: "tj", population: "10.6M", area: "143,100 km²", capital: "Dushanbe", currency: "Somoni (TJS)", head: "Emomali Rahmon" },
+        { name: "Tanzania", timezone: "Africa/Dar_es_Salaam", iso: "tz", population: "71.2M", area: "947,303 km²", capital: "Dodoma", currency: "Shilling (TZS)", head: "Samia Suluhu Hassan" },
+        { name: "Thailand", timezone: "Asia/Bangkok", iso: "th", population: "69.3M", area: "513,120 km²", capital: "Bangkok", currency: "Baht (THB)", head: "King Vajiralongkorn" },
+        { name: "Timor-Leste", timezone: "Asia/Dili", iso: "tl", population: "1.5M", area: "14,919 km²", capital: "Dili", currency: "Dollar (USD)", head: "José Ramos-Horta" },
+        { name: "Togo", timezone: "Africa/Lome", iso: "tg", population: "9.5M", area: "56,785 km²", capital: "Lomé", currency: "CFA Franc (XOF)", head: "Faure Gnassingbé" },
+        { name: "Tonga", timezone: "Pacific/Tongatapu", iso: "to", population: "110K", area: "747 km²", capital: "Nuku'alofa", currency: "Pa'anga (TOP)", head: "King Tupou VI" },
         { name: "Trinidad and Tobago", timezone: "America/Port_of_Spain", iso: "tt", population: "1.5M", area: "5,130 km²", capital: "Port of Spain", currency: "Dollar (TTD)", head: "Christine Kangaloo" },
-        { name: "Tunisia", timezone: "Africa/Tunis", iso: "tn", population: "12.5M", area: "163,610 km²", capital: "Tunis", currency: "Dinar (TND)", head: "Kais Saied" },
-        { name: "Turkey (Istanbul)", timezone: "Europe/Istanbul", iso: "tr", population: "85.8M", area: "783,562 km²", capital: "Ankara", currency: "Lira (TRY)", head: "Recep Tayyip Erdoğan" },
-        { name: "Turkmenistan", timezone: "Asia/Ashgabat", iso: "tm", population: "6.5M", area: "488,100 km²", capital: "Ashgabat", currency: "Manat (TMT)", head: "Serdar Berdimuhamedow" },
+        { name: "Tunisia", timezone: "Africa/Tunis", iso: "tn", population: "12.8M", area: "163,610 km²", capital: "Tunis", currency: "Dinar (TND)", head: "Kais Saied" },
+        { name: "Turkey (Istanbul)", timezone: "Europe/Istanbul", iso: "tr", population: "87.1M", area: "783,562 km²", capital: "Ankara", currency: "Lira (TRY)", head: "Recep Tayyip Erdoğan" },
+        { name: "Turkmenistan", timezone: "Asia/Ashgabat", iso: "tm", population: "6.8M", area: "488,100 km²", capital: "Ashgabat", currency: "Manat (TMT)", head: "Serdar Berdimuhamedow" },
         { name: "Tuvalu", timezone: "Pacific/Funafuti", iso: "tv", population: "11K", area: "26 km²", capital: "Funafuti", currency: "Dollar (AUD)", head: "King Charles III" },
-        { name: "Uganda", timezone: "Africa/Kampala", iso: "ug", population: "48.6M", area: "241,550 km²", capital: "Kampala", currency: "Shilling (UGX)", head: "Yoweri Museveni" },
-        { name: "Ukraine", timezone: "Europe/Kyiv", iso: "ua", population: "36.7M", area: "603,500 km²", capital: "Kyiv", currency: "Hryvnia (UAH)", head: "Volodymyr Zelenskyy" },
-        { name: "United Arab Emirates", timezone: "Asia/Dubai", iso: "ae", population: "9.5M", area: "83,600 km²", capital: "Abu Dhabi", currency: "Dirham (AED)", head: "Mohamed bin Zayed Al Nahyan" },
-        { name: "United Kingdom (London)", timezone: "Europe/London", iso: "gb", population: "67.7M", area: "242,495 km²", capital: "London", currency: "Pound (GBP)", head: "King Charles III" },
-        { name: "USA (New York)", timezone: "America/New_York", iso: "us", population: "340.0M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Joe Biden" },
-        { name: "USA (Los Angeles)", timezone: "America/Los_Angeles", iso: "us", population: "340.0M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Joe Biden" },
-        { name: "USA (Chicago)", timezone: "America/Chicago", iso: "us", population: "340.0M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Joe Biden" },
-        { name: "USA (Denver)", timezone: "America/Denver", iso: "us", population: "340.0M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Joe Biden" },
-        { name: "USA (Honolulu)", timezone: "Pacific/Honolulu", iso: "us", population: "340.0M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Joe Biden" },
-        { name: "USA (Phoenix)", timezone: "America/Phoenix", iso: "us", population: "340.0M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Joe Biden" },
-        { name: "Uruguay", timezone: "America/Montevideo", iso: "uy", population: "3.4M", area: "176,215 km²", capital: "Montevideo", currency: "Peso (UYU)", head: "Luis Alberto Lacalle Pou" },
-        { name: "Uzbekistan", timezone: "Asia/Tashkent", iso: "uz", population: "35.5M", area: "448,978 km²", capital: "Tashkent", currency: "Som (UZS)", head: "Shavkat Mirziyoyev" },
-        { name: "Vanuatu", timezone: "Pacific/Efate", iso: "vu", population: "335K", area: "12,189 km²", capital: "Port Vila", currency: "Vatu (VUV)", head: "Nikenike Vurobaravu" },
-        { name: "Vatican City", timezone: "Europe/Vatican", iso: "va", population: "825", area: "0.44 km²", capital: "Vatican City", currency: "Euro (EUR)", head: "Pope Francis" },
-        { name: "Venezuela", timezone: "America/Caracas", iso: "ve", population: "28.8M", area: "916,445 km²", capital: "Caracas", currency: "Bolívar (VES)", head: "Nicolás Maduro" },
-        { name: "Vietnam", timezone: "Asia/Ho_Chi_Minh", iso: "vn", population: "98.9M", area: "331,212 km²", capital: "Hanoi", currency: "Dong (VND)", head: "Lương Cường" },
-        { name: "Yemen", timezone: "Asia/Aden", iso: "ye", population: "34.4M", area: "527,968 km²", capital: "Sana'a", currency: "Rial (YER)", head: "Rashad al-Alimi" },
-        { name: "Zambia", timezone: "Africa/Lusaka", iso: "zm", population: "20.6M", area: "752,612 km²", capital: "Lusaka", currency: "Kwacha (ZMW)", head: "Hakainde Hichilema" },
-        { name: "Zimbabwe", timezone: "Africa/Harare", iso: "zw", population: "16.7M", area: "390,757 km²", capital: "Harare", currency: "ZiG (ZiG)", head: "Emmerson Mnangagwa" }
+        { name: "Uganda", timezone: "Africa/Kampala", iso: "ug", population: "51.3M", area: "241,550 km²", capital: "Kampala", currency: "Shilling (UGX)", head: "Yoweri Museveni" },
+        { name: "Ukraine", timezone: "Europe/Kyiv", iso: "ua", population: "34.2M", area: "603,500 km²", capital: "Kyiv", currency: "Hryvnia (UAH)", head: "Volodymyr Zelenskyy" },
+        { name: "United Arab Emirates", timezone: "Asia/Dubai", iso: "ae", population: "10.1M", area: "83,600 km²", capital: "Abu Dhabi", currency: "Dirham (AED)", head: "Mohamed bin Zayed Al Nahyan" },
+        { name: "United Kingdom (London)", timezone: "Europe/London", iso: "gb", population: "69.4M", area: "242,495 km²", capital: "London", currency: "Pound (GBP)", head: "King Charles III" },
+        { name: "USA (New York)", timezone: "America/New_York", iso: "us", population: "343.6M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Donald Trump / J. Vance" },
+        { name: "USA (Los Angeles)", timezone: "America/Los_Angeles", iso: "us", population: "343.6M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Donald Trump / J. Vance" },
+        { name: "USA (Chicago)", timezone: "America/Chicago", iso: "us", population: "343.6M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Donald Trump / J. Vance" },
+        { name: "USA (Denver)", timezone: "America/Denver", iso: "us", population: "343.6M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Donald Trump / J. Vance" },
+        { name: "USA (Honolulu)", timezone: "Pacific/Honolulu", iso: "us", population: "343.6M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Donald Trump / J. Vance" },
+        { name: "USA (Phoenix)", timezone: "America/Phoenix", iso: "us", population: "343.6M", area: "9,833,517 km²", capital: "Washington, D.C.", currency: "Dollar (USD)", head: "Donald Trump / J. Vance" },
+        { name: "Uruguay", timezone: "America/Montevideo", iso: "uy", population: "3.5M", area: "176,215 km²", capital: "Montevideo", currency: "Peso (UYU)", head: "Luis Alberto Lacalle Pou" },
+        { name: "Uzbekistan", timezone: "Asia/Tashkent", iso: "uz", population: "36.8M", area: "448,978 km²", capital: "Tashkent", currency: "Som (UZS)", head: "Shavkat Mirziyoyev" },
+        { name: "Vanuatu", timezone: "Pacific/Efate", iso: "vu", population: "350K", area: "12,189 km²", capital: "Port Vila", currency: "Vatu (VUV)", head: "Nikenike Vurobaravu" },
+        { name: "Vatican City", timezone: "Europe/Vatican", iso: "va", population: "800", area: "0.44 km²", capital: "Vatican City", currency: "Euro (EUR)", head: "Pope Francis / Pope Leo XIV (Proj.)" },
+        { name: "Venezuela", timezone: "America/Caracas", iso: "ve", population: "28.2M", area: "916,445 km²", capital: "Caracas", currency: "Bolívar (VES)", head: "Nicolás Maduro" },
+        { name: "Vietnam", timezone: "Asia/Ho_Chi_Minh", iso: "vn", population: "100.8M", area: "331,212 km²", capital: "Hanoi", currency: "Dong (VND)", head: "Lương Cường" },
+        { name: "Yemen", timezone: "Asia/Aden", iso: "ye", population: "36.1M", area: "527,968 km²", capital: "Sana'a", currency: "Rial (YER)", head: "Rashad al-Alimi" },
+        { name: "Zambia", timezone: "Africa/Lusaka", iso: "zm", population: "21.6M", area: "752,612 km²", capital: "Lusaka", currency: "Kwacha (ZMW)", head: "Hakainde Hichilema" },
+        { name: "Zimbabwe", timezone: "Africa/Harare", iso: "zw", population: "17.1M", area: "390,757 km²", capital: "Harare", currency: "ZiG (ZiG)", head: "Emmerson Mnangagwa" }
     ];
 
-    // Sort alphabetically
     countries.sort((a, b) => a.name.localeCompare(b.name));
 
-    // DOM Elements
     const searchInput = document.getElementById('searchInput');
     const countryDropdown = document.getElementById('countryDropdown');
     const resultCard = document.getElementById('resultCard');
@@ -585,159 +378,77 @@
     const ampmBadge = document.getElementById('ampmBadge');
     const digitalClock = document.getElementById('digitalClock');
 
-    let selectedTimezone = null;
-    let intervalId = null;
-    let secondHandOffset = 0;
-    let lastSecondValue = -1;
+    let selectedTimezone = null, intervalId = null, secondHandOffset = 0, lastSecondValue = -1;
 
-    // Create clock numbers and marks
     function createClockFace() {
-        const numbers = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        const radius = 115;
-        numbers.forEach((num, index) => {
+        [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach((num, index) => {
             const angle = (index * 30 - 90) * (Math.PI / 180);
-            const x = 140 + radius * Math.cos(angle) - 15;
-            const y = 140 + radius * Math.sin(angle) - 15;
-            const numEl = document.createElement('div');
-            numEl.className = 'clock-number';
-            numEl.textContent = num;
-            numEl.style.left = x + 'px';
-            numEl.style.top = y + 'px';
-            clockFace.appendChild(numEl);
+            const x = 140 + 115 * Math.cos(angle) - 15, y = 140 + 115 * Math.sin(angle) - 15;
+            const el = document.createElement('div');
+            el.className = 'clock-number'; el.textContent = num;
+            el.style.left = x + 'px'; el.style.top = y + 'px'; clockFace.appendChild(el);
         });
         for (let i = 0; i < 60; i++) {
-            if (i % 5 === 0) continue;
-            const mark = document.createElement('div');
-            mark.className = 'clock-mark';
-            mark.style.transform = `rotate(${i * 6}deg)`;
-            clockFace.appendChild(mark);
-        }
-        for (let i = 0; i < 12; i++) {
-            const mark = document.createElement('div');
-            mark.className = 'clock-mark major';
-            mark.style.transform = `rotate(${i * 30}deg)`;
-            clockFace.appendChild(mark);
+            if (i % 5 !== 0) { const m = document.createElement('div'); m.className='clock-mark'; m.style.transform=`rotate(${i*6}deg)`; clockFace.appendChild(m); }
+            else { const m = document.createElement('div'); m.className='clock-mark major'; m.style.transform=`rotate(${i*6}deg)`; clockFace.appendChild(m); }
         }
     }
     createClockFace();
 
-    // Filter and display countries
-    function filterCountries(query) {
-        const filtered = countries.filter(c => c.name.toLowerCase().includes(query.toLowerCase()));
-        if (filtered.length === 0) {
-            countryDropdown.innerHTML = '<div class="no-results"><i class="bi bi-emoji-dizzy me-2"></i>No countries found</div>';
-        } else {
-            countryDropdown.innerHTML = filtered.map(c => `
-                <div class="country-item" data-timezone="${c.timezone}" data-name="${c.name}" data-iso="${c.iso}" data-population="${c.population}" data-area="${c.area}" data-capital="${c.capital}" data-currency="${c.currency}" data-head="${c.head}">
-                    <img class="flag" src="https://flagcdn.com/w80/${c.iso}.png" alt="${c.name}">
-                    <div class="info">
-                        <div class="name">${highlightText(c.name, query)}</div>
-                        <div class="details">
-                            <span><i class="bi bi-geo-alt"></i> ${c.capital}</span>
-                            <span><i class="bi bi-currency-exchange"></i> ${c.currency.split(' ')[0]}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+    function filterCountries(q) {
+        const f = countries.filter(c => c.name.toLowerCase().includes(q.toLowerCase()));
+        countryDropdown.innerHTML = f.length === 0 
+            ? '<div class="no-results"><i class="bi bi-emoji-dizzy me-2"></i>No countries found</div>'
+            : f.map(c => `<div class="country-item" data-timezone="${c.timezone}" data-name="${c.name}" data-iso="${c.iso}" data-pop="${c.population}" data-area="${c.area}" data-cap="${c.capital}" data-cur="${c.currency}" data-head="${c.head}"><img class="flag" src="https://flagcdn.com/w80/${c.iso}.png"><div class="info"><div class="name">${q?c.name.replace(new RegExp(`(${q})`,'gi'),'<span style="color:#00d4ff">$1</span>'):c.name}</div><div class="details"><span><i class="bi bi-geo-alt"></i> ${c.capital}</span><span><i class="bi bi-currency-exchange"></i> ${c.currency.split(' ')[0]}</span></div></div></div>`).join('');
         countryDropdown.classList.add('show');
     }
 
-    function highlightText(text, query) {
-        if (!query) return text;
-        return text.replace(new RegExp(`(${query})`, 'gi'), '<span style="color: #00d4ff; font-weight: 600;">$1</span>');
-    }
-
-    // Event Listeners
-    searchInput.addEventListener('input', (e) => filterCountries(e.target.value));
+    searchInput.addEventListener('input', e => filterCountries(e.target.value));
     searchInput.addEventListener('focus', () => { resultCard.classList.remove('show'); placeholderMsg.style.display = 'block'; });
-    countryDropdown.addEventListener('click', (e) => {
-        const item = e.target.closest('.country-item');
-        if (item) {
-            selectCountry(item.dataset.timezone, item.dataset.name, item.dataset.iso, item.dataset.population, item.dataset.area, item.dataset.capital, item.dataset.currency, item.dataset.head);
-            countryDropdown.classList.remove('show');
-            searchInput.value = '';
-            searchInput.blur();
-        }
+    countryDropdown.addEventListener('click', e => {
+        const it = e.target.closest('.country-item');
+        if (it) { selectCountry(it.dataset.timezone, it.dataset.name, it.dataset.iso, it.dataset.pop, it.dataset.area, it.dataset.cap, it.dataset.cur, it.dataset.head); countryDropdown.classList.remove('show'); searchInput.value=''; searchInput.blur(); }
     });
-    document.addEventListener('click', (e) => { if (!e.target.closest('.search-wrapper')) countryDropdown.classList.remove('show'); });
+    document.addEventListener('click', e => { if(!e.target.closest('.search-wrapper')) countryDropdown.classList.remove('show'); });
 
-    function selectCountry(timezone, name, iso, pop, areaData, capitalData, currencyData, headData) {
-        selectedTimezone = timezone;
-        countryFlagLarge.src = `https://flagcdn.com/w320/${iso}.png`;
-        countryFlagLarge.alt = `${name} Flag`;
-        countryName.textContent = name;
-        timezoneLabel.textContent = timezone.replace(/_/g, ' ');
+    function selectCountry(tz, nm, iso, pop, ar, cap, cur, hd) {
+        selectedTimezone = tz;
+        countryFlagLarge.src = `https://flagcdn.com/w320/${iso}.png`; countryFlagLarge.alt = nm;
+        countryName.textContent = nm; timezoneLabel.textContent = tz.replace(/_/g,' ');
         population.innerHTML = `<i class="bi bi-people-fill"></i> ${pop}`;
-        area.innerHTML = `<i class="bi bi-map"></i> ${areaData}`;
-        capital.innerHTML = `<i class="bi bi-building"></i> ${capitalData}`;
-        currency.innerHTML = `<i class="bi bi-currency-exchange"></i> ${currencyData}`;
-        head.innerHTML = `<i class="bi bi-person-badge"></i> ${headData}`;
-        timezoneShort.innerHTML = `<i class="bi bi-clock"></i> ${timezone.split('/').slice(-1)[0]}`;
-        secondHandOffset = 0;
-        lastSecondValue = -1;
+        area.innerHTML = `<i class="bi bi-map"></i> ${ar}`;
+        capital.innerHTML = `<i class="bi bi-building"></i> ${cap}`;
+        currency.innerHTML = `<i class="bi bi-currency-exchange"></i> ${cur}`;
+        head.innerHTML = `<i class="bi bi-person-badge"></i> ${hd}`;
+        timezoneShort.innerHTML = `<i class="bi bi-clock"></i> ${tz.split('/').slice(-1)[0]}`;
+        secondHandOffset = 0; lastSecondValue = -1;
         resultCard.classList.remove('show');
         setTimeout(() => { resultCard.classList.add('show'); placeholderMsg.style.display = 'none'; }, 100);
-        if (intervalId) clearInterval(intervalId);
-        updateClocks();
-        intervalId = setInterval(updateClocks, 1000);
+        if(intervalId) clearInterval(intervalId);
+        updateClocks(); intervalId = setInterval(updateClocks, 1000);
     }
 
     function updateClocks() {
         if (!selectedTimezone) return;
-        
-        // Get current date/time
         let now = new Date();
-        
-        // 🔧 Force year to 2026 if configured
-        if (FORCE_2026 && now.getFullYear() !== 2026) {
-            now = new Date(now.setFullYear(2026));
-        }
-
-        const timeStr = now.toLocaleTimeString('en-US', { 
-            timeZone: selectedTimezone, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' 
-        });
-        const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-
-        if (lastSecondValue === 59 && seconds === 0) secondHandOffset += 360;
-        lastSecondValue = seconds;
-
-        const secDeg = seconds * 6 + secondHandOffset;
-        const minDeg = minutes * 6 + (seconds / 60) * 6;
-        const hourDeg = ((hours % 12) * 30) + (minutes / 60) * 30 + (seconds / 3600) * 30;
-
-        secondHand.style.transform = `rotate(${secDeg}deg)`;
-        minuteHand.style.transform = `rotate(${minDeg}deg)`;
-        hourHand.style.transform = `rotate(${hourDeg}deg)`;
-
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        ampmBadge.textContent = ampm;
-        ampmBadge.style.borderColor = ampm === 'AM' ? 'rgba(0,212,255,0.4)' : 'rgba(123,47,247,0.4)';
-        ampmBadge.style.color = ampm === 'AM' ? '#00d4ff' : '#b388ff';
-
-        const digHours = hours % 12 || 12;
-        digitalClock.textContent = `${String(digHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${ampm}`;
-
-        // Explicitly format with full 4-digit year
-        const dateOptions = { timeZone: selectedTimezone, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        fullDate.textContent = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
+        if (FORCE_2026) now.setFullYear(2026);
+        const [h, m, s] = now.toLocaleTimeString('en-US', { timeZone: selectedTimezone, hour12: false }).split(':').map(Number);
+        if (lastSecondValue === 59 && s === 0) secondHandOffset += 360;
+        lastSecondValue = s;
+        secondHand.style.transform = `rotate(${s*6+secondHandOffset}deg)`;
+        minuteHand.style.transform = `rotate(${m*6+s*0.1}deg)`;
+        hourHand.style.transform = `rotate(${(h%12)*30+m*0.5+s*0.0083}deg)`;
+        const ampm = h>=12?'PM':'AM'; ampmBadge.textContent = ampm;
+        ampmBadge.style.borderColor = ampm==='AM'?'rgba(0,212,255,0.4)':'rgba(123,47,247,0.4)';
+        ampmBadge.style.color = ampm==='AM'?'#00d4ff':'#b388ff';
+        digitalClock.textContent = `${String(h%12||12).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
+        fullDate.textContent = now.toLocaleDateString('en-US', { timeZone: selectedTimezone, weekday:'long', year:'numeric', month:'long', day:'numeric' });
     }
 
-    // Background particles
     (function createParticles() {
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 30; i++) {
-            const span = document.createElement('span');
-            const size = Math.random() * 6 + 2;
-            span.style.width = size + 'px';
-            span.style.height = size + 'px';
-            span.style.left = Math.random() * 100 + '%';
-            span.style.animationDuration = Math.random() * 15 + 10 + 's';
-            span.style.animationDelay = Math.random() * 10 + 's';
-            container.appendChild(span);
-        }
+        const c = document.getElementById('particles');
+        for(let i=0;i<30;i++){const s=document.createElement('span');const sz=Math.random()*6+2;s.style.width=sz+'px';s.style.height=sz+'px';s.style.left=Math.random()*100+'%';s.style.animationDuration=Math.random()*15+10+'s';s.style.animationDelay=Math.random()*10+'s';c.appendChild(s);}
     })();
 </script>
-
 </body>
 </html>
