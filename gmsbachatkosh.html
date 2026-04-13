@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏦 GMS Bachat Kosh - Member Financial Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            --success-gradient: linear-gradient(135deg, #43e97b, #38f9d7);
+            --warning-gradient: linear-gradient(135deg, #fa709a, #fee140);
+        }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); min-height: 100vh; font-family: 'Segoe UI', system-ui, sans-serif; color: #2d3748; }
+        .navbar { background: var(--primary-gradient) !important; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        .main-header { background: var(--primary-gradient); color: white; padding: 3rem 0; text-align: center; border-radius: 0 0 30px 30px; margin-bottom: 2rem; }
+        .main-header h1 { font-weight: 800; letter-spacing: -0.5px; }
+        .main-header .brand-subtitle { opacity: 0.9; font-size: 1.1rem; margin-top: 0.5rem; }
+        .stat-card { background: white; border-radius: 20px; padding: 1.5rem; box-shadow: var(--card-shadow); transition: 0.3s; border-left: 4px solid var(--primary-gradient); }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        .stat-card .icon { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: var(--primary-gradient); color: white; margin-bottom: 1rem; font-size: 1.3rem; }
+        .card { border-radius: 20px; box-shadow: var(--card-shadow); border: none; margin-bottom: 1.5rem; }
+        .card-header { background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0 !important; font-weight: 600; padding: 1.2rem 1.5rem; }
+        .card-header.loan { background: var(--warning-gradient); }
+        .card-header.repayment { background: var(--success-gradient); }
+        .form-control, .form-select { border-radius: 12px; padding: 0.8rem; border: 2px solid #e2e8f0; transition: border-color 0.2s; }
+        .form-control:focus, .form-select:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15); }
+        .btn-primary { background: var(--primary-gradient); border: none; border-radius: 12px; padding: 0.8rem 2rem; font-weight: 600; }
+        .btn-warning { background: var(--warning-gradient); border: none; border-radius: 12px; padding: 0.8rem 2rem; font-weight: 600; color: white; }
+        .btn-success { background: var(--success-gradient); border: none; border-radius: 12px; padding: 0.8rem 2rem; font-weight: 600; color: #333; }
+        .nav-pills .nav-link { border-radius: 15px; padding: 0.8rem 1.5rem; font-weight: 600; margin: 0 0.3rem; }
+        .nav-pills .nav-link.active { background: var(--primary-gradient); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        .member-card { background: white; border-radius: 15px; padding: 1.2rem; margin-bottom: 1rem; box-shadow: var(--card-shadow); border-top: 3px solid transparent; transition: border-color 0.3s; }
+        .member-card:hover { border-top-color: #667eea; }
+        .member-avatar { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 10px; font-size: 0.9rem; }
+        .table thead th { background: var(--primary-gradient); color: white; border: none; padding: 1rem; font-weight: 600; white-space: nowrap; }
+        .table tbody tr { background: white; margin-bottom: 8px; border-radius: 10px; transition: background 0.2s; }
+        .table tbody tr:hover { background: #f8fafc; }
+        .badge { font-weight: 500; padding: 0.5em 0.8em; }
+        .badge-deposit { background: #43e97b; color: #333; }
+        .badge-loan { background: #fa709a; color: white; }
+        .badge-repayment { background: #38f9d7; color: #333; }
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.92); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; }
+        .loading-overlay.active { display: flex; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 10000; max-width: 350px; }
+        .gms-brand { background: linear-gradient(135deg, #2c3e50, #4a5568); color: white; padding: 0.8rem 1.5rem; border-radius: 15px; margin: 1.5rem 0; text-align: center; font-weight: 600; box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2); }
+        .gms-brand small { display: block; opacity: 0.85; font-weight: 400; margin-top: 0.3rem; font-size: 0.9rem; }
+        @media (max-width: 768px) {
+            .main-header { padding: 2rem 1rem; }
+            .stat-card { margin-bottom: 1rem; }
+            .nav-pills .nav-link { margin: 0.2rem 0; width: 100%; text-align: center; }
+            .table-responsive { border-radius: 15px; overflow: hidden; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Syncing with GMS Bachat Kosh...</div>
+    </div>
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-landmark me-2"></i>GMS Bachat Kosh</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#dashboard" data-bs-toggle="tab"><i class="fas fa-home me-1"></i>Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#depositTab" data-bs-toggle="tab"><i class="fas fa-piggy-bank me-1"></i>Deposit</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#loanTab" data-bs-toggle="tab"><i class="fas fa-hand-holding-usd me-1"></i>Loans</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#viewTab" data-bs-toggle="tab"><i class="fas fa-table me-1"></i>Records</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-header">
+        <div class="container">
+            <h1 class="fw-bold mb-2"><i class="fas fa-coins me-2"></i>Member Financial Management</h1>
+            <p class="brand-subtitle mb-0"><i class="fas fa-calendar-alt me-1"></i>Tracking deposits & loans from 2079 Bhadra to 2085 Chaitra</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div id="dashboard" class="mb-5">
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-sm-6"><div class="stat-card"><div class="icon"><i class="fas fa-users"></i></div><h3 class="mb-0 fw-bold" id="totalMembers">6</h3><p class="text-muted mb-0">Active Members</p></div></div>
+                <div class="col-md-3 col-sm-6"><div class="stat-card"><div class="icon" style="background: var(--success-gradient)"><i class="fas fa-arrow-down"></i></div><h3 class="mb-0 fw-bold text-success" id="totalDeposits">Rs. 0</h3><p class="text-muted mb-0">Total Deposits</p></div></div>
+                <div class="col-md-3 col-sm-6"><div class="stat-card"><div class="icon" style="background: var(--warning-gradient)"><i class="fas fa-arrow-up"></i></div><h3 class="mb-0 fw-bold text-warning" id="totalLoans">Rs. 0</h3><p class="text-muted mb-0">Total Loans</p></div></div>
+                <div class="col-md-3 col-sm-6"><div class="stat-card"><div class="icon"><i class="fas fa-balance-scale"></i></div><h3 class="mb-0 fw-bold text-primary" id="netBalance">Rs. 0</h3><p class="text-muted mb-0">Net Balance</p></div></div>
+            </div>
+            <h5 class="section-header"><i class="fas fa-chart-pie me-2"></i>Member Overview</h5>
+            <div class="row" id="memberCards"></div>
+        </div>
+
+        <ul class="nav nav-pills mb-4 justify-content-center flex-wrap" id="mainTabs">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#depositTab"><i class="fas fa-piggy-bank me-1"></i> Add Deposit</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#loanTab"><i class="fas fa-hand-holding-usd me-1"></i> Loan & Repayment</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#viewTab"><i class="fas fa-eye me-1"></i> View Records</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- DEPOSIT -->
+            <div class="tab-pane fade show active" id="depositTab">
+                <div class="card">
+                    <div class="card-header"><h5 class="mb-0"><i class="fas fa-piggy-bank me-2"></i>Add Monthly Deposit</h5></div>
+                    <div class="card-body p-4">
+                        <form id="depositForm">
+                            <div class="row g-3">
+                                <div class="col-md-4"><label class="form-label fw-semibold">Member</label><select class="form-select" id="depMember" required><option value="">Select</option><option value="Anil Maharjan">Anil Maharjan</option><option value="Bindu Maharjan">Bindu Maharjan</option><option value="Manisha Maharjan">Manisha Maharjan</option><option value="Rajeep Maharjan">Rajeep Maharjan</option><option value="Sajina Barahi">Sajina Barahi</option><option value="Supreme Chitrakar">Supreme Chitrakar</option></select></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Nepali Year</label><select class="form-select" id="depYear" required><option value="2079">2079 BS</option><option value="2080">2080 BS</option><option value="2081">2081 BS</option><option value="2082" selected>2082 BS</option><option value="2083">2083 BS</option><option value="2084">2084 BS</option><option value="2085">2085 BS</option></select></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Nepali Month</label><select class="form-select" id="depMonth" required><option value="Baishakh">Baishakh</option><option value="Jestha">Jestha</option><option value="Ashadh">Ashadh</option><option value="Shrawan">Shrawan</option><option value="Bhadra">Bhadra</option><option value="Ashwin">Ashwin</option><option value="Kartik">Kartik</option><option value="Mangsir">Mangsir</option><option value="Poush">Poush</option><option value="Magh">Magh</option><option value="Falgun">Falgun</option><option value="Chaitra">Chaitra</option></select></div>
+                                <div class="col-md-6"><label class="form-label fw-semibold">Amount (Rs.)</label><input type="number" class="form-control" id="depAmount" min="1" required></div>
+                                <div class="col-md-6"><label class="form-label fw-semibold">Remarks</label><input type="text" class="form-control" id="depRemarks" placeholder="Optional notes..."></div>
+                                <div class="col-12 text-center pt-2"><button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save me-2"></i>Save Deposit</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOAN & REPAYMENT -->
+            <div class="tab-pane fade" id="loanTab">
+                <div class="card mb-4">
+                    <div class="card-header loan"><h5 class="mb-0"><i class="fas fa-hand-holding-usd me-2"></i>Record New Loan</h5></div>
+                    <div class="card-body p-4">
+                        <form id="loanForm">
+                            <div class="row g-3">
+                                <div class="col-md-4"><label class="form-label fw-semibold">Member</label><select class="form-select" id="loanMember" required><option value="">Select</option><option value="Anil Maharjan">Anil Maharjan</option><option value="Bindu Maharjan">Bindu Maharjan</option><option value="Manisha Maharjan">Manisha Maharjan</option><option value="Rajeep Maharjan">Rajeep Maharjan</option><option value="Sajina Barahi">Sajina Barahi</option><option value="Supreme Chitrakar">Supreme Chitrakar</option></select></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Nepali Year</label><select class="form-select" id="loanYear"><option value="">Select</option><option value="2079">2079 BS</option><option value="2080">2080 BS</option><option value="2081">2081 BS</option><option value="2082" selected>2082 BS</option><option value="2083">2083 BS</option><option value="2084">2084 BS</option><option value="2085">2085 BS</option></select></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Nepali Month</label><select class="form-select" id="loanMonth"><option value="">Select</option><option value="Baishakh">Baishakh</option><option value="Jestha">Jestha</option><option value="Ashadh">Ashadh</option><option value="Shrawan">Shrawan</option><option value="Bhadra">Bhadra</option><option value="Ashwin">Ashwin</option><option value="Kartik">Kartik</option><option value="Mangsir">Mangsir</option><option value="Poush">Poush</option><option value="Magh">Magh</option><option value="Falgun">Falgun</option><option value="Chaitra">Chaitra</option></select></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Loan Amount (Rs.)</label><input type="number" class="form-control" id="loanAmount" min="1" required></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Interest Rate (%)</label><input type="number" class="form-control" id="loanInterest" value="12" min="0" step="0.1"></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Period (Months)</label><input type="number" class="form-control" id="loanPeriod" value="12" min="1"></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Status</label><select class="form-select" id="loanStatus"><option value="Active">Active</option><option value="Paid">Paid</option><option value="Overdue">Overdue</option></select></div>
+                                <div class="col-md-8"><label class="form-label fw-semibold">Remarks</label><textarea class="form-control" id="loanRemarks" rows="2" placeholder="Loan purpose, collateral, etc."></textarea></div>
+                                <div class="col-12 text-center pt-2"><button type="submit" class="btn btn-warning btn-lg"><i class="fas fa-save me-2"></i>Record Loan</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header repayment"><h5 class="mb-0"><i class="fas fa-undo me-2"></i>Record Loan Repayment</h5></div>
+                    <div class="card-body p-4">
+                        <form id="repaymentForm">
+                            <div class="row g-3">
+                                <div class="col-md-4"><label class="form-label fw-semibold">Member</label><select class="form-select" id="repMember" required><option value="">Select</option><option value="Anil Maharjan">Anil Maharjan</option><option value="Bindu Maharjan">Bindu Maharjan</option><option value="Manisha Maharjan">Manisha Maharjan</option><option value="Rajeep Maharjan">Rajeep Maharjan</option><option value="Sajina Barahi">Sajina Barahi</option><option value="Supreme Chitrakar">Supreme Chitrakar</option></select></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Nepali Year</label><select class="form-select" id="repYear"><option value="">Select</option><option value="2079">2079 BS</option><option value="2080">2080 BS</option><option value="2081">2081 BS</option><option value="2082" selected>2082 BS</option><option value="2083">2083 BS</option><option value="2084">2084 BS</option><option value="2085">2085 BS</option></select></div>
+                                <div class="col-md-4"><label class="form-label fw-semibold">Nepali Month</label><select class="form-select" id="repMonth"><option value="">Select</option><option value="Baishakh">Baishakh</option><option value="Jestha">Jestha</option><option value="Ashadh">Ashadh</option><option value="Shrawan">Shrawan</option><option value="Bhadra">Bhadra</option><option value="Ashwin">Ashwin</option><option value="Kartik">Kartik</option><option value="Mangsir">Mangsir</option><option value="Poush">Poush</option><option value="Magh">Magh</option><option value="Falgun">Falgun</option><option value="Chaitra">Chaitra</option></select></div>
+                                <div class="col-md-6"><label class="form-label fw-semibold">Repayment Amount (Rs.)</label><input type="number" class="form-control" id="repAmount" min="1" required></div>
+                                <div class="col-md-6"><label class="form-label fw-semibold">Remarks</label><textarea class="form-control" id="repRemarks" rows="2" placeholder="Payment method, receipt #, etc."></textarea></div>
+                                <div class="col-12 text-center pt-2"><button type="submit" class="btn btn-success btn-lg"><i class="fas fa-check me-2"></i>Save Repayment</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW RECORDS -->
+            <div class="tab-pane fade" id="viewTab">
+                <div class="gms-brand">🏦 GMS Bachat Kosh - Full Record Details<small>Comprehensive financial history with deposits, loans & repayments</small></div>
+                <div class="card mb-4">
+                    <div class="card-body p-3">
+                        <div class="row g-3">
+                            <div class="col-md-3"><select class="form-select" id="filterMember"><option value="all">All Members</option><option value="Anil Maharjan">Anil Maharjan</option><option value="Bindu Maharjan">Bindu Maharjan</option><option value="Manisha Maharjan">Manisha Maharjan</option><option value="Rajeep Maharjan">Rajeep Maharjan</option><option value="Sajina Barahi">Sajina Barahi</option><option value="Supreme Chitrakar">Supreme Chitrakar</option></select></div>
+                            <div class="col-md-3"><select class="form-select" id="filterType"><option value="all">All Types</option><option value="deposit">Deposits</option><option value="loan">Loans</option><option value="repayment">Repayments</option></select></div>
+                            <div class="col-md-3"><select class="form-select" id="filterYear"><option value="all">All Years</option><option value="2079">2079 BS</option><option value="2080">2080 BS</option><option value="2081">2081 BS</option><option value="2082" selected>2082 BS</option><option value="2083">2083 BS</option><option value="2084">2084 BS</option><option value="2085">2085 BS</option></select></div>
+                            <div class="col-md-3 d-flex align-items-end"><button class="btn btn-primary w-100" onclick="loadRecords()"><i class="fas fa-search me-1"></i> Search</button></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="recordsTable">
+                                <thead><tr><th>#</th><th>Member</th><th>Type</th><th>Year (BS)</th><th>Month</th><th>Amount</th><th>Remarks</th><th>Action</th></tr></thead>
+                                <tbody id="recordsBody"><tr><td colspan="8" class="text-center text-muted py-5"><i class="fas fa-search fa-2x mb-3 d-block"></i>Click "Search" to load data</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-header"><h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Monthly Deposit Summary</h5></div>
+                    <div class="card-body p-4">
+                        <div class="row g-3 mb-3"><div class="col-md-4"><select class="form-select" id="summaryYear" onchange="loadSummary()"><option value="">Choose Year</option><option value="2079">2079 BS</option><option value="2080">2080 BS</option><option value="2081">2081 BS</option><option value="2082" selected>2082 BS</option><option value="2083">2083 BS</option><option value="2084">2084 BS</option><option value="2085">2085 BS</option></select></div></div>
+                        <div class="table-responsive"><table class="table table-sm" id="summaryTable"><thead><tr><th>Member</th><th>Bai</th><th>Jes</th><th>Ash</th><th>Shr</th><th>Bha</th><th>Asw</th><th>Kar</th><th>Man</th><th>Pou</th><th>Mag</th><th>Fal</th><th>Cha</th><th class="text-primary">Total</th></tr></thead><tbody id="summaryBody"></tbody></table></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none;">
+                <div class="modal-header" style="background: var(--primary-gradient); color: white; border-radius: 20px 20px 0 0;">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Edit Record</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="editForm">
+                        <input type="hidden" id="editId">
+                        <input type="hidden" id="editType">
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label fw-semibold">Member</label><select class="form-select" id="editMember" required><option value="">Select</option><option value="Anil Maharjan">Anil Maharjan</option><option value="Bindu Maharjan">Bindu Maharjan</option><option value="Manisha Maharjan">Manisha Maharjan</option><option value="Rajeep Maharjan">Rajeep Maharjan</option><option value="Sajina Barahi">Sajina Barahi</option><option value="Supreme Chitrakar">Supreme Chitrakar</option></select></div>
+                            <div class="col-md-3"><label class="form-label fw-semibold">Nepali Year</label><select class="form-select" id="editYear"><option value="">-</option><option value="2079">2079 BS</option><option value="2080">2080 BS</option><option value="2081">2081 BS</option><option value="2082">2082 BS</option><option value="2083">2083 BS</option><option value="2084">2084 BS</option><option value="2085">2085 BS</option></select></div>
+                            <div class="col-md-3"><label class="form-label fw-semibold">Nepali Month</label><select class="form-select" id="editMonth"><option value="">-</option><option value="Baishakh">Baishakh</option><option value="Jestha">Jestha</option><option value="Ashadh">Ashadh</option><option value="Shrawan">Shrawan</option><option value="Bhadra">Bhadra</option><option value="Ashwin">Ashwin</option><option value="Kartik">Kartik</option><option value="Mangsir">Mangsir</option><option value="Poush">Poush</option><option value="Magh">Magh</option><option value="Falgun">Falgun</option><option value="Chaitra">Chaitra</option></select></div>
+                            <div class="col-md-12"><label class="form-label fw-semibold">Amount (Rs.)</label><input type="number" class="form-control" id="editAmount" min="0" required></div>
+                            <div id="editLoanFields" class="d-none">
+                                <div class="row g-3">
+                                    <div class="col-md-4"><label class="form-label fw-semibold">Interest (%)</label><input type="number" class="form-control" id="editInterest" step="0.1"></div>
+                                    <div class="col-md-4"><label class="form-label fw-semibold">Period (Months)</label><input type="number" class="form-control" id="editPeriod"></div>
+                                    <div class="col-md-4"><label class="form-label fw-semibold">Status</label><select class="form-select" id="editStatus"><option value="Active">Active</option><option value="Paid">Paid</option><option value="Overdue">Overdue</option></select></div>
+                                </div>
+                            </div>
+                            <div class="col-12"><label class="form-label fw-semibold">Remarks</label><textarea class="form-control" id="editRemarks" rows="2"></textarea></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center border-0">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary px-4" onclick="submitEdit()"><i class="fas fa-save me-2"></i>Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 text-muted small">
+        <div class="container">
+            <i class="fas fa-lock me-1"></i> Secure • <i class="fas fa-database me-1"></i> Google Sheets Backend • <span id="lastSync">Last sync: --</span>
+            <div class="mt-2">© <span id="currentYear"></span> GMS Bachat Kosh • Built with ❤️ for financial transparency</div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzE6BnGivdEL--MyazErUKm6j4W0qU7uEbQDw9yfL3ncSfWO0dy-XmBDPETVUxNbUAHvw/exec';
+        const MEMBERS = ['Anil Maharjan','Bindu Maharjan','Manisha Maharjan','Rajeep Maharjan','Sajina Barahi','Supreme Chitrakar'];
+        const MONTHS = ['Baishakh','Jestha','Ashadh','Shrawan','Bhadra','Ashwin','Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'];
+        const COLORS = ['#667eea','#43e97b','#fa709a','#a18cd1','#fbc2eb','#fee140'];
+
+        const showLoad = (msg='Syncing...') => { document.querySelector('.loading-text').textContent=msg; document.getElementById('loading').classList.add('active'); };
+        const hideLoad = () => document.getElementById('loading').classList.remove('active');
+        const showToast = (msg, type='success') => {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = `toast align-items-center text-bg-${type==='danger'?'danger':'success'} border-0 show`;
+            t.innerHTML = `<div class="d-flex"><div class="toast-body"><i class="fas fa-${type==='success'?'check-circle':'exclamation-triangle'} me-2"></i>${msg}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+            c.appendChild(t); setTimeout(()=>t.remove(), 4000);
+        };
+        const fmt = (n) => 'Rs. ' + (parseFloat(n)||0).toLocaleString('en-NP');
+        const updateLastSync = () => document.getElementById('lastSync').textContent = 'Last sync: ' + new Date().toLocaleTimeString('en-NP', {hour:'2-digit', minute:'2-digit'});
+
+        async function apiPost(data) {
+            showLoad('Saving data...');
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(data) });
+                const json = await res.json();
+                if(!json.success) throw new Error(json.message);
+                showToast(json.message, 'success');
+                updateLastSync();
+                return json;
+            } catch(e) { showToast('Error: '+e.message, 'danger'); return null; }
+            finally { setTimeout(hideLoad, 300); }
+        }
+
+        async function apiGet(params) {
+            showLoad('Loading records...');
+            try {
+                const qs = new URLSearchParams({action:params.action, ...params}).toString();
+                const res = await fetch(`${APPS_SCRIPT_URL}?${qs}`, {method:'GET'});
+                const json = await res.json();
+                if(!json.success) throw new Error(json.message);
+                updateLastSync();
+                return json.data;
+            } catch(e) { showToast('Fetch Error: '+e.message, 'danger'); return null; }
+            finally { setTimeout(hideLoad, 300); }
+        }
+
+        // 💾 FORM SUBMISSIONS
+        document.getElementById('depositForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await apiPost({ action:'addDeposit', member:document.getElementById('depMember').value, year:document.getElementById('depYear').value, month:document.getElementById('depMonth').value, amount:document.getElementById('depAmount').value, remarks:document.getElementById('depRemarks').value });
+            if(res) { e.target.reset(); document.getElementById('depYear').value='2082'; loadDash(); }
+        };
+
+        document.getElementById('loanForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await apiPost({ action:'addLoan', member:document.getElementById('loanMember').value, year:document.getElementById('loanYear').value||'-', month:document.getElementById('loanMonth').value||'-', amount:document.getElementById('loanAmount').value, interest:document.getElementById('loanInterest').value, period:document.getElementById('loanPeriod').value, status:document.getElementById('loanStatus').value, remarks:document.getElementById('loanRemarks').value });
+            if(res) { e.target.reset(); document.getElementById('loanYear').value='2082'; loadDash(); }
+        };
+
+        document.getElementById('repaymentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await apiPost({ action:'addRepayment', member:document.getElementById('repMember').value, year:document.getElementById('repYear').value||'-', month:document.getElementById('repMonth').value||'-', amount:document.getElementById('repAmount').value, remarks:document.getElementById('repRemarks').value });
+            if(res) { e.target.reset(); document.getElementById('repYear').value='2082'; loadDash(); }
+        };
+
+        // 📊 DASHBOARD
+        async function loadDash() {
+            const d = await apiGet({action:'getDashboard'});
+            if(!d) return;
+            document.getElementById('totalDeposits').textContent = fmt(d.totalDeposits);
+            document.getElementById('totalLoans').textContent = fmt(d.totalLoans);
+            document.getElementById('netBalance').textContent = fmt(d.netBalance);
+            document.getElementById('totalMembers').textContent = MEMBERS.length;
+            document.getElementById('memberCards').innerHTML = MEMBERS.map((m,i)=>{
+                const md = d.members?.[m]||{deposits:0,loans:0,repayments:0};
+                return `<div class="col-lg-4 col-md-6 mb-3"><div class="member-card"><div class="d-flex align-items-center mb-3"><span class="member-avatar" style="background:${COLORS[i]}">${m.split(' ').map(x=>x[0]).join('').substring(0,2)}</span><h6 class="mb-0 fw-bold">${m}</h6></div><div class="row text-center small"><div class="col-4"><div class="text-success fw-bold">${fmt(md.deposits)}</div><small class="text-muted">Deposits</small></div><div class="col-4"><div class="text-warning fw-bold">${fmt(md.loans)}</div><small class="text-muted">Loans</small></div><div class="col-4"><div class="text-primary fw-bold">${fmt(md.repayments)}</div><small class="text-muted">Repaid</small></div></div></div></div>`;
+            }).join('');
+        }
+
+        // 📋 RECORDS & EDIT
+        window.loadRecords = async () => {
+            const d = await apiGet({ action:'getRecords', member:document.getElementById('filterMember').value, type:document.getElementById('filterType').value, year:document.getElementById('filterYear').value });
+            if(!d) return;
+            const tb = document.getElementById('recordsBody');
+            if(!d.length) return tb.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted"><i class="fas fa-inbox fa-2x mb-2 d-block"></i>No records found</td></tr>';
+            tb.innerHTML = d.map((r,i)=>`<tr>
+                <td>${i+1}</td><td class="fw-semibold">${r.member}</td>
+                <td><span class="badge ${r.type==='deposit'?'badge-deposit':r.type==='loan'?'badge-loan':'badge-repayment'}"><i class="fas ${r.type==='deposit'?'fa-arrow-down':r.type==='loan'?'fa-arrow-up':'fa-undo'} me-1"></i>${r.type.toUpperCase()}</span></td>
+                <td>${r.year && r.year!=='-' ? r.year : '<span class="text-muted">-</span>'}</td>
+                <td>${r.month && r.month!=='-' ? r.month : '<span class="text-muted">-</span>'}</td>
+                <td class="fw-bold">${fmt(r.amount)}</td>
+                <td><small class="text-muted">${r.remarks||'-'}</small></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal(${JSON.stringify(r).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="delRecord('${r.id}','${r.type}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`).join('');
+        };
+
+        window.openEditModal = (record) => {
+            document.getElementById('editId').value = record.id;
+            document.getElementById('editType').value = record.type;
+            document.getElementById('editMember').value = record.member;
+            document.getElementById('editAmount').value = record.amount;
+            document.getElementById('editYear').value = (record.year && record.year !== '-') ? record.year : '';
+            document.getElementById('editMonth').value = (record.month && record.month !== '-') ? record.month : '';
+            document.getElementById('editRemarks').value = record.remarks || '';
+            
+            const loanFields = document.getElementById('editLoanFields');
+            if(record.type === 'loan') {
+                loanFields.classList.remove('d-none');
+                document.getElementById('editInterest').value = record.interest || '';
+                document.getElementById('editPeriod').value = record.period || '';
+                document.getElementById('editStatus').value = record.status || 'Active';
+            } else {
+                loanFields.classList.add('d-none');
+            }
+            new bootstrap.Modal(document.getElementById('editModal')).show();
+        };
+
+        window.submitEdit = async () => {
+            const id = document.getElementById('editId').value;
+            const type = document.getElementById('editType').value;
+            const payload = { action:'updateRecord', id, type, member:document.getElementById('editMember').value, amount:document.getElementById('editAmount').value, year:document.getElementById('editYear').value||'-', month:document.getElementById('editMonth').value||'-', remarks:document.getElementById('editRemarks').value };
+            
+            if(type==='loan') {
+                payload.interest = document.getElementById('editInterest').value;
+                payload.period = document.getElementById('editPeriod').value;
+                payload.status = document.getElementById('editStatus').value;
+            }
+            
+            const res = await apiPost(payload);
+            if(res) {
+                bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+                loadRecords();
+            }
+        };
+
+        window.delRecord = async (id, type) => {
+            if(!confirm('⚠️ Delete this record?')) return;
+            const res = await apiPost({action:'deleteRecord', id, type});
+            if(res) loadRecords();
+        };
+
+        // 📈 SUMMARY
+        window.loadSummary = async () => {
+            const y = document.getElementById('summaryYear').value;
+            if(!y) return;
+            const d = await apiGet({action:'getMonthlySummary', year:y, member:'all'});
+            if(!d) return;
+            const tb = document.getElementById('summaryBody');
+            tb.innerHTML = MEMBERS.map((m)=>{
+                const md = d[m]||{}; let total=0;
+                const cells = MONTHS.map(mo=>{ const v=md[mo]||0; total+=v; return `<td class="text-center small">${v>0?fmt(v):'-'}</td>`; }).join('');
+                return `<tr><td class="fw-semibold small">${m}</td>${cells}<td class="fw-bold text-primary small">${fmt(total)}</td></tr>`;
+            }).join('');
+        };
+
+        // 🚀 INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            loadDash();
+            if(document.getElementById('summaryYear').value) setTimeout(loadSummary, 500);
+        });
+    </script>
+</body>
+</html>
