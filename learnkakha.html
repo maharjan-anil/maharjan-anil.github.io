@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🇳🇵 नेपाली वर्णमाला सिक्ने + लेख्ने!</title>
+  <!-- Devanagari Font Support -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #E63946;
+      --secondary: #2A9D8F;
+      --accent: #E9C46A;
+      --dark: #264653;
+      --light: #F8F9FA;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      font-family: 'Noto Sans Devanagari', 'Mukta', 'Comic Sans MS', sans-serif;
+      color: var(--dark);
+      min-height: 100vh;
+      padding: 15px;
+      scroll-behavior: smooth;
+    }
+    
+    .header {
+      text-align: center;
+      padding: 25px 15px;
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+    }
+    
+    .header h1 { font-size: 2.4rem; color: var(--primary); margin: 0; text-shadow: 2px 2px 0 var(--accent); }
+    .header p { font-size: 1.1rem; color: #555; margin: 8px 0 15px; }
+    
+    /* Toggle Button */
+    .trace-toggle-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(230,57,70,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+      font-weight: bold;
+    }
+    .trace-toggle-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(230,57,70,0.6); }
+    .trace-toggle-btn:active { transform: scale(0.95); }
+    
+    .alphabet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .letter-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px 10px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 4px solid transparent;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+    .letter-card:hover { transform: scale(1.08); border-color: var(--secondary); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .letter-card:active { transform: scale(0.95); }
+    
+    .letter { font-size: 2.6rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; }
+    .word { font-size: 1.1rem; color: #444; margin: 3px 0; display: block; }
+    .emoji { font-size: 1.9rem; display: block; margin: 5px auto; animation: float 3s ease-in-out infinite; }
+    
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .speaker-icon { font-size: 1.3rem; color: var(--secondary); margin-top: 5px; opacity: 0.8; transition: opacity 0.2s; }
+    .letter-card:hover .speaker-icon { opacity: 1; animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    
+    /* Tracing Section */
+    .tracing-section {
+      display: none;
+      max-width: 750px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 25px;
+      padding: 30px 25px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+      animation: slideIn 0.4s ease;
+    }
+    .tracing-section.show { display: block; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .close-tracing-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #eee;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .close-tracing-btn:hover { background: #ddd; }
+    
+    .tracing-section h2 { color: var(--primary); margin-bottom: 15px; }
+    
+    .tracing-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tracing-controls button {
+      background: var(--secondary);
+      border: none;
+      border-radius: 15px;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .tracing-controls button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+    .tracing-controls button:active { transform: translateY(0); }
+    .tracing-controls button#clearCanvas { background: #F4A261; }
+    
+    #currentTraceLetter {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+      min-width: 45px;
+    }
+    
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 650px;
+      max-height: 85vh;
+      margin: 0 auto 20px;
+      background: #FFFDF7;
+      border: 4px dashed #E76F51;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+    }
+    
+    .guide-letter {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(150px, 35vw, 280px);
+      font-weight: bold;
+      color: rgba(0,0,0,0.15);
+      border: 6px dashed rgba(0,0,0,0.3);
+      border-radius: 20px;
+      width: clamp(200px, 45vw, 340px);
+      height: clamp(260px, 55vw, 440px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0.9;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+    }
+    
+    #tracingCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: url('image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23E63946" opacity="0.7"/></svg>') 12 12, auto;
+      z-index: 2;
+    }
+    
+    .tracing-hint { color: #666; font-size: 1.1rem; margin-top: 10px; }
+    
+    .footer { text-align: center; padding: 20px; margin-top: 30px; color: #555; font-size: 0.95rem; }
+    .confetti { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; animation: fall 3s linear forwards; pointer-events: none; z-index: 1000; }
+    @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+    
+    @media (max-width: 768px) {
+      .alphabet-grid { grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 12px; }
+      .letter { font-size: 2.2rem; }
+      .emoji { font-size: 1.6rem; }
+      .header h1 { font-size: 1.9rem; }
+      .canvas-wrapper { height: 520px; max-height: 75vh; }
+    }
+    
+    @media (max-width: 480px) {
+      .alphabet-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; }
+      .letter { font-size: 2rem; }
+      .word { font-size: 0.95rem; }
+      .header h1 { font-size: 1.6rem; }
+      .trace-toggle-btn { padding: 10px 20px; font-size: 1rem; }
+      .tracing-controls button { padding: 8px 15px; font-size: 1rem; }
+      #currentTraceLetter { font-size: 1.5rem; }
+      .canvas-wrapper { height: 440px; max-height: 70vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="header">
+      <h1>🇳🇵 नेपाली वर्णमाला सिक्ने!</h1>
+      <p>अक्षर थिच्नुहोस् सुन्न • तल बटन थिच्नुहोस् लेख्न अभ्यास गर्न ✏️</p>
+      <button id="toggleTracingBtn" class="trace-toggle-btn">✏️ लेख्ने अभ्यास खोल्नुहोस्</button>
+    </div>
+    
+    <div class="alphabet-grid" id="alphabetGrid"></div>
+    
+    <div class="tracing-section" id="tracingSection">
+      <button id="closeTracingBtn" class="close-tracing-btn">✕</button>
+      <h2>✏️ लेख्ने अभ्यास!</h2>
+      <div class="tracing-controls">
+        <button id="prevLetter">⬅️</button>
+        <span id="currentTraceLetter">क</span>
+        <button id="nextLetter">➡️</button>
+        <button id="clearCanvas">🗑️ मेट्नुहोस्</button>
+      </div>
+      <div class="canvas-wrapper">
+        <div class="guide-letter" id="guideLetter">क</div>
+        <canvas id="tracingCanvas"></canvas>
+      </div>
+      <p class="tracing-hint">औंला वा माउसले अक्षरमाथि लेख्नुहोस्! 🌟</p>
+    </div>
+    
+    <div class="footer">
+      <p>🎉 राम्रो काम! हरेक दिन अभ्यास गर्नुहोस्! 🎉</p>
+      <small>साना सिकारुहरूका लागि ❤️ ले बनाइएको</small>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Nepali Alphabet Data (क to ज्ञ)
+    const nepaliAlphabet = [
+      { letter: 'क', word: 'कलम', emoji: '🖊️' }, { letter: 'ख', word: 'खरायो', emoji: '🐇' },
+      { letter: 'ग', word: 'गाई', emoji: '🐄' }, { letter: 'घ', word: 'घर', emoji: '🏠' },
+      { letter: 'ङ', word: 'अङ्गुर', emoji: '🍇' }, { letter: 'च', word: 'चरा', emoji: '🐦' },
+      { letter: 'छ', word: 'छाता', emoji: '☂️' }, { letter: 'ज', word: 'जहाज', emoji: '🚢' },
+      { letter: 'झ', word: 'झण्डा', emoji: '🚩' }, { letter: 'ञ', word: 'अञ्जल', emoji: '🤲' },
+      { letter: 'ट', word: 'टाउको', emoji: '🗣️' }, { letter: 'ठ', word: 'ठेला', emoji: '🛒' },
+      { letter: 'ड', word: 'डल्लो', emoji: '⚽' }, { letter: 'ढ', word: 'ढुङ्गा', emoji: '🪨' },
+      { letter: 'ण', word: 'घण्टा', emoji: '🔔' }, { letter: 'त', word: 'तरकारी', emoji: '🥦' },
+      { letter: 'थ', word: 'थाली', emoji: '🍽️' }, { letter: 'द', word: 'दाँत', emoji: '🦷' },
+      { letter: 'ध', word: 'धान', emoji: '🌾' }, { letter: 'न', word: 'नाक', emoji: '👃' },
+      { letter: 'प', word: 'पानी', emoji: '💧' }, { letter: 'फ', word: 'फूल', emoji: '🌸' },
+      { letter: 'ब', word: 'बिरालो', emoji: '🐱' }, { letter: 'भ', word: 'भैंसी', emoji: '🐃' },
+      { letter: 'म', word: 'माछा', emoji: '🐟' }, { letter: 'य', word: 'यान', emoji: '🚗' },
+      { letter: 'र', word: 'रुख', emoji: '🌳' }, { letter: 'ल', word: 'लट्टु', emoji: '🌀' },
+      { letter: 'व', word: 'वन', emoji: '🌲' }, { letter: 'श', word: 'शंख', emoji: '🐚' },
+      { letter: 'ष', word: 'षट्कोण', emoji: '⬡' }, { letter: 'स', word: 'सप', emoji: '🐍' },
+      { letter: 'ह', word: 'हात्ती', emoji: '🐘' }, { letter: 'क्ष', word: 'अक्षर', emoji: '📝' },
+      { letter: 'त्र', word: 'त्रिकोण', emoji: '🔺' }, { letter: 'ज्ञ', word: 'ज्ञान', emoji: '📖' }
+    ];
+
+    const grid = document.getElementById('alphabetGrid');
+    let currentTraceIndex = 0;
+    const canvas = document.getElementById('tracingCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let lastX = 0, lastY = 0;
+
+    // Generate letter cards
+    nepaliAlphabet.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'letter-card';
+      card.innerHTML = `
+        <span class="letter">${item.letter}</span>
+        <span class="emoji">${item.emoji}</span>
+        <span class="word">${item.word}</span>
+        <span class="speaker-icon">🔊</span>
+      `;
+      
+      card.addEventListener('click', () => speakAlphabet(item.letter, item.word));
+      card.tabIndex = 0;
+      card.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
+      grid.appendChild(card);
+    });
+
+    // Speech Synthesis (Nepali)
+    function speakAlphabet(letter, word) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(`${letter}। ${word}। ${letter} को ${word}।`);
+        utterance.lang = 'ne-NP'; 
+        utterance.rate = 0.75; // Slower for toddlers
+        utterance.pitch = 1.15;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert(`🔤 ${letter} - ${word} ${nepaliAlphabet.find(d => d.letter === letter).emoji}`);
+      }
+    }
+
+    // Canvas Setup
+    function setupCanvas() {
+      const wrapper = document.querySelector('.canvas-wrapper');
+      const rect = wrapper.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.scale(dpr, dpr);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 18; // Slightly thicker for Devanagari curves
+      ctx.strokeStyle = '#E63946';
+      ctx.shadowColor = 'rgba(230, 57, 70, 0.4)';
+      ctx.shadowBlur = 8;
+    }
+
+    // Drawing Logic
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return [clientX - rect.left, clientY - rect.top];
+    }
+    function startDraw(e) { isDrawing = true; [lastX, lastY] = getPos(e); }
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const [x, y] = getPos(e);
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      [lastX, lastY] = [x, y];
+    }
+    function stopDraw() { isDrawing = false; }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDraw);
+    canvas.addEventListener('mouseleave', stopDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDraw);
+    canvas.addEventListener('touchcancel', stopDraw);
+
+    // Toggle Tracing Section
+    const toggleBtn = document.getElementById('toggleTracingBtn');
+    const tracingSection = document.getElementById('tracingSection');
+    const closeBtn = document.getElementById('closeTracingBtn');
+
+    function toggleTracing() {
+      tracingSection.classList.toggle('show');
+      if (tracingSection.classList.contains('show')) {
+        setTimeout(() => { setupCanvas(); tracingSection.scrollIntoView({ behavior: 'smooth' }); }, 50);
+        toggleBtn.textContent = '❌ लेख्ने अभ्यास बन्द गर्नुहोस्';
+      } else {
+        toggleBtn.textContent = '✏️ लेख्ने अभ्यास खोल्नुहोस्';
+      }
+    }
+
+    toggleBtn.addEventListener('click', toggleTracing);
+    closeBtn.addEventListener('click', toggleTracing);
+
+    // Tracing Controls
+    function updateTracingUI() {
+      const item = nepaliAlphabet[currentTraceIndex];
+      document.getElementById('currentTraceLetter').textContent = item.letter;
+      document.getElementById('guideLetter').textContent = item.letter;
+      speakAlphabet(item.letter, item.word);
+    }
+    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+    document.getElementById('prevLetter').addEventListener('click', () => { currentTraceIndex = (currentTraceIndex - 1 + 36) % 36; updateTracingUI(); clearCanvas(); });
+    document.getElementById('nextLetter').addEventListener('click', () => { currentTraceIndex = (currentTraceIndex + 1) % 36; updateTracingUI(); clearCanvas(); });
+    document.getElementById('clearCanvas').addEventListener('click', () => { clearCanvas(); createConfetti(); });
+
+    // Confetti
+    function createConfetti() {
+      const colors = ['#E63946', '#2A9D8F', '#E9C46A', '#F4A261', '#A8DADC'];
+      for (let i = 0; i < 15; i++) {
+        const c = document.createElement('div'); c.className = 'confetti';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDuration = (2 + Math.random() * 2) + 's';
+        c.style.width = (5 + Math.random() * 8) + 'px';
+        c.style.height = c.style.width;
+        document.body.appendChild(c); setTimeout(() => c.remove(), 4000);
+      }
+    }
+
+    // Init
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if ('speechSynthesis' in window) {
+          const welcome = new SpeechSynthesisUtterance('नमस्ते सानो शिक्षार्थी! अक्षर थिच्नुहोस् सुन्न, र नारंगी बटन थिच्नुहोस् लेख्न अभ्यास गर्न!');
+          welcome.lang = 'ne-NP'; welcome.rate = 0.8;
+          window.speechSynthesis.speak(welcome);
+        }
+      }, 800);
+    });
+
+    // Prevent double-tap zoom on mobile
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      const now = Date.now(); if (now - lastTouchEnd <= 300) event.preventDefault(); lastTouchEnd = now;
+    }, false);
+  </script>
+</body>
+</html>
