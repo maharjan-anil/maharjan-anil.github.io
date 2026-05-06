@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🇳🇵 नेपाली वर्णमाला सिक्ने + लेख्ने!</title>
-  <!-- Devanagari Font Support -->
+  <title>🇳🇵 नेपाली वर्णमाला + मात्रा सिक्ने!</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <style>
@@ -27,177 +26,118 @@
     
     .header {
       text-align: center;
-      padding: 25px 15px;
+      padding: 20px 15px;
       background: white;
       border-radius: 25px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
     
-    .header h1 { font-size: 2.4rem; color: var(--primary); margin: 0; text-shadow: 2px 2px 0 var(--accent); }
-    .header p { font-size: 1.1rem; color: #555; margin: 8px 0 15px; }
+    .header h1 { font-size: 2.2rem; color: var(--primary); margin: 0 0 5px; text-shadow: 2px 2px 0 var(--accent); }
+    .header p { font-size: 1rem; color: #555; margin: 0 0 15px; }
     
-    /* Toggle Button */
+    /* Tab Switcher */
+    .tab-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+    .tab-btn {
+      background: white; border: 3px solid transparent;
+      padding: 12px 24px; font-size: 1.2rem; border-radius: 50px;
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-weight: bold;
+      color: #666;
+    }
+    .tab-btn:hover { transform: translateY(-2px); }
+    .tab-btn.active { border-color: var(--secondary); background: #E8F8F5; color: var(--secondary); box-shadow: 0 6px 15px rgba(42,157,143,0.2); }
+    
     .trace-toggle-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 28px;
-      font-size: 1.2rem;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(230,57,70,0.4);
+      background: var(--primary); color: white; border: none;
+      padding: 12px 28px; font-size: 1.15rem; border-radius: 50px;
+      cursor: pointer; box-shadow: 0 4px 15px rgba(230,57,70,0.4);
       transition: transform 0.2s, box-shadow 0.2s;
-      font-family: inherit;
-      font-weight: bold;
+      font-family: inherit; font-weight: bold; margin-bottom: 15px;
     }
     .trace-toggle-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(230,57,70,0.6); }
-    .trace-toggle-btn:active { transform: scale(0.95); }
     
     .alphabet-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      gap: 15px;
-      max-width: 1200px;
-      margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 15px; max-width: 1200px; margin: 0 auto 30px;
     }
     
     .letter-card {
-      background: white;
-      border-radius: 20px;
-      padding: 18px 10px;
-      text-align: center;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 4px solid transparent;
-      position: relative;
-      overflow: hidden;
-      user-select: none;
+      background: white; border-radius: 20px; padding: 15px 10px;
+      text-align: center; box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+      cursor: pointer; transition: all 0.3s ease; border: 4px solid transparent;
+      position: relative; overflow: hidden; user-select: none;
     }
     .letter-card:hover { transform: scale(1.08); border-color: var(--secondary); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .letter-card:active { transform: scale(0.95); }
     
-    .letter { font-size: 2.6rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; display: block; }
-    .word { font-size: 1.1rem; color: #444; margin: 3px 0; display: block; }
-    .emoji { font-size: 1.9rem; display: block; margin: 5px auto; animation: float 3s ease-in-out infinite; }
+    .letter { font-size: 2.6rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; display: block; }
+    .matra-sign { font-size: 1.1rem; color: var(--accent); background: #264653; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 4px; }
+    .word { font-size: 1.05rem; color: #444; margin: 3px 0; display: block; }
+    .emoji { font-size: 1.8rem; display: block; margin: 4px auto; animation: float 3s ease-in-out infinite; }
     
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    .speaker-icon { font-size: 1.3rem; color: var(--secondary); margin-top: 5px; opacity: 0.8; transition: opacity 0.2s; }
-    .letter-card:hover .speaker-icon { opacity: 1; animation: pulse 1s infinite; }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    .speaker-icon { font-size: 1.2rem; color: var(--secondary); margin-top: 5px; opacity: 0.8; }
     
     /* Tracing Section */
     .tracing-section {
-      display: none;
-      max-width: 750px;
-      margin: 30px auto;
-      background: white;
-      border-radius: 25px;
-      padding: 30px 25px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-      text-align: center;
-      position: relative;
-      animation: slideIn 0.4s ease;
+      display: none; max-width: 750px; margin: 30px auto;
+      background: white; border-radius: 25px; padding: 30px 25px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2); text-align: center;
+      position: relative; animation: slideIn 0.4s ease;
     }
     .tracing-section.show { display: block; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     
     .close-tracing-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: #eee;
-      border: none;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: background 0.2s;
+      position: absolute; top: 15px; right: 15px;
+      background: #eee; border: none; width: 35px; height: 35px;
+      border-radius: 50%; font-size: 1.2rem; cursor: pointer;
     }
     .close-tracing-btn:hover { background: #ddd; }
     
-    .tracing-section h2 { color: var(--primary); margin-bottom: 15px; }
+    .tracing-section h2 { color: var(--primary); margin-bottom: 15px; font-size: 1.8rem; }
+    .tracing-subtitle { color: #666; font-size: 1rem; margin-top: -10px; margin-bottom: 15px; }
     
     .tracing-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      display: flex; justify-content: center; align-items: center;
+      gap: 15px; margin-bottom: 20px; flex-wrap: wrap;
     }
     .tracing-controls button {
-      background: var(--secondary);
-      border: none;
-      border-radius: 15px;
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background: var(--secondary); border: none; border-radius: 15px;
+      padding: 10px 20px; font-size: 1.2rem; cursor: pointer;
+      transition: all 0.2s; font-family: inherit; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     .tracing-controls button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
     .tracing-controls button:active { transform: translateY(0); }
     .tracing-controls button#clearCanvas { background: #F4A261; }
     
-    #currentTraceLetter {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--primary);
-      min-width: 45px;
-    }
+    #currentTraceLetter { font-size: 2rem; font-weight: bold; color: var(--primary); min-width: 45px; }
     
     .canvas-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 600px;
-      height: 650px;
-      max-height: 85vh;
-      margin: 0 auto 20px;
-      background: #FFFDF7;
-      border: 4px dashed #E76F51;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+      position: relative; width: 100%; max-width: 600px; height: 650px;
+      max-height: 85vh; margin: 0 auto 20px; background: #FFFDF7;
+      border: 4px dashed #E76F51; border-radius: 20px;
+      overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
     }
     
     .guide-letter {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: clamp(150px, 35vw, 280px);
-      font-weight: bold;
-      color: rgba(0,0,0,0.15);
-      border: 6px dashed rgba(0,0,0,0.3);
-      border-radius: 20px;
-      width: clamp(200px, 45vw, 340px);
-      height: clamp(260px, 55vw, 440px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 0.9;
-      user-select: none;
-      pointer-events: none;
-      z-index: 1;
-      font-family: 'Noto Sans Devanagari', sans-serif;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: clamp(150px, 35vw, 280px); font-weight: bold;
+      color: rgba(0,0,0,0.15); border: 6px dashed rgba(0,0,0,0.3);
+      border-radius: 20px; width: clamp(200px, 45vw, 340px);
+      height: clamp(260px, 55vw, 440px); display: flex; align-items: center;
+      justify-content: center; line-height: 0.9; user-select: none;
+      pointer-events: none; z-index: 1; font-family: 'Noto Sans Devanagari', sans-serif;
     }
     
     #tracingCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
-      cursor: url('image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23E63946" opacity="0.7"/></svg>') 12 12, auto;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      touch-action: none; cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23E63946" opacity="0.7"/></svg>') 12 12, auto;
       z-index: 2;
     }
     
-    .tracing-hint { color: #666; font-size: 1.1rem; margin-top: 10px; }
+    .tracing-hint { color: #666; font-size: 1rem; margin-top: 10px; }
     
     .footer { text-align: center; padding: 20px; margin-top: 30px; color: #555; font-size: 0.95rem; }
     .confetti { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; animation: fall 3s linear forwards; pointer-events: none; z-index: 1000; }
@@ -205,29 +145,30 @@
     
     @media (max-width: 768px) {
       .alphabet-grid { grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 12px; }
-      .letter { font-size: 2.2rem; }
-      .emoji { font-size: 1.6rem; }
-      .header h1 { font-size: 1.9rem; }
+      .letter { font-size: 2.2rem; } .emoji { font-size: 1.6rem; }
+      .header h1 { font-size: 1.8rem; } .tab-btn { padding: 10px 18px; font-size: 1rem; }
       .canvas-wrapper { height: 520px; max-height: 75vh; }
     }
-    
     @media (max-width: 480px) {
       .alphabet-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; }
-      .letter { font-size: 2rem; }
-      .word { font-size: 0.95rem; }
-      .header h1 { font-size: 1.6rem; }
-      .trace-toggle-btn { padding: 10px 20px; font-size: 1rem; }
-      .tracing-controls button { padding: 8px 15px; font-size: 1rem; }
-      #currentTraceLetter { font-size: 1.5rem; }
+      .letter { font-size: 2rem; } .word { font-size: 0.95rem; }
+      .header h1 { font-size: 1.5rem; }
       .canvas-wrapper { height: 440px; max-height: 70vh; }
+      .tab-container { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
 <body>
   <div class="container-fluid">
     <div class="header">
-      <h1>🇳🇵 नेपाली वर्णमाला सिक्ने!</h1>
+      <h1>🇳🇵 नेपाली अक्षर सिक्ने + लेख्ने!</h1>
       <p>अक्षर थिच्नुहोस् सुन्न • तल बटन थिच्नुहोस् लेख्न अभ्यास गर्न ✏️</p>
+      
+      <div class="tab-container" id="tabContainer">
+        <button class="tab-btn active" data-type="consonant">🔤 व्यञ्जन वर्णमाला</button>
+        <button class="tab-btn" data-type="matra">📝 स्वर एवं मात्रा</button>
+      </div>
+      
       <button id="toggleTracingBtn" class="trace-toggle-btn">✏️ लेख्ने अभ्यास खोल्नुहोस्</button>
     </div>
     
@@ -236,6 +177,7 @@
     <div class="tracing-section" id="tracingSection">
       <button id="closeTracingBtn" class="close-tracing-btn">✕</button>
       <h2>✏️ लेख्ने अभ्यास!</h2>
+      <p class="tracing-subtitle" id="tracingSubtitle">व्यञ्जन वर्णमाला</p>
       <div class="tracing-controls">
         <button id="prevLetter">⬅️</button>
         <span id="currentTraceLetter">क</span>
@@ -257,8 +199,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Nepali Alphabet Data (क to ज्ञ)
-    const nepaliAlphabet = [
+    // Data Sets
+    const consonantData = [
       { letter: 'क', word: 'कलम', emoji: '🖊️' }, { letter: 'ख', word: 'खरायो', emoji: '🐇' },
       { letter: 'ग', word: 'गाई', emoji: '🐄' }, { letter: 'घ', word: 'घर', emoji: '🏠' },
       { letter: 'ङ', word: 'अङ्गुर', emoji: '🍇' }, { letter: 'च', word: 'चरा', emoji: '🐦' },
@@ -279,63 +221,95 @@
       { letter: 'त्र', word: 'त्रिकोण', emoji: '🔺' }, { letter: 'ज्ञ', word: 'ज्ञान', emoji: '📖' }
     ];
 
-    const grid = document.getElementById('alphabetGrid');
+    const matraData = [
+      { letter: 'अ', matra: 'स्वर', word: 'अंगूर', emoji: '🍇' },
+      { letter: 'आ', matra: 'ा', word: 'आम', emoji: '🥭' },
+      { letter: 'इ', matra: 'ि', word: 'इट्टा', emoji: '🧱' },
+      { letter: 'ई', matra: 'ी', word: 'ईख', emoji: '🎋' },
+      { letter: 'उ', matra: 'ु', word: 'उखु', emoji: '🌿' },
+      { letter: 'ऊ', matra: 'ू', word: 'ऊन', emoji: '🧶' },
+      { letter: 'ऋ', matra: 'ृ', word: 'ऋषि', emoji: '🧘' },
+      { letter: 'ए', matra: 'े', word: 'एक', emoji: '1️⃣' },
+      { letter: 'ऐ', matra: 'ै', word: 'ऐना', emoji: '🪞' },
+      { letter: 'ओ', matra: 'ो', word: 'ओखल', emoji: '🥣' },
+      { letter: 'औ', matra: 'ौ', word: 'औंलो', emoji: '👆' },
+      { letter: 'अं', matra: 'ं', word: 'अंशु', emoji: '🌤️' },
+      { letter: 'अः', matra: 'ः', word: 'नमः', emoji: '🙏' }
+    ];
+
+    // State
+    let currentDataset = consonantData;
     let currentTraceIndex = 0;
     const canvas = document.getElementById('tracingCanvas');
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
     let lastX = 0, lastY = 0;
 
-    // Generate letter cards
-    nepaliAlphabet.forEach((item, index) => {
-      const card = document.createElement('div');
-      card.className = 'letter-card';
-      card.innerHTML = `
-        <span class="letter">${item.letter}</span>
-        <span class="emoji">${item.emoji}</span>
-        <span class="word">${item.word}</span>
-        <span class="speaker-icon">🔊</span>
-      `;
-      
-      card.addEventListener('click', () => speakAlphabet(item.letter, item.word));
-      card.tabIndex = 0;
-      card.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
-      grid.appendChild(card);
+    // UI Elements
+    const grid = document.getElementById('alphabetGrid');
+    const tracingSection = document.getElementById('tracingSection');
+    const toggleBtn = document.getElementById('toggleTracingBtn');
+    const closeBtn = document.getElementById('closeTracingBtn');
+    const tracingSubtitle = document.getElementById('tracingSubtitle');
+    const tabs = document.querySelectorAll('.tab-btn');
+
+    // Render Grid
+    function renderGrid(data) {
+      grid.innerHTML = '';
+      data.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'letter-card';
+        const matraBadge = item.matra ? `<span class="matra-sign">${item.matra}</span><br>` : '';
+        card.innerHTML = `
+          <span class="letter">${item.letter}</span>
+          ${matraBadge}
+          <span class="emoji">${item.emoji}</span>
+          <span class="word">${item.word}</span>
+          <span class="speaker-icon">🔊</span>
+        `;
+        card.addEventListener('click', () => speakAlphabet(item.letter, item.word));
+        card.tabIndex = 0;
+        card.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
+        grid.appendChild(card);
+      });
+    }
+
+    // Tab Switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentDataset = tab.dataset.type === 'consonant' ? consonantData : matraData;
+        currentTraceIndex = 0;
+        renderGrid(currentDataset);
+        updateTracingUI();
+        if(tracingSection.classList.contains('show')) tracingSection.scrollIntoView({behavior:'smooth'});
+      });
     });
 
-    // Speech Synthesis (Nepali)
+    // Speech Synthesis
     function speakAlphabet(letter, word) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(`${letter}। ${word}। ${letter} को ${word}।`);
-        utterance.lang = 'ne-NP'; 
-        utterance.rate = 0.75; // Slower for toddlers
-        utterance.pitch = 1.15;
+        utterance.lang = 'ne-NP'; utterance.rate = 0.75; utterance.pitch = 1.15;
         window.speechSynthesis.speak(utterance);
-      } else {
-        alert(`🔤 ${letter} - ${word} ${nepaliAlphabet.find(d => d.letter === letter).emoji}`);
       }
     }
 
-    // Canvas Setup
+    // Canvas Setup & Drawing
     function setupCanvas() {
       const wrapper = document.querySelector('.canvas-wrapper');
       const rect = wrapper.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
+      canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`; canvas.style.height = `${rect.height}px`;
       ctx.scale(dpr, dpr);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.lineWidth = 18; // Slightly thicker for Devanagari curves
-      ctx.strokeStyle = '#E63946';
-      ctx.shadowColor = 'rgba(230, 57, 70, 0.4)';
-      ctx.shadowBlur = 8;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.lineWidth = 18; ctx.strokeStyle = '#E63946';
+      ctx.shadowColor = 'rgba(230, 57, 70, 0.4)'; ctx.shadowBlur = 8;
     }
 
-    // Drawing Logic
     function getPos(e) {
       const rect = canvas.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -344,52 +318,48 @@
     }
     function startDraw(e) { isDrawing = true; [lastX, lastY] = getPos(e); }
     function draw(e) {
-      if (!isDrawing) return;
-      e.preventDefault();
+      if (!isDrawing) return; e.preventDefault();
       const [x, y] = getPos(e);
       ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
       [lastX, lastY] = [x, y];
     }
     function stopDraw() { isDrawing = false; }
 
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDraw);
-    canvas.addEventListener('mouseleave', stopDraw);
+    canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDraw); canvas.addEventListener('mouseleave', stopDraw);
     canvas.addEventListener('touchstart', startDraw, { passive: false });
     canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDraw);
-    canvas.addEventListener('touchcancel', stopDraw);
+    canvas.addEventListener('touchend', stopDraw); canvas.addEventListener('touchcancel', stopDraw);
 
-    // Toggle Tracing Section
-    const toggleBtn = document.getElementById('toggleTracingBtn');
-    const tracingSection = document.getElementById('tracingSection');
-    const closeBtn = document.getElementById('closeTracingBtn');
-
+    // Toggle Tracing
     function toggleTracing() {
       tracingSection.classList.toggle('show');
       if (tracingSection.classList.contains('show')) {
         setTimeout(() => { setupCanvas(); tracingSection.scrollIntoView({ behavior: 'smooth' }); }, 50);
         toggleBtn.textContent = '❌ लेख्ने अभ्यास बन्द गर्नुहोस्';
-      } else {
-        toggleBtn.textContent = '✏️ लेख्ने अभ्यास खोल्नुहोस्';
-      }
+      } else { toggleBtn.textContent = '✏️ लेख्ने अभ्यास खोल्नुहोस्'; }
     }
-
     toggleBtn.addEventListener('click', toggleTracing);
     closeBtn.addEventListener('click', toggleTracing);
 
     // Tracing Controls
     function updateTracingUI() {
-      const item = nepaliAlphabet[currentTraceIndex];
+      const item = currentDataset[currentTraceIndex];
       document.getElementById('currentTraceLetter').textContent = item.letter;
       document.getElementById('guideLetter').textContent = item.letter;
+      tracingSubtitle.textContent = currentDataset === consonantData ? 'व्यञ्जन वर्णमाला' : 'स्वर एवं मात्रा';
       speakAlphabet(item.letter, item.word);
     }
     function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    document.getElementById('prevLetter').addEventListener('click', () => { currentTraceIndex = (currentTraceIndex - 1 + 36) % 36; updateTracingUI(); clearCanvas(); });
-    document.getElementById('nextLetter').addEventListener('click', () => { currentTraceIndex = (currentTraceIndex + 1) % 36; updateTracingUI(); clearCanvas(); });
+    document.getElementById('prevLetter').addEventListener('click', () => { 
+      currentTraceIndex = (currentTraceIndex - 1 + currentDataset.length) % currentDataset.length; 
+      updateTracingUI(); clearCanvas(); 
+    });
+    document.getElementById('nextLetter').addEventListener('click', () => { 
+      currentTraceIndex = (currentTraceIndex + 1) % currentDataset.length; 
+      updateTracingUI(); clearCanvas(); 
+    });
     document.getElementById('clearCanvas').addEventListener('click', () => { clearCanvas(); createConfetti(); });
 
     // Confetti
@@ -408,6 +378,7 @@
 
     // Init
     window.addEventListener('load', () => {
+      renderGrid(currentDataset);
       setTimeout(() => {
         if ('speechSynthesis' in window) {
           const welcome = new SpeechSynthesisUtterance('नमस्ते सानो शिक्षार्थी! अक्षर थिच्नुहोस् सुन्न, र नारंगी बटन थिच्नुहोस् लेख्न अभ्यास गर्न!');
@@ -417,7 +388,6 @@
       }, 800);
     });
 
-    // Prevent double-tap zoom on mobile
     let lastTouchEnd = 0;
     document.addEventListener('touchend', function(event) {
       const now = Date.now(); if (now - lastTouchEnd <= 300) event.preventDefault(); lastTouchEnd = now;
