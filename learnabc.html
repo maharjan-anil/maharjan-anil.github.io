@@ -19,27 +19,38 @@
       font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
       color: var(--dark);
       min-height: 100vh;
-      padding: 10px;
+      padding: 15px;
       scroll-behavior: smooth;
     }
     
     .header {
       text-align: center;
-      padding: 20px 10px;
+      padding: 25px 15px;
       background: white;
-      border-radius: 20px;
+      border-radius: 25px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.1);
       margin-bottom: 25px;
-      animation: bounce 2s infinite;
-    }
-    
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
     }
     
     .header h1 { font-size: 2.5rem; color: var(--primary); margin: 0; text-shadow: 2px 2px 0 var(--accent); }
-    .header p { font-size: 1.2rem; color: #666; margin: 8px 0 0; }
+    .header p { font-size: 1.2rem; color: #666; margin: 8px 0 15px; }
+    
+    /* NEW: Toggle Button */
+    .trace-toggle-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+      font-weight: bold;
+    }
+    .trace-toggle-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255,107,107,0.6); }
+    .trace-toggle-btn:active { transform: scale(0.95); }
     
     .alphabet-grid {
       display: grid;
@@ -60,8 +71,8 @@
       border: 4px solid transparent;
       position: relative;
       overflow: hidden;
+      user-select: none;
     }
-    
     .letter-card:hover { transform: scale(1.08); border-color: var(--secondary); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .letter-card:active { transform: scale(0.95); }
     
@@ -70,20 +81,40 @@
     .emoji { font-size: 1.8rem; display: block; margin: 5px auto; animation: float 3s ease-in-out infinite; }
     
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    
     .speaker-icon { font-size: 1.3rem; color: var(--secondary); margin-top: 5px; opacity: 0.8; transition: opacity 0.2s; }
     .letter-card:hover .speaker-icon { opacity: 1; animation: pulse 1s infinite; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     
+    /* Tracing Section (Hidden by Default) */
     .tracing-section {
-      max-width: 800px;
-      margin: 40px auto;
+      display: none;
+      max-width: 700px;
+      margin: 30px auto;
       background: white;
       border-radius: 25px;
-      padding: 25px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      padding: 30px 25px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
       text-align: center;
+      position: relative;
+      animation: slideIn 0.4s ease;
     }
+    .tracing-section.show { display: block; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .close-tracing-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #eee;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .close-tracing-btn:hover { background: #ddd; }
     
     .tracing-section h2 { color: var(--primary); margin-bottom: 15px; }
     
@@ -95,7 +126,6 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
-    
     .tracing-controls button {
       background: var(--secondary);
       border: none;
@@ -107,7 +137,6 @@
       font-family: inherit;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    
     .tracing-controls button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
     .tracing-controls button:active { transform: translateY(0); }
     .tracing-controls button#clearCanvas { background: #FF9F43; }
@@ -119,17 +148,19 @@
       min-width: 40px;
     }
     
+    /* LARGER Canvas Wrapper */
     .canvas-wrapper {
       position: relative;
       width: 100%;
-      max-width: 350px;
-      aspect-ratio: 3/4;
+      max-width: 550px;
+      height: 600px;
+      max-height: 85vh;
       margin: 0 auto 20px;
       background: #FFF8E1;
-      border: 3px dashed #FFB6C1;
+      border: 4px dashed #FFB6C1;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
     }
     
     .guide-letter {
@@ -137,13 +168,13 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 160px;
+      font-size: clamp(140px, 35vw, 280px);
       font-weight: bold;
       color: rgba(0,0,0,0.15);
-      border: 5px dashed rgba(0,0,0,0.3);
-      border-radius: 15px;
-      width: 180px;
-      height: 240px;
+      border: 6px dashed rgba(0,0,0,0.3);
+      border-radius: 20px;
+      width: clamp(180px, 45vw, 320px);
+      height: clamp(240px, 55vw, 420px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -166,7 +197,6 @@
     .tracing-hint { color: #777; font-size: 1.1rem; margin-top: 10px; }
     
     .footer { text-align: center; padding: 20px; margin-top: 30px; color: #666; font-size: 0.95rem; }
-    
     .confetti { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; animation: fall 3s linear forwards; pointer-events: none; z-index: 1000; }
     @keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
     
@@ -175,8 +205,7 @@
       .letter { font-size: 2.3rem; }
       .emoji { font-size: 1.5rem; }
       .header h1 { font-size: 2rem; }
-      .tracing-section { padding: 20px 15px; }
-      .guide-letter { font-size: 120px; width: 150px; height: 200px; }
+      .canvas-wrapper { height: 500px; max-height: 75vh; }
     }
     
     @media (max-width: 480px) {
@@ -184,9 +213,10 @@
       .letter { font-size: 2rem; }
       .word { font-size: 0.95rem; }
       .header h1 { font-size: 1.7rem; }
+      .trace-toggle-btn { padding: 10px 20px; font-size: 1rem; }
       .tracing-controls button { padding: 8px 15px; font-size: 1rem; }
       #currentTraceLetter { font-size: 1.6rem; }
-      .guide-letter { font-size: 100px; width: 120px; height: 170px; }
+      .canvas-wrapper { height: 420px; max-height: 70vh; }
     }
   </style>
 </head>
@@ -194,12 +224,14 @@
   <div class="container-fluid">
     <div class="header">
       <h1>🔤 Let's Learn ABCs!</h1>
-      <p>Click a letter to hear it • Tap to trace ✏️</p>
+      <p>Click a letter to hear it • Tap below to practice writing ✏️</p>
+      <button id="toggleTracingBtn" class="trace-toggle-btn">✏️ Open Tracing Practice</button>
     </div>
     
     <div class="alphabet-grid" id="alphabetGrid"></div>
     
     <div class="tracing-section" id="tracingSection">
+      <button id="closeTracingBtn" class="close-tracing-btn">✕</button>
       <h2>✏️ Practice Tracing!</h2>
       <div class="tracing-controls">
         <button id="prevLetter">⬅️</button>
@@ -224,32 +256,19 @@
   <script>
     // Alphabet data
     const alphabetData = [
-      { letter: 'A', word: 'Apple', emoji: '🍎' },
-      { letter: 'B', word: 'Ball', emoji: '⚽' },
-      { letter: 'C', word: 'Cat', emoji: '🐱' },
-      { letter: 'D', word: 'Dog', emoji: '🐶' },
-      { letter: 'E', word: 'Elephant', emoji: '🐘' },
-      { letter: 'F', word: 'Fish', emoji: '🐠' },
-      { letter: 'G', word: 'Grape', emoji: '🍇' },
-      { letter: 'H', word: 'Hat', emoji: '🎩' },
-      { letter: 'I', word: 'Ice cream', emoji: '🍦' },
-      { letter: 'J', word: 'Juice', emoji: '🧃' },
-      { letter: 'K', word: 'Kite', emoji: '🪁' },
-      { letter: 'L', word: 'Lion', emoji: '🦁' },
-      { letter: 'M', word: 'Moon', emoji: '🌙' },
-      { letter: 'N', word: 'Nest', emoji: '🪺' },
-      { letter: 'O', word: 'Orange', emoji: '🍊' },
-      { letter: 'P', word: 'Panda', emoji: '🐼' },
-      { letter: 'Q', word: 'Queen', emoji: '👑' },
-      { letter: 'R', word: 'Rainbow', emoji: '🌈' },
-      { letter: 'S', word: 'Sun', emoji: '☀️' },
-      { letter: 'T', word: 'Tree', emoji: '🌳' },
-      { letter: 'U', word: 'Umbrella', emoji: '☂️' },
-      { letter: 'V', word: 'Volcano', emoji: '🌋' },
-      { letter: 'W', word: 'Whale', emoji: '🐋' },
-      { letter: 'X', word: 'Xylophone', emoji: '🎵' },
-      { letter: 'Y', word: 'Yak', emoji: '🦬' },
-      { letter: 'Z', word: 'Zebra', emoji: '🦓' }
+      { letter: 'A', word: 'Apple', emoji: '🍎' }, { letter: 'B', word: 'Ball', emoji: '⚽' },
+      { letter: 'C', word: 'Cat', emoji: '🐱' }, { letter: 'D', word: 'Dog', emoji: '🐶' },
+      { letter: 'E', word: 'Elephant', emoji: '🐘' }, { letter: 'F', word: 'Fish', emoji: '🐠' },
+      { letter: 'G', word: 'Grape', emoji: '🍇' }, { letter: 'H', word: 'Hat', emoji: '🎩' },
+      { letter: 'I', word: 'Ice cream', emoji: '🍦' }, { letter: 'J', word: 'Juice', emoji: '🧃' },
+      { letter: 'K', word: 'Kite', emoji: '🪁' }, { letter: 'L', word: 'Lion', emoji: '🦁' },
+      { letter: 'M', word: 'Moon', emoji: '🌙' }, { letter: 'N', word: 'Nest', emoji: '🪺' },
+      { letter: 'O', word: 'Orange', emoji: '🍊' }, { letter: 'P', word: 'Panda', emoji: '🐼' },
+      { letter: 'Q', word: 'Queen', emoji: '👑' }, { letter: 'R', word: 'Rainbow', emoji: '🌈' },
+      { letter: 'S', word: 'Sun', emoji: '☀️' }, { letter: 'T', word: 'Tree', emoji: '🌳' },
+      { letter: 'U', word: 'Umbrella', emoji: '☂️' }, { letter: 'V', word: 'Volcano', emoji: '🌋' },
+      { letter: 'W', word: 'Whale', emoji: '🐋' }, { letter: 'X', word: 'Xylophone', emoji: '🎵' },
+      { letter: 'Y', word: 'Yak', emoji: '🦬' }, { letter: 'Z', word: 'Zebra', emoji: '🦓' }
     ];
 
     const grid = document.getElementById('alphabetGrid');
@@ -270,14 +289,8 @@
         <span class="speaker-icon">🔊</span>
       `;
       
-      card.addEventListener('click', () => {
-        speakAlphabet(item.letter, item.word);
-        currentTraceIndex = index;
-        updateTracingUI();
-        document.getElementById('tracingSection').scrollIntoView({ behavior: 'smooth' });
-        clearCanvas();
-      });
-      
+      // ONLY plays audio now, no auto-scroll to tracing
+      card.addEventListener('click', () => speakAlphabet(item.letter, item.word));
       card.tabIndex = 0;
       card.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
       grid.appendChild(card);
@@ -288,9 +301,7 @@
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(`${letter}. ${word}. ${letter} is for ${word}.`);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.8;
-        utterance.pitch = 1.2;
+        utterance.lang = 'en-US'; utterance.rate = 0.8; utterance.pitch = 1.2;
         window.speechSynthesis.speak(utterance);
       }
     }
@@ -307,7 +318,7 @@
       ctx.scale(dpr, dpr);
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.lineWidth = 12;
+      ctx.lineWidth = 16; // Thicker for easier tracing
       ctx.strokeStyle = '#FF6B6B';
       ctx.shadowColor = 'rgba(255, 107, 107, 0.4)';
       ctx.shadowBlur = 6;
@@ -320,35 +331,42 @@
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       return [clientX - rect.left, clientY - rect.top];
     }
-
-    function startDraw(e) {
-      isDrawing = true;
-      [lastX, lastY] = getPos(e);
-    }
-
+    function startDraw(e) { isDrawing = true; [lastX, lastY] = getPos(e); }
     function draw(e) {
       if (!isDrawing) return;
       e.preventDefault();
       const [x, y] = getPos(e);
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
       [lastX, lastY] = [x, y];
     }
-
     function stopDraw() { isDrawing = false; }
 
-    // Events
     canvas.addEventListener('mousedown', startDraw);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDraw);
     canvas.addEventListener('mouseleave', stopDraw);
-    
     canvas.addEventListener('touchstart', startDraw, { passive: false });
     canvas.addEventListener('touchmove', draw, { passive: false });
     canvas.addEventListener('touchend', stopDraw);
     canvas.addEventListener('touchcancel', stopDraw);
+
+    // Toggle Tracing Section
+    const toggleBtn = document.getElementById('toggleTracingBtn');
+    const tracingSection = document.getElementById('tracingSection');
+    const closeBtn = document.getElementById('closeTracingBtn');
+
+    function toggleTracing() {
+      tracingSection.classList.toggle('show');
+      if (tracingSection.classList.contains('show')) {
+        setTimeout(() => { setupCanvas(); tracingSection.scrollIntoView({ behavior: 'smooth' }); }, 50);
+        toggleBtn.textContent = '❌ Close Tracing Practice';
+      } else {
+        toggleBtn.textContent = '✏️ Open Tracing Practice';
+      }
+    }
+
+    toggleBtn.addEventListener('click', toggleTracing);
+    closeBtn.addEventListener('click', toggleTracing);
 
     // Tracing Controls
     function updateTracingUI() {
@@ -357,64 +375,41 @@
       document.getElementById('guideLetter').textContent = item.letter;
       speakAlphabet(item.letter, item.word);
     }
+    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    function clearCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    document.getElementById('prevLetter').addEventListener('click', () => {
-      currentTraceIndex = (currentTraceIndex - 1 + 26) % 26;
-      updateTracingUI();
-      clearCanvas();
-    });
-
-    document.getElementById('nextLetter').addEventListener('click', () => {
-      currentTraceIndex = (currentTraceIndex + 1) % 26;
-      updateTracingUI();
-      clearCanvas();
-    });
-
-    document.getElementById('clearCanvas').addEventListener('click', () => {
-      clearCanvas();
-      createConfetti();
-    });
+    document.getElementById('prevLetter').addEventListener('click', () => { currentTraceIndex = (currentTraceIndex - 1 + 26) % 26; updateTracingUI(); clearCanvas(); });
+    document.getElementById('nextLetter').addEventListener('click', () => { currentTraceIndex = (currentTraceIndex + 1) % 26; updateTracingUI(); clearCanvas(); });
+    document.getElementById('clearCanvas').addEventListener('click', () => { clearCanvas(); createConfetti(); });
 
     // Confetti
     function createConfetti() {
       const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A8E6CF', '#FFD3B6'];
       for (let i = 0; i < 15; i++) {
-        const c = document.createElement('div');
-        c.className = 'confetti';
+        const c = document.createElement('div'); c.className = 'confetti';
         c.style.left = Math.random() * 100 + 'vw';
         c.style.background = colors[Math.floor(Math.random() * colors.length)];
         c.style.animationDuration = (2 + Math.random() * 2) + 's';
         c.style.width = (5 + Math.random() * 8) + 'px';
         c.style.height = c.style.width;
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 4000);
+        document.body.appendChild(c); setTimeout(() => c.remove(), 4000);
       }
     }
 
     // Init
     window.addEventListener('load', () => {
-      setupCanvas();
-      window.addEventListener('resize', setupCanvas);
       setTimeout(() => {
         if ('speechSynthesis' in window) {
-          const welcome = new SpeechSynthesisUtterance('Hello little learner! Click any letter to hear it, or scroll down to practice tracing!');
-          welcome.lang = 'en-US';
-          welcome.rate = 0.9;
+          const welcome = new SpeechSynthesisUtterance('Hello little learner! Click letters to hear them, then tap the orange button to practice tracing!');
+          welcome.lang = 'en-US'; welcome.rate = 0.9;
           window.speechSynthesis.speak(welcome);
         }
-      }, 1000);
+      }, 800);
     });
 
-    // Prevent double-tap zoom on mobile
+    // Prevent double-tap zoom
     let lastTouchEnd = 0;
     document.addEventListener('touchend', function(event) {
-      const now = Date.now();
-      if (now - lastTouchEnd <= 300) event.preventDefault();
-      lastTouchEnd = now;
+      const now = Date.now(); if (now - lastTouchEnd <= 300) event.preventDefault(); lastTouchEnd = now;
     }, false);
   </script>
 </body>
