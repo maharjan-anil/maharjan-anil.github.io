@@ -96,7 +96,7 @@
         }
 
         .navbar-toggler-icon {
-            background-image: url("image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
 
         /* Hero Section */
@@ -226,10 +226,26 @@
             border-bottom: 1px solid var(--border-color);
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
 
         .portfolio-item:hover {
             border-bottom-color: var(--text-primary);
+            padding-left: 10px;
+        }
+
+        .portfolio-item:hover .portfolio-title {
+            color: var(--text-secondary);
+        }
+
+        .portfolio-item .fa-play-circle {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .portfolio-item:hover .fa-play-circle {
+            opacity: 1;
         }
 
         .portfolio-category {
@@ -390,6 +406,31 @@
             background: var(--text-primary);
             color: var(--bg-primary);
         }
+
+        /* Video Modal Styling */
+        #videoModal .modal-content {
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            background: var(--bg-secondary);
+        }
+
+        #videoModal .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+        }
+
+        #videoModal .btn-close {
+            filter: invert(1);
+            opacity: 0.7;
+        }
+
+        #videoModal .btn-close:hover {
+            opacity: 1;
+        }
+
+        #videoModal .ratio-16x9 iframe {
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -470,8 +511,6 @@
                         <li>Character Animation</li>
                         <li>Logo Animation</li>
                         <li>Explainer Videos</li>
-                        <!-- <li>Visual Effects</li> -->
-                        <!--<li>Storyboarding</li>-->
                         <li>Video Editing</li>
                     </ul>
                 </div>
@@ -486,39 +525,51 @@
                 <div class="col-lg-8">
                     <h2 class="section-title fade-in">Recent Works</h2>
                     <p class="portfolio-intro fade-in">
-                        Here are some of my favorite animation projects I have done lately. Feel free to check them out.
+                        Here are some of my favorite animation projects I have done lately. 
+                        Click on any project to watch the video.
                     </p>
                 </div>
             </div>
             
-          <!--  <div class="portfolio-grid">
-                <div class="portfolio-item fade-in">
+            <div class="portfolio-grid">
+                <!-- Portfolio Item 1 
+                <div class="portfolio-item fade-in" data-video-id="dQw4w9WgXcQ">
                     <div class="portfolio-category">Motion Graphics</div>
-                    <div class="portfolio-title">Brand Promo Animation</div>
-                </div>
-                <div class="portfolio-item fade-in">
-                    <div class="portfolio-category">Character Animation</div>
-                    <div class="portfolio-title">Explainer Video Series</div>
-                </div>
-                <div class="portfolio-item fade-in">
+                    <div class="portfolio-title">Brand Promo Animation <i class="fas fa-play-circle"></i></div>
+                </div>  -->
+                
+                <!-- Portfolio Item 2 
+                <div class="portfolio-item fade-in" data-video-id="abc123XYZ">
+                    <div class="portfolio-category">Explainer Video</div>
+                    <div class="portfolio-title">Product Explainer Series <i class="fas fa-play-circle"></i></div>
+                </div>  -->
+                
+                <!-- Portfolio Item 3 
+                <div class="portfolio-item fade-in" data-video-id="xyz789ABC">
                     <div class="portfolio-category">Logo Animation</div>
-                    <div class="portfolio-title">Corporate Identity Motion</div>
-                </div>
-                <div class="portfolio-item fade-in">
+                    <div class="portfolio-title">Corporate Identity Motion <i class="fas fa-play-circle"></i></div>
+                </div>  -->
+                
+                <!-- Portfolio Item 4 -->
+                <div class="portfolio-item fade-in" data-video-id="B29DIcUNVVE">
                     <div class="portfolio-category">2D Animation</div>
-                    <div class="portfolio-title">Social Media Content</div>
+                    <div class="portfolio-title"> Short Animation <i class="fas fa-play-circle"></i></div>
+                </div>  
+                
+                <!-- Portfolio Item 5 -->
+                <div class="portfolio-item fade-in" data-video-id="xcFhLIdsGE8">
+                    <div class="portfolio-category">2D Animation</div>
+                    <div class="portfolio-title">Character Walk Cycle <i class="fas fa-play-circle"></i></div>
                 </div>
-                <div class="portfolio-item fade-in">
-                    <div class="portfolio-category">Visual Effects</div>
-                    <div class="portfolio-title">Product Launch Video</div>
-                </div>
-                <div class="portfolio-item fade-in">
-                    <div class="portfolio-category">Motion Graphics</div>
-                    <div class="portfolio-title">Title Sequence Design</div>
-                </div>
+                
+                <!-- Portfolio Item 6 -->
+                  <!-- <div class="portfolio-item fade-in" data-video-id="vwx012yza">
+                    <div class="portfolio-category">Title Sequence</div>
+                    <div class="portfolio-title">Opening Credits Design <i class="fas fa-play-circle"></i></div>
+                </div> -->
             </div>
         </div>
-    </section>-->
+    </section>
 
     <!-- Contact Section -->
     <section id="contact">
@@ -574,6 +625,22 @@
             <p>&copy; 2024 Anil Maharjan. All Rights Reserved.</p>
         </div>
     </footer>
+
+    <!-- Video Modal -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark border-secondary">
+                <div class="modal-header border-secondary">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="ratio ratio-16x9">
+                        <iframe id="videoFrame" src="" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -662,6 +729,37 @@
                 rect.bottom >= 0
             );
         }
+
+        // ========== VIDEO MODAL FUNCTIONALITY ==========
+        const videoModal = document.getElementById('videoModal');
+        const videoFrame = document.getElementById('videoFrame');
+
+        // Open modal with YouTube video when portfolio item is clicked
+        document.querySelectorAll('.portfolio-item[data-video-id]').forEach(item => {
+            item.addEventListener('click', function() {
+                const videoId = this.getAttribute('data-video-id');
+                // Build embed URL with autoplay and clean UI options
+                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+                
+                videoFrame.src = embedUrl;
+                
+                // Show modal using Bootstrap 5 API
+                const modal = new bootstrap.Modal(videoModal);
+                modal.show();
+            });
+        });
+
+        // Stop video when modal is closed (via close button or ESC)
+        videoModal.addEventListener('hidden.bs.modal', function() {
+            videoFrame.src = '';
+        });
+
+        // Also stop video if user clicks outside the modal content (backdrop)
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal) {
+                videoFrame.src = '';
+            }
+        });
     </script>
 </body>
 </html>
