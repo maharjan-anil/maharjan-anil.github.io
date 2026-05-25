@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>📚 Book Database</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
     body { background-color: #f4f6f9; padding-top: 2rem; }
-    .container { max-width: 850px; }
+    .container { max-width: 950px; }
     #loading { display: none; }
     .table th { background-color: #0d6efd; color: white; }
-    .fade-in { animation: fadeIn 0.5s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .filter-box { max-width: 240px; }
+    .btn-action { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
   </style>
 </head>
 <body>
@@ -33,9 +36,11 @@
                 <option value="Fiction">Fiction</option>
                 <option value="Non-Fiction">Non-Fiction</option>
                 <option value="Sci-Fi">Sci-Fi</option>
-                <option value="Mystery">Mystery</option>
-                <option value="Fantasy">Fantasy</option>
+                <option value="Business">Business</option>
+                <option value="Children Book">Children Book</option>
                 <option value="Biography">Biography</option>
+                <option value="History">History</option>
+                <option value="Self-Help">Self-Help</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -56,9 +61,9 @@
             </div>
           </div>
           
-          <div class="d-grid gap-2 mt-4">
-            <button type="submit" class="btn btn-primary fw-semibold" id="saveBtn">💾 Save Book</button>
-            <button type="button" class="btn btn-outline-secondary" id="fetchBtn">🔄 Refresh List</button>
+          <div class="d-grid gap-2 mt-4 d-sm-flex">
+            <button type="submit" class="btn btn-primary fw-semibold flex-grow-1" id="saveBtn">💾 Save Book</button>
+            <button type="button" class="btn btn-outline-secondary d-none" id="cancelEditBtn">✖ Cancel</button>
           </div>
         </form>
 
@@ -72,20 +77,30 @@
     <!-- Data Table -->
     <div class="card shadow-sm">
       <div class="card-body">
-        <h5 class="card-title mb-3">Saved Books</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h5 class="card-title mb-0">Saved Books</h5>
+          <div class="filter-box">
+            <label for="genreFilter" class="form-label small text-muted mb-1">Filter by Genre</label>
+            <select id="genreFilter" class="form-select form-select-sm">
+              <option value="All">All Genres</option>
+            </select>
+          </div>
+        </div>
+        
         <div class="table-responsive">
           <table class="table table-striped table-hover align-middle" id="bookTable">
             <thead>
               <tr>
-                <th>Date Added</th>
+                <th>Date</th>
                 <th>Genre</th>
                 <th>Book Name</th>
                 <th>Author</th>
                 <th>Binding</th>
+                <th class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody id="tableBody">
-              <tr><td colspan="5" class="text-center text-muted">No books loaded yet.</td></tr>
+              <tr><td colspan="6" class="text-center text-muted">Loading books...</td></tr>
             </tbody>
           </table>
         </div>
@@ -95,15 +110,19 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // ⚠️ REPLACE THIS WITH YOUR DEPLOYED GOOGLE SCRIPT WEB APP URL
+    // ⚠️ REPLACE WITH YOUR DEPLOYED WEB APP URL
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0YojaTSlqVjL3EgitbS7CX1AYGtguMQpySubeq8pSdLKqvyJ0dHPWraPeEbodHrJiCA/exec';
 
     const form = document.getElementById('bookForm');
     const saveBtn = document.getElementById('saveBtn');
-    const fetchBtn = document.getElementById('fetchBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
     const loading = document.getElementById('loading');
     const alertBox = document.getElementById('alertBox');
     const tableBody = document.getElementById('tableBody');
+    const genreFilter = document.getElementById('genreFilter');
+
+    let allBooks = [];
+    let editingId = null;
 
     function showAlert(msg, type = 'success') {
       alertBox.className = `alert alert-${type} show`;
@@ -114,10 +133,26 @@
     function toggleLoading(show) {
       loading.style.display = show ? 'block' : 'none';
       saveBtn.disabled = show;
-      fetchBtn.disabled = show;
+      cancelEditBtn.disabled = show;
     }
 
-    // Save Book
+    function setEditMode(id) {
+      editingId = id;
+      saveBtn.textContent = '🔄 Update Book';
+      saveBtn.classList.replace('btn-primary', 'btn-warning');
+      cancelEditBtn.classList.remove('d-none');
+      form.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetForm() {
+      editingId = null;
+      form.reset();
+      saveBtn.textContent = '💾 Save Book';
+      saveBtn.classList.replace('btn-warning', 'btn-primary');
+      cancelEditBtn.classList.add('d-none');
+    }
+
+    // Save or Update
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = {
@@ -127,18 +162,25 @@
         binding: document.getElementById('binding').value
       };
 
+      if (editingId) {
+        data.id = editingId;
+        data.action = 'update';
+      } else {
+        data.action = 'save';
+      }
+
       toggleLoading(true);
       try {
         const res = await fetch(SCRIPT_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' }, // Avoids CORS preflight
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(data)
         });
         const result = await res.json();
         if (result.success) {
           showAlert('✅ ' + result.message);
-          form.reset();
-          fetchBooks();
+          resetForm();
+          await fetchBooks();
         } else {
           showAlert('❌ ' + result.message, 'danger');
         }
@@ -149,39 +191,123 @@
       }
     });
 
-    // Fetch Books
-    fetchBtn.addEventListener('click', fetchBooks);
+    cancelEditBtn.addEventListener('click', resetForm);
 
-    async function fetchBooks() {
+    // Fetch Books
+    document.getElementById('fetchBtn')?.addEventListener('click', fetchBooks); // If you keep a refresh button
+    window.fetchBooks = async function() {
       toggleLoading(true);
       try {
         const res = await fetch(`${SCRIPT_URL}?action=get`);
         const result = await res.json();
         
-        if (result.success && result.data.length > 0) {
-          tableBody.innerHTML = '';
-          result.data.forEach(book => {
-            const date = new Date(book.timestamp).toLocaleDateString();
-            tableBody.innerHTML += `
-              <tr class="fade-in">
-                <td>${date}</td>
-                <td><span class="badge bg-info text-dark">${book.genre}</span></td>
-                <td class="fw-semibold">${book.bookName}</td>
-                <td>${book.author}</td>
-                <td><span class="badge ${book.binding === 'Hardcover' ? 'bg-warning text-dark' : 'bg-secondary'}">${book.binding}</span></td>
-              </tr>`;
-          });
+        if (result.success) {
+          allBooks = result.data;
+          populateGenreFilter();
+          applyFilter();
         } else {
-          tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No books found in the database.</td></tr>';
+          tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data.</td></tr>';
         }
       } catch (err) {
-        showAlert('❌ Failed to fetch: ' + err.message, 'danger');
+        showAlert('❌ Fetch Error: ' + err.message, 'danger');
       } finally {
         toggleLoading(false);
       }
+    };
+
+    function populateGenreFilter() {
+      const counts = {};
+      allBooks.forEach(b => {
+        if (b.genre) counts[b.genre] = (counts[b.genre] || 0) + 1;
+      });
+      
+      const currentVal = genreFilter.value;
+      genreFilter.innerHTML = '<option value="All">All Genres</option>';
+      
+      Object.keys(counts).sort().forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g;
+        opt.textContent = `${g} (${counts[g]})`;
+        genreFilter.appendChild(opt);
+      });
+
+      if ([...genreFilter.options].some(o => o.value === currentVal)) {
+        genreFilter.value = currentVal;
+      }
     }
 
-    // Load on startup
+    function applyFilter() {
+      const selected = genreFilter.value;
+      const filtered = selected === 'All' ? allBooks : allBooks.filter(b => b.genre === selected);
+      renderTable(filtered);
+    }
+
+    function renderTable(books) {
+      if (!books || books.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No books found.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = books.map(book => {
+        const date = new Date(book.timestamp).toLocaleDateString();
+        const bindingClass = book.binding === 'Hardcover' ? 'bg-warning text-dark' : 'bg-secondary';
+        return `
+          <tr class="fade-in">
+            <td>${date}</td>
+            <td><span class="badge bg-info text-dark">${book.genre}</span></td>
+            <td class="fw-semibold">${book.bookName}</td>
+            <td>${book.author}</td>
+            <td><span class="badge ${bindingClass}">${book.binding}</span></td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary btn-action" onclick="editBook('${book.id}')" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger btn-action ms-1" onclick="deleteBook('${book.id}')" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    window.editBook = function(id) {
+      const book = allBooks.find(b => b.id === id);
+      if (!book) return;
+      
+      document.getElementById('genre').value = book.genre;
+      document.getElementById('bookName').value = book.bookName;
+      document.getElementById('author').value = book.author;
+      document.getElementById('binding').value = book.binding;
+      setEditMode(id);
+    };
+
+    window.deleteBook = async function(id) {
+      if (!confirm('⚠️ Are you sure you want to permanently delete this book?')) return;
+      
+      toggleLoading(true);
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'delete', id: id })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showAlert('🗑️ ' + result.message);
+          await fetchBooks();
+        } else {
+          showAlert('❌ ' + result.message, 'danger');
+        }
+      } catch (err) {
+        showAlert('❌ Delete Error: ' + err.message, 'danger');
+      } finally {
+        toggleLoading(false);
+      }
+    };
+
+    genreFilter.addEventListener('change', applyFilter);
+
+    // Initial load
     document.addEventListener('DOMContentLoaded', fetchBooks);
   </script>
 </body>
