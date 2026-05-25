@@ -37,27 +37,45 @@
     .loading { text-align:center; padding:3rem; color:#718096; }
     .loading .spinner-border { width:3rem; height:3rem; border-width:0.3rem; border-color:#667eea; border-right-color:transparent; }
     
-    /* Modal Styles */
+    /* 🖼️ FIXED IMAGE CONTAINER & SIZING */
+    .cover-wrapper {
+      width: 100%;
+      min-height: 320px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    .cover-img {
+      width: 100%;
+      height: 100%;
+      max-height: 340px;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+    .cover-loading {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .cover-placeholder {
+      text-align: center;
+      color: #94a3b8;
+      padding: 2rem;
+    }
+    .cover-placeholder i { font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; }
+    .cover-placeholder p { margin: 0; font-size: 0.95rem; }
+
     .modal-content { border-radius:20px; border:none; box-shadow:0 10px 40px rgba(0,0,0,0.2); }
     .modal-header { border-bottom:1px solid #e2e8f0; background:#f8f9fa; border-radius:20px 20px 0 0; }
     .modal-body { padding:2rem; }
     .desc-text { line-height:1.7; color:#4a5568; font-size:1rem; }
-    
-    /* 🖼️ Cover Image Styles - FIXED FOR GOOGLE DRIVE */
-    .cover-container { 
-      background: #f8f9fa; border-radius: 12px; padding: 1.5rem; 
-      min-height: 340px; display: flex; align-items: center; justify-content: center;
-      border: 2px dashed #e2e8f0;
-    }
-    .cover-img { 
-      max-height: 360px; width: auto; max-width: 100%; 
-      border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      display: block; transition: opacity 0.3s;
-    }
-    .cover-img.loading { opacity: 0.5; }
-    .cover-placeholder { text-align: center; color: #a0aec0; }
-    .cover-placeholder i { font-size: 4.5rem; margin-bottom: 0.75rem; opacity: 0.7; }
-    .cover-placeholder p { margin: 0; font-size: 0.95rem; }
     
     @media(max-width:768px) { 
       .header h1{font-size:2rem;} 
@@ -65,7 +83,7 @@
       .book-title{font-size:1.1rem;} 
       .book-price{font-size:1.3rem;} 
       .result-card::after{display:none;}
-      .cover-container { min-height: 280px; }
+      .cover-wrapper { min-height: 260px; }
     }
   </style>
 </head>
@@ -78,7 +96,7 @@
     </div>
     
     <div class="search-box">
-      <h2>🔍 Search Books</h2>
+      <h2> Search Books</h2>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-search"></i></span>
         <input type="text" class="form-control" id="searchInput" placeholder="Search by title, author, genre, ISBN, or publisher..." autocomplete="off">
@@ -106,7 +124,7 @@
     </div>
   </div>
 
-  <!-- 📖 Book Detail Modal - WITH FIXED IMAGE HANDLING -->
+  <!-- 📖 Book Detail Modal -->
   <div class="modal fade" id="bookDetailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
@@ -117,17 +135,12 @@
         <div class="modal-body">
           <div class="row align-items-start">
             <div class="col-md-5 mb-3 mb-md-0">
-              <div class="cover-container">
-                <!-- Loading Spinner -->
-                <div id="coverLoading" class="text-center" style="display:none;">
-                  <div class="spinner-border text-primary" role="status" style="width:2rem;height:2rem;border-width:0.2rem;"></div>
+              <div class="cover-wrapper">
+                <div id="coverLoading" class="cover-loading">
+                  <div class="spinner-border text-primary" role="status" style="width:2rem;height:2rem;border-width:0.25rem;"></div>
                   <p class="small text-muted mt-2 mb-0">Loading cover...</p>
                 </div>
-                
-                <!-- Actual Image -->
-                <img id="modalCover" src="" alt="Book Cover" class="cover-img" style="display:none;">
-                
-                <!-- Placeholder when no image or error -->
+                <img id="modalCover" src="" alt="Book Cover" class="cover-img" style="opacity:0;">
                 <div id="coverPlaceholder" class="cover-placeholder">
                   <i class="bi bi-image"></i>
                   <p class="mb-0">No cover available</p>
@@ -159,39 +172,19 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycby_TlVlPtc7QhP6KxHT_FwlUllCQ9QLEv4mWBQTAgFijTTXq2SDuzA7TYGO2AQthrqP/exec'; // 👈 REPLACE WITH YOUR URL
+    const API_URL = 'https://script.google.com/macros/s/AKfycby_TlVlPtc7QhP6KxHT_FwlUllCQ9QLEv4mWBQTAgFijTTXq2SDuzA7TYGO2AQthrqP/exec'; //  REPLACE WITH YOUR URL
     let allBooks = [];
     const bookModal = new bootstrap.Modal(document.getElementById('bookDetailModal'));
     const formatNPR = (val) => 'रू ' + Number(val).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    // 🖼️ HELPER: Convert Google Drive URL to direct image URL
-    function getDirectImageUrl(url) {
+    // 🖼️ Convert any Drive link to direct image URL
+    function getDirectDriveUrl(url) {
       if (!url) return null;
-      
-      // Handle various Google Drive URL formats
-      const patterns = [
-        /drive\.google\.com\/file\/d\/([^/]+)\/view/,
-        /drive\.google\.com\/open\?id=([^&]+)/,
-        /drive\.google\.com\/uc\?export=view&id=([^&]+)/
-      ];
-      
-      for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match && match[1]) {
-          return `https://drive.google.com/uc?export=view&id=${match[1]}&t=${Date.now()}`;
-        }
-      }
-      
-      // If already in correct format, add cache buster
-      if (url.includes('drive.google.com/uc?')) {
-        const separator = url.includes('?') ? '&' : '?';
-        return url + separator + 't=' + Date.now();
-      }
-      
-      return url;
+      const match = url.match(/\/d\/([^/]+)|[?&]id=([^&]+)/);
+      const id = match ? (match[1] || match[2]) : null;
+      return id ? `https://drive.google.com/uc?export=view&id=${id}&t=${Date.now()}` : url;
     }
 
-    // 📥 Load Books
     async function loadBooks() {
       try {
         const res = await fetch(API_URL);
@@ -200,7 +193,7 @@
           allBooks = json.data.filter(b => Number(b.currentStock) > 0); 
           showDefaultState(); 
         } else showError('Failed to load books: ' + json.error);
-      } catch { showError('Connection failed. Please try again later.'); }
+      } catch { showError('Connection failed.'); }
     }
 
     function showError(msg) {
@@ -218,17 +211,14 @@
       document.getElementById('clearSearch').style.display = 'none';
     }
 
-    // 🖼️ Render Results
     function renderResults(books) {
       const container = document.getElementById('resultsContainer');
       document.getElementById('defaultState').style.display = 'none';
       container.innerHTML = '';
-      
       if (books.length === 0) { 
         document.getElementById('noResults').style.display = 'block'; 
         return; 
       }
-      
       document.getElementById('noResults').style.display = 'none';
       
       books.forEach(b => {
@@ -239,105 +229,75 @@
           <div class="row align-items-center">
             <div class="col-lg-8">
               <div class="book-title">${b.title||'Untitled'}</div>
-              <div class="book-meta">
-                <i class="bi bi-person"></i> ${b.author||'Unknown Author'} 
-                ${b.genre ? `<span class="mx-2">•</span><span class="badge bg-light text-dark border">${b.genre}</span>` : ''}
-              </div>
-              <div class="book-meta">
-                ${b.isbn ? `<i class="bi bi-upc"></i> ${b.isbn} <span class="mx-2">•</span>` : ''}
-                <i class="bi bi-building"></i> ${b.publisher||'Unknown Publisher'} 
-                ${b.binding ? `<span class="mx-2">•</span> ${b.binding}` : ''}
-              </div>
+              <div class="book-meta"><i class="bi bi-person"></i> ${b.author||'Unknown Author'} ${b.genre?`<span class="mx-2">•</span><span class="badge bg-light text-dark border">${b.genre}</span>`:''}</div>
+              <div class="book-meta">${b.isbn?`<i class="bi bi-upc"></i> ${b.isbn} <span class="mx-2">•</span>`:''}<i class="bi bi-building"></i> ${b.publisher||'Unknown Publisher'} ${b.binding?`<span class="mx-2">•</span> ${b.binding}`:''}</div>
             </div>
             <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
               <div class="book-price">${formatNPR(b.sellingPrice)}</div>
               <span class="stock-badge"><i class="bi bi-check-circle me-1"></i>In Stock (${stock})</span>
             </div>
           </div>`;
-        
         card.addEventListener('click', () => openBookModal(b));
         container.appendChild(card);
       });
     }
 
-    // 🖼️ Open Modal with ROBUST Image Handling
     function openBookModal(book) {
-      // Set text fields
       document.getElementById('modalTitle').textContent = book.title || 'Untitled';
       document.getElementById('modalAuthor').textContent = book.author || 'Unknown Author';
       document.getElementById('modalPrice').textContent = formatNPR(book.sellingPrice);
       document.getElementById('modalStock').innerHTML = `<i class="bi bi-check-circle me-1"></i>In Stock (${book.currentStock||0})`;
       
-      // Build meta info
       const metaParts = [];
       if(book.isbn) metaParts.push(`<i class="bi bi-upc"></i> ${book.isbn}`);
       if(book.publisher) metaParts.push(`<i class="bi bi-building"></i> ${book.publisher}`);
       if(book.binding) metaParts.push(`<i class="bi bi-journal"></i> ${book.binding}`);
       document.getElementById('modalMeta').innerHTML = metaParts.join(' <span class="mx-2">•</span> ');
+      document.getElementById('modalDescription').innerHTML = book.description ? book.description.replace(/\n/g,'<br>') : 'No description available.';
       
-      // Description with line breaks
-      document.getElementById('modalDescription').innerHTML = 
-        book.description ? book.description.replace(/\n/g,'<br>') : 'No description available.';
-      
-      // 🖼️ Handle Cover Image
+      // 🖼️ IMAGE HANDLING
       const coverImg = document.getElementById('modalCover');
       const placeholder = document.getElementById('coverPlaceholder');
       const loading = document.getElementById('coverLoading');
       
-      // Reset states
-      coverImg.style.display = 'none';
-      coverImg.classList.remove('loading');
+      // Reset
+      coverImg.style.opacity = '0';
       placeholder.style.display = 'none';
-      loading.style.display = 'none';
+      loading.style.display = 'block';
       
       if (book.coverUrl && book.coverUrl.trim() !== '') {
-        // Convert to direct URL and add cache buster
-        const imageUrl = getDirectImageUrl(book.coverUrl);
-        console.log('🖼️ Loading cover:', imageUrl);
+        const directUrl = getDirectDriveUrl(book.coverUrl);
+        console.log('🖼️ Loading:', directUrl);
         
-        // Show loading
-        loading.style.display = 'block';
-        
-        // Set up image load handlers BEFORE setting src
         coverImg.onload = () => {
-          console.log('✅ Image loaded');
+          console.log('✅ Loaded');
           loading.style.display = 'none';
-          coverImg.style.display = 'block';
+          coverImg.style.opacity = '1';
           placeholder.style.display = 'none';
         };
         
         coverImg.onerror = () => {
-          console.error('❌ Failed to load:', imageUrl);
+          console.error('❌ Failed:', directUrl);
           loading.style.display = 'none';
-          coverImg.style.display = 'none';
+          coverImg.style.opacity = '0';
           placeholder.style.display = 'block';
-          placeholder.innerHTML = `
-            <i class="bi bi-exclamation-triangle"></i>
-            <p class="mb-0 small">Cover unavailable</p>
-          `;
+          placeholder.innerHTML = `<i class="bi bi-exclamation-triangle"></i><p class="mb-0 small">Cover unavailable</p>`;
         };
         
-        // Set src LAST to trigger load
-        coverImg.src = imageUrl;
-        
+        coverImg.src = directUrl;
       } else {
-        // No URL provided
+        loading.style.display = 'none';
         placeholder.style.display = 'block';
-        placeholder.innerHTML = `
-          <i class="bi bi-image"></i>
-          <p class="mb-0">No cover image</p>
-        `;
+        placeholder.innerHTML = `<i class="bi bi-image"></i><p class="mb-0">No cover image</p>`;
       }
       
-      // Show modal
-      bookModal.show();
+      // Force modal to recalculate layout after image loads
+      setTimeout(() => bookModal.show(), 50);
     }
 
-    // 🔍 Search Filter
     function filterBooks() {
       const query = document.getElementById('searchInput').value.toLowerCase().trim();
       if(!query) { showDefaultState(); return; }
-      
       renderResults(allBooks.filter(b => 
         String(b.title||'').toLowerCase().includes(query) || 
         String(b.author||'').toLowerCase().includes(query) ||
@@ -347,7 +307,6 @@
       ));
     }
 
-    // Event Listeners
     document.getElementById('searchInput').addEventListener('input', (e) => {
       document.getElementById('clearSearch').style.display = e.target.value.trim() ? 'inline-block' : 'none';
       filterBooks();
@@ -358,7 +317,6 @@
       showDefaultState(); 
     });
     
-    // Initialize
     window.addEventListener('DOMContentLoaded', loadBooks);
   </script>
 </body>
