@@ -7,246 +7,91 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      background: #f8f9fa;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 2rem 1rem;
-    }
-    
-    .search-container {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      color: #2d3748;
-    }
-    
-    .header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #667eea;
-    }
-    
-    .header p {
-      font-size: 1.1rem;
-      color: #718096;
-    }
-    
-    .search-box {
-      background: white;
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      margin-bottom: 2rem;
-    }
-    
-    .search-box h2 {
-      font-size: 1.5rem;
-      color: #2d3748;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-    
-    .input-group {
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border-radius: 15px;
-      overflow: hidden;
-    }
-    
-    .input-group-text {
-      background: #667eea;
-      border: none;
-      padding: 1rem 1.5rem;
-      color: white;
-    }
-    
-    .form-control {
-      border: none;
-      padding: 1rem 1.5rem;
-      font-size: 1.1rem;
-      border-left: 1px solid #e2e8f0;
-    }
-    
-    .form-control:focus {
-      box-shadow: none;
-      border-color: #667eea;
-    }
-    
-    .btn-clear {
-      background: #e2e8f0;
-      border: none;
-      padding: 1rem 1.5rem;
-      color: #4a5568;
-      border-radius: 0;
-      transition: all 0.3s;
-    }
-    
-    .btn-clear:hover {
-      background: #cbd5e0;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f8f9fa; min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 2rem 1rem; }
+    .search-container { max-width: 1000px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 2.5rem; }
+    .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #667eea; }
+    .header p { font-size: 1.1rem; color: #718096; }
+    .search-box { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+    .search-box h2 { font-size: 1.5rem; color: #2d3748; margin-bottom: 1.5rem; text-align: center; }
+    .input-group { box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 15px; overflow: hidden; }
+    .input-group-text { background: #667eea; border: none; padding: 1rem 1.5rem; color: white; }
+    .form-control { border: none; padding: 1rem 1.5rem; font-size: 1.1rem; border-left: 1px solid #e2e8f0; }
+    .form-control:focus { box-shadow: none; border-color: #667eea; }
+    .btn-clear { background: #e2e8f0; border: none; padding: 1rem 1.5rem; color: #4a5568; border-radius: 0; transition: all 0.3s; }
+    .btn-clear:hover { background: #cbd5e0; }
     
     .result-card {
-      background: white;
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-      transition: all 0.3s ease;
-      border-left: 4px solid #667eea;
+      background: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06); transition: all 0.3s ease;
+      border-left: 4px solid #667eea; cursor: pointer; position: relative;
     }
+    .result-card:hover { transform: translateX(5px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); border-left-color: #764ba2; }
+    .result-card::after {
+      content: 'Click for details →'; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
+      font-size: 0.85rem; color: #667eea; opacity: 0; transition: opacity 0.3s;
+    }
+    .result-card:hover::after { opacity: 1; }
     
-    .result-card:hover {
-      transform: translateX(5px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    }
+    .book-title { font-size: 1.3rem; font-weight: 700; color: #2d3748; margin-bottom: 0.5rem; }
+    .book-meta { color: #718096; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .book-meta i { color: #667eea; margin-right: 0.3rem; }
+    .book-price { font-size: 1.6rem; font-weight: 700; color: #48bb78; margin-bottom: 0.5rem; }
+    .stock-badge { font-size: 0.85rem; padding: 0.5rem 1rem; border-radius: 20px; background: #c6f6d5; color: #276749; display: inline-block; }
     
-    .book-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #2d3748;
-      margin-bottom: 0.5rem;
-    }
+    .default-state, .no-results { text-align: center; padding: 4rem 2rem; color: #718096; }
+    .default-state i, .no-results i { font-size: 4rem; margin-bottom: 1.5rem; color: #cbd5e0; }
+    .default-state h4, .no-results h4 { font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: 600; color: #2d3748; }
+    .default-state p, .no-results p { font-size: 1.1rem; color: #718096; }
+    .loading { text-align: center; padding: 3rem; color: #718096; }
+    .loading .spinner-border { width: 3rem; height: 3rem; border-width: 0.3rem; border-color: #667eea; border-right-color: transparent; }
     
-    .book-meta {
-      color: #718096;
-      font-size: 0.95rem;
-      margin-bottom: 0.3rem;
-    }
-    
-    .book-meta i {
-      color: #667eea;
-      margin-right: 0.3rem;
-    }
-    
-    .book-price {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #48bb78;
-      margin-bottom: 0.5rem;
-    }
-    
-    .stock-badge {
-      font-size: 0.85rem;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      background: #c6f6d5;
-      color: #276749;
-      display: inline-block;
-    }
-    
-    .default-state, .no-results {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: #718096;
-    }
-    
-    .default-state i, .no-results i {
-      font-size: 4rem;
-      margin-bottom: 1.5rem;
-      color: #cbd5e0;
-    }
-    
-    .default-state h4, .no-results h4 {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: #2d3748;
-    }
-    
-    .default-state p, .no-results p {
-      font-size: 1.1rem;
-      color: #718096;
-    }
-    
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      color: #718096;
-    }
-    
-    .loading .spinner-border {
-      width: 3rem;
-      height: 3rem;
-      border-width: 0.3rem;
-      border-color: #667eea;
-      border-right-color: transparent;
-    }
+    /* Modal Styles */
+    .modal-content { border-radius: 20px; border: none; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .modal-header { border-bottom: 1px solid #e2e8f0; background: #f8f9fa; border-radius: 20px 20px 0 0; }
+    .modal-body { padding: 2rem; }
+    .desc-text { line-height: 1.7; color: #4a5568; font-size: 1rem; }
     
     @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      .search-box {
-        padding: 1.5rem;
-      }
-      
-      .book-title {
-        font-size: 1.1rem;
-      }
-      
-      .book-price {
-        font-size: 1.3rem;
-      }
+      .header h1 { font-size: 2rem; }
+      .search-box { padding: 1.5rem; }
+      .book-title { font-size: 1.1rem; }
+      .book-price { font-size: 1.3rem; }
+      .result-card::after { display: none; }
     }
   </style>
 </head>
 <body>
 
   <div class="search-container">
-    <!-- Header -->
     <div class="header">
       <h1>📚 Book Shelf</h1>
       <p>Find your next great read</p>
     </div>
     
-    <!-- Search Box -->
     <div class="search-box">
-      <h2>🔍 Search Books</h2>
+      <h2> Search Books</h2>
       <div class="input-group">
-        <span class="input-group-text">
-          <i class="bi bi-search"></i>
-        </span>
-        <input type="text" 
-               class="form-control" 
-               id="searchInput" 
-               placeholder="Search by title, author, genre, ISBN, or publisher..."
-               autocomplete="off">
-        <button class="btn btn-clear" type="button" id="clearSearch" style="display:none;">
-          <i class="bi bi-x-lg"></i>
-        </button>
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" id="searchInput" placeholder="Search by title, author, genre, ISBN, or publisher..." autocomplete="off">
+        <button class="btn btn-clear" type="button" id="clearSearch" style="display:none;"><i class="bi bi-x-lg"></i></button>
       </div>
     </div>
 
-    <!-- Results Container -->
     <div id="resultsContainer">
       <div class="loading">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
+        <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
         <p class="mt-3">Loading books...</p>
       </div>
     </div>
 
-    <!-- Default State -->
     <div id="defaultState" class="default-state" style="display:none;">
       <i class="bi bi-search"></i>
       <h4>Start Searching</h4>
       <p>Type above to find available books in our collection</p>
     </div>
 
-    <!-- No Results -->
     <div id="noResults" class="no-results" style="display:none;">
       <i class="bi bi-book"></i>
       <h4>No Books Found</h4>
@@ -254,17 +99,40 @@
     </div>
   </div>
 
+  <!--  Book Detail Modal -->
+  <div class="modal fade" id="bookDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold text-primary" id="modalTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-8">
+              <p class="text-muted mb-2"><i class="bi bi-person-fill"></i> <span id="modalAuthor"></span></p>
+              <p class="mb-3" id="modalMeta"></p>
+              <h6 class="fw-bold text-dark mb-2"><i class="bi bi-journal-text me-2"></i>Description</h6>
+              <p class="desc-text" id="modalDescription">No description available.</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <div class="book-price mb-2" id="modalPrice"></div>
+              <span class="stock-badge" id="modalStock"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // 🔑 CONFIGURATION
-    const API_URL = 'https://script.google.com/macros/s/AKfycby2S4BsCvmTQBsFFdhQ19haPBg82feDnS4R8RIdS0jvPhC2iYksp4LfCEhRRkIyuP5S/exec'; // 👈 REPLACE WITH YOUR DEPLOYED URL
-
+    const API_URL = 'https://script.google.com/macros/s/AKfycby2S4BsCvmTQBsFFdhQ19haPBg82feDnS4R8RIdS0jvPhC2iYksp4LfCEhRRkIyuP5S/exec'; // 👈 REPLACE
     let allBooks = [];
+    const bookModal = new bootstrap.Modal(document.getElementById('bookDetailModal'));
 
-    // 💰 NPR FORMATTER
     const formatNPR = (val) => 'रू ' + Number(val).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    // 📥 DATA FETCH
     async function loadBooks() {
       try {
         const res = await fetch(API_URL);
@@ -272,20 +140,15 @@
         if (json.success) {
           allBooks = json.data.filter(b => Number(b.currentStock) > 0);
           showDefaultState();
-        } else {
-          showError('Failed to load books: ' + json.error);
-        }
-      } catch {
-        showError('Connection failed. Please try again later.');
-      }
+        } else showError('Failed to load books: ' + json.error);
+      } catch { showError('Connection failed. Please try again later.'); }
     }
 
     function showError(msg) {
       document.getElementById('resultsContainer').innerHTML = `
         <div class="alert alert-danger text-center" role="alert" style="border-radius: 15px; padding: 2rem;">
           <i class="bi bi-exclamation-triangle-fill me-2"></i>${msg}
-        </div>
-      `;
+        </div>`;
       document.getElementById('defaultState').style.display = 'none';
     }
 
@@ -296,7 +159,6 @@
       document.getElementById('clearSearch').style.display = 'none';
     }
 
-    // 🖼️ RENDER RESULTS
     function renderResults(books) {
       const container = document.getElementById('resultsContainer');
       const defaultState = document.getElementById('defaultState');
@@ -332,24 +194,39 @@
             </div>
             <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
               <div class="book-price">${formatNPR(b.sellingPrice)}</div>
-              <span class="stock-badge">
-                <i class="bi bi-check-circle me-1"></i>In Stock (${stock})
-              </span>
+              <span class="stock-badge"><i class="bi bi-check-circle me-1"></i>In Stock (${stock})</span>
             </div>
-          </div>
-        `;
+          </div>`;
+        
+        // 👆 Make card clickable
+        card.addEventListener('click', () => openBookModal(b));
         container.appendChild(card);
       });
     }
 
-    // 🔍 SEARCH & FILTER
+    function openBookModal(book) {
+      document.getElementById('modalTitle').textContent = book.title || 'Untitled';
+      document.getElementById('modalAuthor').textContent = book.author || 'Unknown Author';
+      document.getElementById('modalPrice').textContent = formatNPR(book.sellingPrice);
+      document.getElementById('modalStock').innerHTML = `<i class="bi bi-check-circle me-1"></i>In Stock (${book.currentStock || 0})`;
+      
+      // Build meta info
+      const metaParts = [];
+      if (book.isbn) metaParts.push(`<i class="bi bi-upc"></i> ${book.isbn}`);
+      if (book.publisher) metaParts.push(`<i class="bi bi-building"></i> ${book.publisher}`);
+      if (book.binding) metaParts.push(`<i class="bi bi-journal"></i> ${book.binding}`);
+      document.getElementById('modalMeta').innerHTML = metaParts.join(' <span class="mx-2">•</span> ');
+      
+      // Description with line breaks preserved
+      const desc = book.description ? book.description.replace(/\n/g, '<br>') : 'No description available.';
+      document.getElementById('modalDescription').innerHTML = desc;
+      
+      bookModal.show();
+    }
+
     function filterBooks() {
       const query = document.getElementById('searchInput').value.toLowerCase().trim();
-      
-      if (!query) {
-        showDefaultState();
-        return;
-      }
+      if (!query) { showDefaultState(); return; }
 
       const filtered = allBooks.filter(b => 
         String(b.title || '').toLowerCase().includes(query) ||
@@ -358,11 +235,9 @@
         String(b.isbn || '').includes(query) ||
         String(b.publisher || '').toLowerCase().includes(query)
       );
-
       renderResults(filtered);
     }
 
-    // 🎛️ EVENT LISTENERS
     document.getElementById('searchInput').addEventListener('input', (e) => {
       const val = e.target.value.trim();
       document.getElementById('clearSearch').style.display = val ? 'inline-block' : 'none';
@@ -374,7 +249,6 @@
       showDefaultState();
     });
 
-    // 🚀 INIT
     window.addEventListener('DOMContentLoaded', loadBooks);
   </script>
 </body>
