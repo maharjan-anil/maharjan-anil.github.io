@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📚 Book Database</title>
+  <title>📚 Book Manager</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
@@ -15,11 +15,14 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .filter-box { max-width: 240px; }
     .btn-action { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+    .clickable-title { cursor: pointer; transition: color 0.2s; }
+    .clickable-title:hover { color: #0d6efd; text-decoration: underline; }
+    .modal-desc { white-space: pre-wrap; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2 class="text-center mb-4 fw-bold">📖 Book Database</h2>
+    <h2 class="text-center mb-4 fw-bold">📖 Book Manager</h2>
 
     <!-- Alerts -->
     <div id="alertBox" class="alert d-none" role="alert"></div>
@@ -36,8 +39,8 @@
                 <option value="Fiction">Fiction</option>
                 <option value="Non-Fiction">Non-Fiction</option>
                 <option value="Sci-Fi">Sci-Fi</option>
-                <option value="Business">Business</option>
-                <option value="Children Book">Children Book</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Fantasy">Fantasy</option>
                 <option value="Biography">Biography</option>
                 <option value="History">History</option>
                 <option value="Self-Help">Self-Help</option>
@@ -58,6 +61,10 @@
             <div class="col-md-6">
               <label for="author" class="form-label">Author</label>
               <input type="text" class="form-control" id="author" placeholder="e.g. F. Scott Fitzgerald" required>
+            </div>
+            <div class="col-12">
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control" id="description" rows="3" placeholder="Brief summary or notes about the book..."></textarea>
             </div>
           </div>
           
@@ -108,6 +115,36 @@
     </div>
   </div>
 
+  <!-- Details Modal -->
+  <div class="modal fade" id="bookModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title fw-bold" id="modalTitle">Book Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-3">
+            <div class="col-6"><strong>Author:</strong> <span id="modalAuthor"></span></div>
+            <div class="col-6"><strong>Binding:</strong> <span id="modalBinding" class="badge bg-secondary"></span></div>
+          </div>
+          <div class="mb-3">
+            <strong>Genre:</strong> <span id="modalGenre" class="badge bg-info text-dark"></span>
+          </div>
+          <div class="mb-3 text-muted small">
+            <strong>Date Added:</strong> <span id="modalDate"></span>
+          </div>
+          <hr>
+          <h6 class="fw-semibold">📖 Description</h6>
+          <p id="modalDesc" class="text-muted modal-desc"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // ⚠️ REPLACE WITH YOUR DEPLOYED WEB APP URL
@@ -120,6 +157,7 @@
     const alertBox = document.getElementById('alertBox');
     const tableBody = document.getElementById('tableBody');
     const genreFilter = document.getElementById('genreFilter');
+    const bookModal = new bootstrap.Modal(document.getElementById('bookModal'));
 
     let allBooks = [];
     let editingId = null;
@@ -159,7 +197,8 @@
         genre: document.getElementById('genre').value,
         bookName: document.getElementById('bookName').value,
         author: document.getElementById('author').value,
-        binding: document.getElementById('binding').value
+        binding: document.getElementById('binding').value,
+        description: document.getElementById('description').value.trim()
       };
 
       if (editingId) {
@@ -194,7 +233,6 @@
     cancelEditBtn.addEventListener('click', resetForm);
 
     // Fetch Books
-    document.getElementById('fetchBtn')?.addEventListener('click', fetchBooks); // If you keep a refresh button
     window.fetchBooks = async function() {
       toggleLoading(true);
       try {
@@ -255,7 +293,7 @@
           <tr class="fade-in">
             <td>${date}</td>
             <td><span class="badge bg-info text-dark">${book.genre}</span></td>
-            <td class="fw-semibold">${book.bookName}</td>
+            <td><span class="fw-semibold clickable-title" onclick="viewBook('${book.id}')" title="Click to view details">${book.bookName}</span></td>
             <td>${book.author}</td>
             <td><span class="badge ${bindingClass}">${book.binding}</span></td>
             <td class="text-center">
@@ -270,6 +308,22 @@
       }).join('');
     }
 
+    // View Details Modal
+    window.viewBook = function(id) {
+      const book = allBooks.find(b => b.id === id);
+      if (!book) return;
+      
+      document.getElementById('modalTitle').textContent = book.bookName;
+      document.getElementById('modalAuthor').textContent = book.author;
+      document.getElementById('modalGenre').textContent = book.genre;
+      document.getElementById('modalBinding').textContent = book.binding;
+      document.getElementById('modalDate').textContent = new Date(book.timestamp).toLocaleDateString();
+      document.getElementById('modalDesc').textContent = book.description || 'No description available.';
+      
+      bookModal.show();
+    };
+
+    // Edit Book
     window.editBook = function(id) {
       const book = allBooks.find(b => b.id === id);
       if (!book) return;
@@ -278,9 +332,11 @@
       document.getElementById('bookName').value = book.bookName;
       document.getElementById('author').value = book.author;
       document.getElementById('binding').value = book.binding;
+      document.getElementById('description').value = book.description || '';
       setEditMode(id);
     };
 
+    // Delete Book
     window.deleteBook = async function(id) {
       if (!confirm('⚠️ Are you sure you want to permanently delete this book?')) return;
       
