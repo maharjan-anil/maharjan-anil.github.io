@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
     :root {
+      /* Light Theme */
       --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
       --card-bg: #ffffff;
       --primary: #4f46e5;
@@ -18,7 +19,42 @@
       --border-color: #e2e8f0;
       --shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
       --radius: 14px;
+      --input-bg: #ffffff;
+      --table-striped: #f8fafc;
+      --badge-genre-bg: #e0e7ff;
+      --badge-genre-text: #3730a3;
+      --badge-binding-bg: #fef3c7;
+      --badge-binding-text: #92400e;
+      --modal-header-bg: #f8fafc;
+      --desc-bg: #f1f5f9;
+      --toggle-bg: #ffffff;
+      --hover-bg: #f1f5f9;
     }
+
+    [data-theme="dark"] {
+      /* Dark Theme */
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: #1e293b;
+      --primary: #6366f1;
+      --primary-hover: #818cf8;
+      --accent: #fbbf24;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2);
+      --input-bg: #334155;
+      --table-striped: #334155;
+      --badge-genre-bg: #312e81;
+      --badge-genre-text: #a5b4fc;
+      --badge-binding-bg: #78350f;
+      --badge-binding-text: #fcd34d;
+      --modal-header-bg: #334155;
+      --desc-bg: #334155;
+      --toggle-bg: #334155;
+      --hover-bg: #475569;
+    }
+
+    * { transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease; }
 
     body {
       background: var(--bg-gradient);
@@ -28,14 +64,14 @@
       min-height: 100vh;
     }
 
-    .container { max-width: 900px; }
+    .container { max-width: 950px; }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
     }
 
     .btn-primary {
@@ -50,15 +86,21 @@
     .btn-warning:hover { background: #d97706; }
 
     .form-control, .form-select {
+      background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 0.6rem 0.8rem;
+      color: var(--text-main);
     }
     .form-control:focus, .form-select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      background: var(--input-bg);
+      color: var(--text-main);
     }
+    .form-control::placeholder { color: var(--text-muted); }
 
+    .table { color: var(--text-main); }
     .table th {
       background: var(--primary);
       color: white;
@@ -69,10 +111,10 @@
       padding: 0.8rem;
     }
     .table td { vertical-align: middle; padding: 0.75rem 0.8rem; }
-    .table-striped > tbody > tr:nth-of-type(odd) > td { background-color: #f8fafc; }
+    .table-striped > tbody > tr:nth-of-type(odd) > td { background-color: var(--table-striped); }
 
-    .badge-genre { background: #e0e7ff; color: #3730a3; font-weight: 500; }
-    .badge-binding { background: #fef3c7; color: #92400e; font-weight: 500; }
+    .badge-genre { background: var(--badge-genre-bg); color: var(--badge-genre-text); font-weight: 500; }
+    .badge-binding { background: var(--badge-binding-bg); color: var(--badge-binding-text); font-weight: 500; }
 
     .btn-action {
       width: 32px; height: 32px; padding: 0; display: inline-flex;
@@ -87,7 +129,6 @@
     }
     .clickable-title:hover { color: var(--primary-hover); text-decoration: underline; }
 
-    /* Toggle Section Animation */
     .books-section {
       max-height: 0;
       overflow: hidden;
@@ -99,39 +140,103 @@
       opacity: 1;
     }
 
-    .toggle-btn {
-      background: var(--card-bg);
+    .toggle-btn, .theme-toggle {
+      background: var(--toggle-bg);
       border: 1px solid var(--border-color);
-      color: var(--text-muted);
+      color: var(--text-main);
       border-radius: 50px;
       padding: 0.5rem 1.2rem;
       font-size: 0.9rem;
       transition: all 0.2s;
     }
-    .toggle-btn:hover {
+    .toggle-btn:hover, .theme-toggle:hover {
       color: var(--primary);
       border-color: var(--primary);
-      background: #f1f5f9;
+      background: var(--hover-bg);
     }
 
-    .modal-content { border-radius: var(--radius); border: none; }
-    .modal-header { background: #f8fafc; border-bottom: 1px solid var(--border-color); }
-    .modal-footer { background: #f8fafc; border-top: 1px solid var(--border-color); }
-    .modal-desc { white-space: pre-wrap; line-height: 1.6; }
+    .search-box {
+      position: relative;
+      max-width: 350px;
+    }
+    .search-box i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+    .search-box .form-control {
+      padding-left: 40px;
+    }
+
+    .modal-content { 
+      border-radius: var(--radius); 
+      border: none; 
+      background: var(--card-bg);
+      color: var(--text-main);
+    }
+    .modal-header { 
+      background: var(--modal-header-bg); 
+      border-bottom: 1px solid var(--border-color); 
+    }
+    .modal-footer { 
+      background: var(--modal-header-bg); 
+      border-top: 1px solid var(--border-color); 
+    }
+    .modal-desc { 
+      white-space: pre-wrap; 
+      line-height: 1.6; 
+      background: var(--desc-bg);
+      color: var(--text-main);
+    }
+    .modal-title { color: var(--text-main); }
+    .btn-close { filter: var(--text-main) === '#f1f5f9' ? invert(1) : none; }
 
     #loading { display: none; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .fade-in { animation: fadeIn 0.4s ease-in-out; }
+
+    .header-controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header & Toggle -->
+    <!-- Header with Controls -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
       <h2 class="mb-0 fw-bold">📖 Book Database</h2>
-      <button id="toggleBooksBtn" class="btn toggle-btn">
-        <i class="bi bi-chevron-down me-1"></i> Show Saved Books
-      </button>
+      <div class="header-controls">
+        <button id="themeToggle" class="btn theme-toggle" title="Toggle Dark Mode">
+          <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+          <span id="themeText">Dark</span>
+        </button>
+        <button id="toggleBooksBtn" class="btn toggle-btn">
+          <i class="bi bi-chevron-down me-1"></i> Show Saved Books
+        </button>
+      </div>
     </div>
 
     <!-- Alerts -->
@@ -196,13 +301,18 @@
     <div class="books-section" id="booksContainer">
       <div class="card">
         <div class="card-body p-4">
-          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
             <h5 class="card-title mb-0 fw-semibold">Saved Books</h5>
-            <div class="filter-box" style="max-width: 220px;">
-              <label for="genreFilter" class="form-label small text-muted mb-1">Filter by Genre</label>
-              <select id="genreFilter" class="form-select form-select-sm">
-                <option value="All">All Genres</option>
-              </select>
+            <div class="d-flex gap-2 flex-wrap">
+              <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="Search by title or author...">
+              </div>
+              <div class="filter-box" style="min-width: 180px;">
+                <select id="genreFilter" class="form-select form-select-sm">
+                  <option value="All">All Genres</option>
+                </select>
+              </div>
             </div>
           </div>
           
@@ -245,9 +355,9 @@
           <div class="mb-3 text-muted small">
             <strong>Added on:</strong> <span id="modalDate"></span>
           </div>
-          <hr class="my-3">
+          <hr class="my-3" style="border-color: var(--border-color);">
           <h6 class="fw-semibold mb-2">📖 Description</h6>
-          <div id="modalDesc" class="text-muted modal-desc bg-light p-3 rounded border"></div>
+          <div id="modalDesc" class="text-muted modal-desc p-3 rounded border" style="border-color: var(--border-color) !important;"></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
@@ -268,13 +378,42 @@
     const alertBox = document.getElementById('alertBox');
     const tableBody = document.getElementById('tableBody');
     const genreFilter = document.getElementById('genreFilter');
+    const searchInput = document.getElementById('searchInput');
     const bookModal = new bootstrap.Modal(document.getElementById('bookModal'));
     const toggleBtn = document.getElementById('toggleBooksBtn');
     const booksContainer = document.getElementById('booksContainer');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
 
     let allBooks = [];
     let editingId = null;
     let isBooksVisible = false;
+    let currentTheme = localStorage.getItem('theme') || 'light';
+
+    // Initialize Theme
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      
+      if (theme === 'dark') {
+        themeIcon.className = 'bi bi-sun-fill';
+        themeText.textContent = 'Light';
+      } else {
+        themeIcon.className = 'bi bi-moon-stars-fill';
+        themeText.textContent = 'Dark';
+      }
+    }
+
+    // Apply saved theme on load
+    applyTheme(currentTheme);
+
+    // Theme Toggle
+    themeToggle.addEventListener('click', () => {
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      currentTheme = newTheme;
+      applyTheme(newTheme);
+    });
 
     function showAlert(msg, type = 'success') {
       alertBox.className = `alert alert-${type} show rounded-3`;
@@ -363,7 +502,7 @@
         if (result.success) {
           allBooks = result.data;
           populateGenreFilter();
-          applyFilter();
+          applyFilters();
         } else {
           tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data.</td></tr>';
         }
@@ -395,15 +534,47 @@
       }
     }
 
-    function applyFilter() {
-      const selected = genreFilter.value;
-      const filtered = selected === 'All' ? allBooks : allBooks.filter(b => b.genre === selected);
+    function applyFilters() {
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      const selectedGenre = genreFilter.value;
+      
+      let filtered = allBooks;
+      
+      // Apply search filter
+      if (searchTerm) {
+        filtered = filtered.filter(book => 
+          book.bookName.toLowerCase().includes(searchTerm) ||
+          book.author.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Apply genre filter
+      if (selectedGenre !== 'All') {
+        filtered = filtered.filter(book => book.genre === selectedGenre);
+      }
+      
       renderTable(filtered);
     }
 
     function renderTable(books) {
       if (!books || books.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No books found.</td></tr>';
+        const searchTerm = searchInput.value.trim();
+        const selectedGenre = genreFilter.value;
+        let message = 'No books found.';
+        
+        if (searchTerm || selectedGenre !== 'All') {
+          message = 'No books match your filters.';
+        }
+        
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                <i class="bi bi-book"></i>
+                <p class="mb-0">${message}</p>
+              </div>
+            </td>
+          </tr>`;
         return;
       }
 
@@ -478,7 +649,9 @@
       }
     };
 
-    genreFilter.addEventListener('change', applyFilter);
+    // Search and Filter Events
+    searchInput.addEventListener('input', applyFilters);
+    genreFilter.addEventListener('change', applyFilters);
 
     // Load data silently on startup
     document.addEventListener('DOMContentLoaded', fetchBooks);
