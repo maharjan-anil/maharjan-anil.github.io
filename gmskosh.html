@@ -23,15 +23,7 @@
     .cancel-btn { background-color: #6c757d; margin-top: 10px; }
     .cancel-btn:hover { background-color: #5a6268; }
     
-    .logout-btn { 
-      background-color: #dc3545; 
-      width: auto; 
-      padding: 8px 12px; 
-      margin: 0; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-    }
+    .logout-btn { background-color: #dc3545; width: auto; padding: 8px 12px; margin: 0; display: flex; align-items: center; justify-content: center; }
     .logout-btn:hover { background-color: #c82333; }
     
     .hidden { display: none !important; }
@@ -39,25 +31,11 @@
     .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     
-    .table-container { 
-      overflow-y: auto; 
-      max-height: 500px; 
-      margin-top: 15px; 
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-    }
+    .table-container { overflow-y: auto; max-height: 500px; margin-top: 15px; border: 1px solid #e0e0e0; border-radius: 6px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; }
     th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: right; }
     th:first-child, td:first-child { text-align: left; }
-    th { 
-      background-color: #f8f9fa; 
-      color: #333; 
-      font-weight: 600; 
-      position: sticky; 
-      top: 0; 
-      z-index: 10; 
-      box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-    }
+    th { background-color: #f8f9fa; color: #333; font-weight: 600; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); }
     tr:nth-child(even) { background-color: #fcfcfc; }
     tfoot tr { background-color: #e8f0fe; font-weight: bold; }
     tfoot td { position: sticky; bottom: 0; background-color: #e8f0fe; z-index: 5; box-shadow: 0 -2px 2px -1px rgba(0, 0, 0, 0.1); }
@@ -68,49 +46,13 @@
     .edit-btn:hover { background-color: #e0a800; }
     .admin-controls { background-color: #e8f0fe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #1a73e8; }
     
-    /* NEW SUMMARY GRID STYLES */
-    .kosh-summary { 
-      background-color: #e6f4ea; 
-      padding: 20px; 
-      border-radius: 10px; 
-      margin-bottom: 20px; 
-      border: 1px solid #28a745; 
-    }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      text-align: center;
-      margin-top: 15px;
-    }
-    .summary-item {
-      background: white;
-      padding: 15px 10px;
-      border-radius: 8px;
-      border: 1px solid #c3e6cb;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .summary-item label {
-      display: block;
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    .summary-item div {
-      font-weight: bold;
-      font-size: 18px;
-      color: #155724;
-    }
-    .summary-item.highlight-blue div {
-      color: #0056b3;
-      font-size: 20px;
-    }
-    .summary-item.highlight-red div {
-      color: #d9534f;
-      font-size: 22px;
-    }
-
+    .kosh-summary { background-color: #e6f4ea; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #28a745; }
+    .loan-summary { background-color: #e7f1ff; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #0d6efd; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center; margin-top: 15px; }
+    .summary-item { background: white; padding: 15px 10px; border-radius: 8px; border: 1px solid #dee2e6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .summary-item label { display: block; font-size: 13px; color: #555; margin-bottom: 8px; font-weight: 600; }
+    .summary-item div { font-weight: bold; font-size: 18px; }
+    
     .section-title { font-size: 15px; font-weight: bold; color: #1a73e8; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
     .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .dashboard-header h2 { text-align: left; margin: 0; }
@@ -146,6 +88,37 @@
       
       <div id="dash-msg" class="message hidden"></div>
       
+      <!-- MEMBER LOAN SUMMARY (Visible to All) -->
+      <div id="member-loan-summary" class="loan-summary hidden">
+        <h3 style="margin-top:0; border-bottom: 2px solid #0d6efd; color: #084298;">💳 Member Loan Status</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Loan Amount</label>
+            <div id="member-loan-amt" style="color: #0d6efd;">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Total Loan Interest</label>
+            <div id="member-loan-interest" style="color: #0d6efd;">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Loan Installment Paid</label>
+            <div id="member-loan-install" style="color: #198754;">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Remaining Loan Balance</label>
+            <div id="member-loan-remaining" style="color: #dc3545; font-size: 20px;">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Loan Taken Date</label>
+            <div id="member-loan-taken-date" style="color: #555; font-size: 16px;">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Maturity Date</label>
+            <div id="member-maturity-date" style="color: #555; font-size: 16px;">-</div>
+          </div>
+        </div>
+      </div>
+
       <!-- OVERALL KOSH SUMMARY (Visible to Admin) -->
       <div id="overall-kosh-summary" class="kosh-summary hidden">
         <h3 style="margin-top:0; border-bottom: 2px solid #28a745; color: #155724;">🏦 Overall Kosh Summary (All 6 Members)</h3>
@@ -158,9 +131,9 @@
             <label>Total Loan Amount</label>
             <div id="sum-all-loan-amt">-</div>
           </div>
-          <div class="summary-item highlight-blue">
+          <div class="summary-item">
             <label>Total Balance after Loan</label>
-            <div id="sum-all-balance-after-loan">-</div>
+            <div id="sum-all-balance-after-loan" style="color: #0056b3;">-</div>
           </div>
           <div class="summary-item">
             <label>Loan Installment Paid</label>
@@ -170,9 +143,9 @@
             <label>Loan Interest Balance</label>
             <div id="sum-all-loan-interest">-</div>
           </div>
-          <div class="summary-item highlight-red">
-            <label>Remaining Total Balance</label>
-            <div id="sum-all-grand-total">-</div>
+          <div class="summary-item">
+            <label style="color:#d9534f;">Remaining Total Balance</label>
+            <div id="sum-all-grand-total" style="color: #d9534f; font-size: 20px;">-</div>
           </div>
         </div>
       </div>
@@ -205,6 +178,13 @@
           <div class="form-group"><label>Year (B.S.)</label><select id="l-year"></select></div>
           <div class="form-group"><label>Month</label><select id="l-month"></select></div>
           <div class="form-group"><label>Day</label><select id="l-day"></select></div>
+        </div>
+
+        <div class="section-title" style="margin-top: 15px;">Loan Maturity Date (If Applicable)</div>
+        <div class="form-row">
+          <div class="form-group"><label>Year (B.S.)</label><select id="m-year"></select></div>
+          <div class="form-group"><label>Month</label><select id="m-month"></select></div>
+          <div class="form-group"><label>Day</label><select id="m-day"></select></div>
         </div>
 
         <div class="section-title" style="margin-top: 15px;">Financial Details</div>
@@ -267,20 +247,23 @@
     let currentTransactionsData = [];
 
     function populateDateDropdowns() {
-      const selects = ['t-year', 'l-year', 't-month', 'l-month', 't-day', 'l-day'];
+      const selects = ['t-year', 'l-year', 'm-year', 't-month', 'l-month', 'm-month', 't-day', 'l-day', 'm-day'];
       selects.forEach(id => document.getElementById(id).innerHTML = '<option value="">-- Select --</option>');
 
       for (let y = 2078; y <= 2088; y++) {
         document.getElementById('t-year').add(new Option(y, y));
         document.getElementById('l-year').add(new Option(y, y));
+        document.getElementById('m-year').add(new Option(y, y));
       }
       ["Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin", "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"].forEach(m => {
         document.getElementById('t-month').add(new Option(m, m));
         document.getElementById('l-month').add(new Option(m, m));
+        document.getElementById('m-month').add(new Option(m, m));
       });
       for (let d = 1; d <= 32; d++) {
         document.getElementById('t-day').add(new Option(d, d));
         document.getElementById('l-day').add(new Option(d, d));
+        document.getElementById('m-day').add(new Option(d, d));
       }
     }
     populateDateDropdowns();
@@ -358,12 +341,7 @@
       try {
         const res = await callGAS({ action: 'getOverallSummary' });
         if (res.success && res.data) {
-          // Format to 2 decimal places. Show "0.00" if the value is exactly 0.
-          const fmt = (val) => { 
-            const num = parseFloat(val); 
-            return (val === null || val === undefined || isNaN(num)) ? "-" : num.toFixed(2); 
-          };
-          
+          const fmt = (val) => { const num = parseFloat(val); return (isNaN(num)) ? "-" : num.toFixed(2); };
           document.getElementById('sum-all-deposit').textContent = fmt(res.data.deposit);
           document.getElementById('sum-all-loan-amt').textContent = fmt(res.data.loanAmt);
           document.getElementById('sum-all-balance-after-loan').textContent = fmt(res.data.balanceAfterLoan);
@@ -386,7 +364,7 @@
       document.getElementById('form-title').innerHTML = '➕ Add Transaction <span class="admin-badge">ADMIN ONLY</span>';
       document.getElementById('store-btn').textContent = 'Save Transaction';
       document.getElementById('cancel-edit-btn').classList.add('hidden');
-      ['t-year', 't-month', 't-day', 'l-year', 'l-month', 'l-day', 'tx-deposit', 'tx-loan-install', 'tx-loan-interest', 'tx-loan-amount', 'tx-fine', 'tx-grand-total'].forEach(id => document.getElementById(id).value = "");
+      ['t-year', 't-month', 't-day', 'l-year', 'l-month', 'l-day', 'm-year', 'm-month', 'm-day', 'tx-deposit', 'tx-loan-install', 'tx-loan-interest', 'tx-loan-amount', 'tx-fine', 'tx-grand-total'].forEach(id => document.getElementById(id).value = "");
     }
 
     function editTransaction(rowIndex) {
@@ -404,6 +382,10 @@
       document.getElementById('l-year').value = row.lYear || "";
       document.getElementById('l-month').value = row.lMonth || "";
       document.getElementById('l-day').value = row.lDay || "";
+      document.getElementById('m-year').value = row.mYear || "";
+      document.getElementById('m-month').value = row.mMonth || "";
+      document.getElementById('m-day').value = row.mDay || "";
+      
       document.getElementById('tx-deposit').value = row.deposit || '';
       document.getElementById('tx-loan-install').value = row.loanInstall || '';
       document.getElementById('tx-loan-interest').value = row.loanInterest || '';
@@ -421,6 +403,9 @@
       const lYear = document.getElementById('l-year').value;
       const lMonth = document.getElementById('l-month').value;
       const lDay = document.getElementById('l-day').value;
+      const mYear = document.getElementById('m-year').value;
+      const mMonth = document.getElementById('m-month').value;
+      const mDay = document.getElementById('m-day').value;
       const deposit = document.getElementById('tx-deposit').value || 0;
       const loanInstall = document.getElementById('tx-loan-install').value || 0;
       const loanInterest = document.getElementById('tx-loan-interest').value || 0;
@@ -434,7 +419,7 @@
       const btnText = isEditMode ? 'Update Transaction' : 'Save Transaction';
       toggleLoading('store-btn', true, btnText);
       try {
-        const payload = { action: actionType, tabName: currentTabName, tYear, tMonth, tDay, lYear, lMonth, lDay, deposit, loanInstall, loanInterest, loanAmt, fine, grandTotal };
+        const payload = { action: actionType, tabName: currentTabName, tYear, tMonth, tDay, lYear, lMonth, lDay, mYear, mMonth, mDay, deposit, loanInstall, loanInterest, loanAmt, fine, grandTotal };
         if (isEditMode) payload.rowIndex = rowIndex;
         const res = await callGAS(payload);
         showMessage('dash-msg', res.message, !res.success);
@@ -457,14 +442,35 @@
         const res = await callGAS({ action: 'fetch', tabName: currentTabName });
         tbody.innerHTML = '';
         currentTransactionsData = res.data || [];
+        
         if (currentTransactionsData.length === 0) {
           tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding: 20px; color: #666;">No transactions found yet.</td></tr>`;
+          document.getElementById('member-loan-amt').textContent = "0.00";
+          document.getElementById('member-loan-interest').textContent = "0.00";
+          document.getElementById('member-loan-install').textContent = "0.00";
+          document.getElementById('member-loan-remaining').textContent = "0.00";
+          document.getElementById('member-loan-taken-date').textContent = "-";
+          document.getElementById('member-maturity-date').textContent = "-";
+          document.getElementById('member-loan-summary').classList.remove('hidden');
           return;
         }
 
         let totals = { deposit: 0, loanInstall: 0, loanInterest: 0, loanAmt: 0, fine: 0, grandTotal: 0 };
         let currentYear = '';
-        const fmt = (val) => { const num = parseFloat(val); return (!val || num === 0 || isNaN(num)) ? "-" : num.toFixed(2); };
+        let latestLoanTakenDate = "-";
+        let latestMaturityDate = "-";
+        
+        const fmt = (val) => { const num = parseFloat(val); return (isNaN(num)) ? "-" : num.toFixed(2); };
+
+        // Find the latest loan dates (iterate backwards since data is sorted ascending)
+        for (let i = currentTransactionsData.length - 1; i >= 0; i--) {
+          const row = currentTransactionsData[i];
+          if (parseFloat(row.loanAmt) > 0 || (row.lYear && row.lMonth)) {
+            latestLoanTakenDate = (row.lYear && row.lMonth && row.lDay) ? `${row.lYear} ${row.lMonth} ${row.lDay}` : "-";
+            latestMaturityDate = (row.mYear && row.mMonth && row.mDay) ? `${row.mYear} ${row.mMonth} ${row.mDay}` : "-";
+            break;
+          }
+        }
 
         currentTransactionsData.forEach(row => {
           totals.deposit += parseFloat(row.deposit) || 0;
@@ -500,6 +506,17 @@
           tbody.appendChild(tr);
         });
 
+        // --- UPDATE MEMBER LOAN SUMMARY ---
+        const remainingLoan = totals.loanAmt - totals.loanInstall;
+        document.getElementById('member-loan-amt').textContent = fmt(totals.loanAmt);
+        document.getElementById('member-loan-interest').textContent = fmt(totals.loanInterest);
+        document.getElementById('member-loan-install').textContent = fmt(totals.loanInstall);
+        document.getElementById('member-loan-remaining').textContent = fmt(remainingLoan);
+        document.getElementById('member-loan-taken-date').textContent = latestLoanTakenDate;
+        document.getElementById('member-maturity-date').textContent = latestMaturityDate;
+        document.getElementById('member-loan-summary').classList.remove('hidden');
+
+        // Update Member Transaction Totals (Footer)
         document.getElementById('sum-deposit').textContent = fmt(totals.deposit);
         document.getElementById('sum-loan-install').textContent = fmt(totals.loanInstall);
         document.getElementById('sum-loan-interest').textContent = fmt(totals.loanInterest);
@@ -507,6 +524,7 @@
         document.getElementById('sum-fine').textContent = fmt(totals.fine);
         document.getElementById('sum-grand-total').textContent = fmt(totals.grandTotal);
         document.getElementById('tx-foot').classList.remove('hidden');
+        
       } catch (err) {
         tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding: 20px; color: red;">Error: ${err.message}</td></tr>`;
       }
@@ -521,6 +539,7 @@
       document.getElementById('login-password').value = '';
       document.getElementById('tx-body').innerHTML = '';
       document.getElementById('tx-foot').classList.add('hidden');
+      document.getElementById('member-loan-summary').classList.add('hidden');
       cancelEdit();
       showView('login-view');
     }
