@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kosh Management System</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+    .container { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #1a73e8; margin-top: 0; }
+    h3 { color: #555; border-bottom: 2px solid #1a73e8; padding-bottom: 5px; margin-top: 25px; }
+    .form-group { margin-bottom: 15px; }
+    .form-row { display: flex; gap: 15px; flex-wrap: wrap; }
+    .form-row .form-group { flex: 1; min-width: 120px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; color: #555; font-size: 14px; }
+    input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+    input:focus, select:focus { border-color: #1a73e8; outline: none; }
+    button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; margin-top: 10px; transition: background 0.3s; }
+    button:hover { background-color: #1557b0; }
+    button:disabled { background-color: #ccc; cursor: not-allowed; }
+    .secondary-btn { background-color: #f8f9fa; color: #1a73e8; border: 1px solid #1a73e8; }
+    .secondary-btn:hover { background-color: #e8f0fe; }
+    .cancel-btn { background-color: #6c757d; margin-top: 10px; }
+    .cancel-btn:hover { background-color: #5a6268; }
+    
+    .logout-btn { 
+      background-color: #dc3545; 
+      width: auto; 
+      padding: 8px 12px; 
+      margin: 0; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+    }
+    .logout-btn:hover { background-color: #c82333; }
+    
+    .hidden { display: none !important; }
+    .message { padding: 12px; margin-bottom: 15px; border-radius: 6px; text-align: center; font-size: 14px; font-weight: 500; }
+    .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    
+    .table-container { 
+      overflow-y: auto; 
+      max-height: 500px; 
+      margin-top: 15px; 
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; }
+    th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    th { 
+      background-color: #f8f9fa; 
+      color: #333; 
+      font-weight: 600; 
+      position: sticky; 
+      top: 0; 
+      z-index: 10; 
+      box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+    tr:nth-child(even) { background-color: #fcfcfc; }
+    tfoot tr { background-color: #e8f0fe; font-weight: bold; }
+    tfoot td { position: sticky; bottom: 0; background-color: #e8f0fe; z-index: 5; box-shadow: 0 -2px 2px -1px rgba(0, 0, 0, 0.1); }
+    
+    .year-header { background-color: #1a73e8; color: white; font-weight: bold; text-align: left; padding-left: 15px !important; font-size: 14px; }
+    .admin-badge { background-color: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 8px; vertical-align: middle; }
+    .edit-btn { background-color: #ffc107; color: #000; padding: 6px 12px; font-size: 12px; margin-top: 0; width: auto; border-radius: 4px; border: none; cursor: pointer; }
+    .edit-btn:hover { background-color: #e0a800; }
+    .admin-controls { background-color: #e8f0fe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #1a73e8; }
+    
+    /* NEW SUMMARY GRID STYLES */
+    .kosh-summary { 
+      background-color: #e6f4ea; 
+      padding: 20px; 
+      border-radius: 10px; 
+      margin-bottom: 20px; 
+      border: 1px solid #28a745; 
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      text-align: center;
+      margin-top: 15px;
+    }
+    .summary-item {
+      background: white;
+      padding: 15px 10px;
+      border-radius: 8px;
+      border: 1px solid #c3e6cb;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .summary-item label {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .summary-item div {
+      font-weight: bold;
+      font-size: 18px;
+      color: #155724;
+    }
+    .summary-item.highlight-blue div {
+      color: #0056b3;
+      font-size: 20px;
+    }
+    .summary-item.highlight-red div {
+      color: #d9534f;
+      font-size: 22px;
+    }
+
+    .section-title { font-size: 15px; font-weight: bold; color: #1a73e8; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .dashboard-header h2 { text-align: left; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="login-view">
+      <h2>🏦 Kosh Management Login</h2>
+      <div id="login-msg" class="message hidden"></div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-username" placeholder="Enter your username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Enter your password">
+      </div>
+      <button id="login-btn" onclick="handleLogin()">Login</button>
+    </div>
+
+    <div id="dashboard-view" class="hidden">
+      <div class="dashboard-header">
+        <h2 id="welcome-msg">Welcome</h2>
+        <button class="logout-btn" onclick="logout()" title="Logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="dash-msg" class="message hidden"></div>
+      
+      <!-- OVERALL KOSH SUMMARY (Visible to Admin) -->
+      <div id="overall-kosh-summary" class="kosh-summary hidden">
+        <h3 style="margin-top:0; border-bottom: 2px solid #28a745; color: #155724;">🏦 Overall Kosh Summary (All 6 Members)</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Total Deposit</label>
+            <div id="sum-all-deposit">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Total Loan Amount</label>
+            <div id="sum-all-loan-amt">-</div>
+          </div>
+          <div class="summary-item highlight-blue">
+            <label>Total Balance after Loan</label>
+            <div id="sum-all-balance-after-loan">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Loan Installment Paid</label>
+            <div id="sum-all-loan-install">-</div>
+          </div>
+          <div class="summary-item">
+            <label>Loan Interest Balance</label>
+            <div id="sum-all-loan-interest">-</div>
+          </div>
+          <div class="summary-item highlight-red">
+            <label>Remaining Total Balance</label>
+            <div id="sum-all-grand-total">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="admin-controls-section" class="admin-controls hidden">
+        <label style="color: #1a73e8; font-weight: bold;">👑 Admin Controls: Select Member to View/Edit</label>
+        <select id="admin-member-select" onchange="handleAdminMemberChange()" style="margin-top: 8px; border-color: #1a73e8;">
+          <option value="Member1">Anil Maharjan (Member1)</option>
+          <option value="Member2">Bindu Maharjan (Member2)</option>
+          <option value="Member3">Manisha Maharjan (Member3)</option>
+          <option value="Member4">Rajeep Maharjan (Member4)</option>
+          <option value="Member5">Sajina Barahi (Member5)</option>
+          <option value="Member6">Supreme Chitrakar (Member6)</option>
+        </select>
+      </div>
+
+      <div id="add-transaction-section" class="hidden">
+        <h3 id="form-title">➕ Add Transaction <span class="admin-badge">ADMIN ONLY</span></h3>
+        <input type="hidden" id="edit-row-index" value="">
+        
+        <div class="section-title">Transaction Date</div>
+        <div class="form-row">
+          <div class="form-group"><label>Year (B.S.)</label><select id="t-year"></select></div>
+          <div class="form-group"><label>Month</label><select id="t-month"></select></div>
+          <div class="form-group"><label>Day</label><select id="t-day"></select></div>
+        </div>
+
+        <div class="section-title" style="margin-top: 15px;">Loan Taken Date (If Applicable)</div>
+        <div class="form-row">
+          <div class="form-group"><label>Year (B.S.)</label><select id="l-year"></select></div>
+          <div class="form-group"><label>Month</label><select id="l-month"></select></div>
+          <div class="form-group"><label>Day</label><select id="l-day"></select></div>
+        </div>
+
+        <div class="section-title" style="margin-top: 15px;">Financial Details</div>
+        <div class="form-row">
+          <div class="form-group"><label>Deposit Amount</label><input type="number" id="tx-deposit" placeholder="0.00" step="0.01"></div>
+          <div class="form-group"><label>Loan Installment</label><input type="number" id="tx-loan-install" placeholder="0.00" step="0.01"></div>
+          <div class="form-group"><label>Loan Interest Amount</label><input type="number" id="tx-loan-interest" placeholder="0.00" step="0.01"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Loan Amount</label><input type="number" id="tx-loan-amount" placeholder="0.00" step="0.01"></div>
+          <div class="form-group"><label>Fine</label><input type="number" id="tx-fine" placeholder="0.00" step="0.01"></div>
+          <div class="form-group"><label>Grand Total</label><input type="number" id="tx-grand-total" placeholder="0.00" step="0.01"></div>
+        </div>
+        <button id="store-btn" onclick="handleStore()">Save Transaction</button>
+        <button id="cancel-edit-btn" class="cancel-btn hidden" onclick="cancelEdit()">Cancel Edit</button>
+      </div>
+      
+      <h3>📜 Transaction History</h3>
+      <button class="secondary-btn" onclick="handleFetch()" style="margin-bottom: 10px; width: auto; padding: 8px 16px;">🔄 Refresh Data</button>
+      
+      <div class="table-container">
+        <table id="tx-table">
+          <thead>
+            <tr>
+              <th>Trans Date</th>
+              <th>Loan Taken Date</th>
+              <th>Deposit</th>
+              <th>Loan Install.</th>
+              <th>Loan Interest</th>
+              <th>Loan Amt</th>
+              <th>Fine</th>
+              <th>Grand Total</th>
+              <th id="action-header" class="hidden">Action</th>
+            </tr>
+          </thead>
+          <tbody id="tx-body"></tbody>
+          <tfoot id="tx-foot" class="hidden">
+            <tr>
+              <td colspan="2" style="text-align: right;">TOTAL:</td>
+              <td id="sum-deposit">-</td>
+              <td id="sum-loan-install">-</td>
+              <td id="sum-loan-interest">-</td>
+              <td id="sum-loan-amt">-</td>
+              <td id="sum-fine">-</td>
+              <td id="sum-grand-total">-</td>
+              <td id="sum-action" class="hidden"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzRFiNkrWT0zdyUNsHUiW9bMh5DbqV0UZ-pnRMhfTmtxeCi8Vw6OWcv53lBLt8b6p3m/exec";
+    
+    let currentTabName = '';
+    let currentUserRole = 'Member';
+    let isEditMode = false;
+    let currentTransactionsData = [];
+
+    function populateDateDropdowns() {
+      const selects = ['t-year', 'l-year', 't-month', 'l-month', 't-day', 'l-day'];
+      selects.forEach(id => document.getElementById(id).innerHTML = '<option value="">-- Select --</option>');
+
+      for (let y = 2078; y <= 2088; y++) {
+        document.getElementById('t-year').add(new Option(y, y));
+        document.getElementById('l-year').add(new Option(y, y));
+      }
+      ["Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin", "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"].forEach(m => {
+        document.getElementById('t-month').add(new Option(m, m));
+        document.getElementById('l-month').add(new Option(m, m));
+      });
+      for (let d = 1; d <= 32; d++) {
+        document.getElementById('t-day').add(new Option(d, d));
+        document.getElementById('l-day').add(new Option(d, d));
+      }
+    }
+    populateDateDropdowns();
+
+    function showView(viewId) {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('dashboard-view').classList.add('hidden');
+      document.getElementById(viewId).classList.remove('hidden');
+      clearMessages();
+    }
+
+    function showMessage(elementId, text, isError = false) {
+      const el = document.getElementById(elementId);
+      el.textContent = text;
+      el.className = 'message ' + (isError ? 'error' : 'success');
+      el.classList.remove('hidden');
+    }
+
+    function clearMessages() { document.querySelectorAll('.message').forEach(el => el.classList.add('hidden')); }
+
+    function toggleLoading(btnId, isLoading, defaultText) {
+      const btn = document.getElementById(btnId);
+      btn.disabled = isLoading;
+      btn.textContent = isLoading ? 'Processing...' : defaultText;
+    }
+
+    async function callGAS(params) {
+      if (WEB_APP_URL === "PASTE_YOUR_WEB_APP_URL_HERE" || WEB_APP_URL === "") throw new Error("Please update the WEB_APP_URL variable.");
+      const queryString = new URLSearchParams(params).toString();
+      const url = WEB_APP_URL + (WEB_APP_URL.includes('?') ? '&' : '?') + queryString;
+      const response = await fetch(url, { method: 'GET' });
+      const text = await response.text();
+      if (text.trim().startsWith('<')) throw new Error("Google returned an HTML page. Check Web App URL (/exec) and 'Who has access' (Anyone).");
+      return JSON.parse(text);
+    }
+
+    async function handleLogin() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      if (!username || !password) { showMessage('login-msg', 'Please enter both username and password.', true); return; }
+
+      toggleLoading('login-btn', true, 'Login');
+      try {
+        const res = await callGAS({ action: 'login', username, password });
+        if (res.success) {
+          currentTabName = res.tabName;
+          currentUserRole = res.role; 
+          let welcomeText = 'Welcome, ' + res.memberName;
+          if (currentUserRole === 'Admin') welcomeText += ' <span class="admin-badge">ADMIN</span>';
+          document.getElementById('welcome-msg').innerHTML = welcomeText;
+          showView('dashboard-view');
+          
+          if (currentUserRole === 'Admin') {
+            document.getElementById('overall-kosh-summary').classList.remove('hidden');
+            document.getElementById('admin-controls-section').classList.remove('hidden');
+            document.getElementById('add-transaction-section').classList.remove('hidden');
+            document.getElementById('action-header').classList.remove('hidden');
+            document.getElementById('sum-action').classList.remove('hidden');
+            document.getElementById('admin-member-select').value = currentTabName;
+            fetchOverallSummary();
+          } else {
+            document.getElementById('overall-kosh-summary').classList.add('hidden');
+            document.getElementById('admin-controls-section').classList.add('hidden');
+            document.getElementById('add-transaction-section').classList.add('hidden');
+            document.getElementById('action-header').classList.add('hidden');
+            document.getElementById('sum-action').classList.add('hidden');
+          }
+          handleFetch();
+        } else { showMessage('login-msg', res.message, true); }
+      } catch (err) { showMessage('login-msg', 'Error: ' + err.message, true); }
+      toggleLoading('login-btn', false, 'Login');
+    }
+
+    async function fetchOverallSummary() {
+      try {
+        const res = await callGAS({ action: 'getOverallSummary' });
+        if (res.success && res.data) {
+          // Format to 2 decimal places. Show "0.00" if the value is exactly 0.
+          const fmt = (val) => { 
+            const num = parseFloat(val); 
+            return (val === null || val === undefined || isNaN(num)) ? "-" : num.toFixed(2); 
+          };
+          
+          document.getElementById('sum-all-deposit').textContent = fmt(res.data.deposit);
+          document.getElementById('sum-all-loan-amt').textContent = fmt(res.data.loanAmt);
+          document.getElementById('sum-all-balance-after-loan').textContent = fmt(res.data.balanceAfterLoan);
+          document.getElementById('sum-all-loan-install').textContent = fmt(res.data.loanInstall);
+          document.getElementById('sum-all-loan-interest').textContent = fmt(res.data.loanInterest);
+          document.getElementById('sum-all-grand-total').textContent = fmt(res.data.remainingTotalBalance);
+        }
+      } catch (err) { console.error("Failed to fetch overall summary:", err); }
+    }
+
+    function handleAdminMemberChange() {
+      currentTabName = document.getElementById('admin-member-select').value;
+      cancelEdit();
+      handleFetch();
+    }
+
+    function cancelEdit() {
+      isEditMode = false;
+      document.getElementById('edit-row-index').value = '';
+      document.getElementById('form-title').innerHTML = '➕ Add Transaction <span class="admin-badge">ADMIN ONLY</span>';
+      document.getElementById('store-btn').textContent = 'Save Transaction';
+      document.getElementById('cancel-edit-btn').classList.add('hidden');
+      ['t-year', 't-month', 't-day', 'l-year', 'l-month', 'l-day', 'tx-deposit', 'tx-loan-install', 'tx-loan-interest', 'tx-loan-amount', 'tx-fine', 'tx-grand-total'].forEach(id => document.getElementById(id).value = "");
+    }
+
+    function editTransaction(rowIndex) {
+      const row = currentTransactionsData.find(r => r.rowIndex === rowIndex);
+      if (!row) return;
+      isEditMode = true;
+      document.getElementById('edit-row-index').value = row.rowIndex;
+      document.getElementById('form-title').innerHTML = '✏️ Edit Transaction <span class="admin-badge">ADMIN ONLY</span>';
+      document.getElementById('store-btn').textContent = 'Update Transaction';
+      document.getElementById('cancel-edit-btn').classList.remove('hidden');
+      
+      document.getElementById('t-year').value = row.tYear || "";
+      document.getElementById('t-month').value = row.tMonth || "";
+      document.getElementById('t-day').value = row.tDay || "";
+      document.getElementById('l-year').value = row.lYear || "";
+      document.getElementById('l-month').value = row.lMonth || "";
+      document.getElementById('l-day').value = row.lDay || "";
+      document.getElementById('tx-deposit').value = row.deposit || '';
+      document.getElementById('tx-loan-install').value = row.loanInstall || '';
+      document.getElementById('tx-loan-interest').value = row.loanInterest || '';
+      document.getElementById('tx-loan-amount').value = row.loanAmt || '';
+      document.getElementById('tx-fine').value = row.fine || '';
+      document.getElementById('tx-grand-total').value = row.grandTotal || '';
+      document.getElementById('add-transaction-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function handleStore() {
+      const rowIndex = document.getElementById('edit-row-index').value;
+      const tYear = document.getElementById('t-year').value;
+      const tMonth = document.getElementById('t-month').value;
+      const tDay = document.getElementById('t-day').value;
+      const lYear = document.getElementById('l-year').value;
+      const lMonth = document.getElementById('l-month').value;
+      const lDay = document.getElementById('l-day').value;
+      const deposit = document.getElementById('tx-deposit').value || 0;
+      const loanInstall = document.getElementById('tx-loan-install').value || 0;
+      const loanInterest = document.getElementById('tx-loan-interest').value || 0;
+      const loanAmt = document.getElementById('tx-loan-amount').value || 0;
+      const fine = document.getElementById('tx-fine').value || 0;
+      const grandTotal = document.getElementById('tx-grand-total').value || 0;
+
+      if (!tYear || !tMonth || !tDay) { showMessage('dash-msg', 'Transaction Date (Year, Month, Day) is required.', true); return; }
+
+      const actionType = isEditMode ? 'update' : 'store';
+      const btnText = isEditMode ? 'Update Transaction' : 'Save Transaction';
+      toggleLoading('store-btn', true, btnText);
+      try {
+        const payload = { action: actionType, tabName: currentTabName, tYear, tMonth, tDay, lYear, lMonth, lDay, deposit, loanInstall, loanInterest, loanAmt, fine, grandTotal };
+        if (isEditMode) payload.rowIndex = rowIndex;
+        const res = await callGAS(payload);
+        showMessage('dash-msg', res.message, !res.success);
+        if (res.success) {
+          cancelEdit();
+          handleFetch();
+          if (currentUserRole === 'Admin') fetchOverallSummary();
+        }
+      } catch (err) { showMessage('dash-msg', 'Error: ' + err.message, true); }
+      toggleLoading('store-btn', false, btnText);
+    }
+
+    async function handleFetch() {
+      const tbody = document.getElementById('tx-body');
+      const colCount = currentUserRole === 'Admin' ? 9 : 8;
+      tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding: 20px; color: #666;">Loading data...</td></tr>`;
+      document.getElementById('tx-foot').classList.add('hidden');
+      
+      try {
+        const res = await callGAS({ action: 'fetch', tabName: currentTabName });
+        tbody.innerHTML = '';
+        currentTransactionsData = res.data || [];
+        if (currentTransactionsData.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding: 20px; color: #666;">No transactions found yet.</td></tr>`;
+          return;
+        }
+
+        let totals = { deposit: 0, loanInstall: 0, loanInterest: 0, loanAmt: 0, fine: 0, grandTotal: 0 };
+        let currentYear = '';
+        const fmt = (val) => { const num = parseFloat(val); return (!val || num === 0 || isNaN(num)) ? "-" : num.toFixed(2); };
+
+        currentTransactionsData.forEach(row => {
+          totals.deposit += parseFloat(row.deposit) || 0;
+          totals.loanInstall += parseFloat(row.loanInstall) || 0;
+          totals.loanInterest += parseFloat(row.loanInterest) || 0;
+          totals.loanAmt += parseFloat(row.loanAmt) || 0;
+          totals.fine += parseFloat(row.fine) || 0;
+          totals.grandTotal += parseFloat(row.grandTotal) || 0;
+
+          if (row.tYear !== currentYear) {
+            currentYear = row.tYear;
+            const yearRow = document.createElement('tr');
+            yearRow.innerHTML = `<td colspan="${colCount}" class="year-header">📅 Year: ${currentYear} B.S.</td>`;
+            tbody.appendChild(yearRow);
+          }
+
+          const tr = document.createElement('tr');
+          const transDate = `${row.tYear} ${row.tMonth} ${row.tDay}`;
+          const loanDate = (row.lYear && row.lMonth && row.lDay) ? `${row.lYear} ${row.lMonth} ${row.lDay}` : '-';
+          let actionCell = currentUserRole === 'Admin' ? `<td><button class="edit-btn" onclick="editTransaction(${row.rowIndex})">Edit</button></td>` : '';
+          
+          tr.innerHTML = `
+            <td>${transDate}</td>
+            <td>${loanDate}</td>
+            <td>${fmt(row.deposit)}</td>
+            <td>${fmt(row.loanInstall)}</td>
+            <td>${fmt(row.loanInterest)}</td>
+            <td>${fmt(row.loanAmt)}</td>
+            <td>${fmt(row.fine)}</td>
+            <td style="font-weight:bold;">${fmt(row.grandTotal)}</td>
+            ${actionCell}
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById('sum-deposit').textContent = fmt(totals.deposit);
+        document.getElementById('sum-loan-install').textContent = fmt(totals.loanInstall);
+        document.getElementById('sum-loan-interest').textContent = fmt(totals.loanInterest);
+        document.getElementById('sum-loan-amt').textContent = fmt(totals.loanAmt);
+        document.getElementById('sum-fine').textContent = fmt(totals.fine);
+        document.getElementById('sum-grand-total').textContent = fmt(totals.grandTotal);
+        document.getElementById('tx-foot').classList.remove('hidden');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding: 20px; color: red;">Error: ${err.message}</td></tr>`;
+      }
+    }
+
+    function logout() {
+      currentTabName = '';
+      currentUserRole = 'Member';
+      isEditMode = false;
+      currentTransactionsData = [];
+      document.getElementById('login-username').value = '';
+      document.getElementById('login-password').value = '';
+      document.getElementById('tx-body').innerHTML = '';
+      document.getElementById('tx-foot').classList.add('hidden');
+      cancelEdit();
+      showView('login-view');
+    }
+  </script>
+</body>
+</html>
