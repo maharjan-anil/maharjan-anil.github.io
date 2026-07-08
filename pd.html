@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Directory</title>
+    <meta name="description" content="Search our phone directory">
+    <meta name="theme-color" content="#0d6efd">
+    
+    <!-- PWA Manifest & Icon -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Phone Directory","short_name":"Directory","start_url":".","display":"standalone","background_color":"%23f4f7f6","theme_color":"%230d6efd","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBkNmVmZCIgcng9IjEwMCIvPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNMTYwIDY0Yy0xNy43IDAtMzIgMTQuMy0zMiAzMnYzMjBjMCAxNy43IDE0LjMgMzIgMzIgMzJoMTkyYzE3LjcgMCAzMi0xNC4zIDMyLTMyVjk2YzAtMTcuNy0xNC4zLTMyLTMyLTMySDE2MHptOTYgMzUyYy0xMy4zIDAtMjQtMTAuNy0yNC0yNHMxMC43LTI0IDI0LTI0IDI0IDEwLjcgMjQgMjQtMTAuNyAyNC0yNCAyNHptOTYtNjRIMTYwVjExMmgxOTJ2MjQweiIvPjwvc3ZnPg==","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}'>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230d6efd" rx="20"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="white">📞</text></svg>'>
+
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Custom Modern UI CSS -->
+    <style>
+        :root {
+            --primary-blue: #0d6efd;
+            --primary-dark: #0a58ca;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding-bottom: 2rem;
+            margin: 0;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 1rem 4rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-header h1 { font-weight: 700; margin-bottom: 0.25rem; font-size: 1.5rem; }
+        .app-header p { opacity: 0.8; font-size: 0.9rem; margin: 0; }
+
+        /* Floating Search Container */
+        .search-container {
+            margin-top: -2.5rem;
+            position: relative;
+            z-index: 10;
+            padding: 0 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-box {
+            background: var(--card-bg);
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Subtle visual cue: Search box lifts when focused */
+        .search-box:focus-within {
+            box-shadow: 0 15px 30px rgba(13, 110, 253, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .search-box i.bi-search { color: var(--text-muted); font-size: 1.2rem; }
+
+        .search-box input {
+            border: none; outline: none; flex: 1;
+            padding: 0.8rem 1rem; font-size: 1rem;
+            background: transparent; color: var(--text-main);
+        }
+        .search-box input::placeholder { color: #a0aec0; }
+
+        .search-box .clear-btn {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 1.2rem; cursor: pointer; display: none;
+            transition: color 0.2s; padding: 0;
+        }
+        .search-box .clear-btn:hover { color: var(--primary-blue); }
+
+        /* Content Area */
+        .content-area {
+            padding: 1.5rem 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Modern Contact Cards */
+        .contact-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Subtle visual cue: Cards lift on hover */
+        .contact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+        }
+
+        .avatar {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            color: var(--primary-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.1rem;
+            margin-right: 1rem; flex-shrink: 0;
+        }
+
+        .contact-info { flex: 1; min-width: 0; }
+        .contact-info h5 {
+            font-size: 1.05rem; font-weight: 600; margin: 0 0 0.25rem 0;
+            color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        .relation-tag {
+            display: inline-block; background-color: #ebf5ff; color: var(--primary-blue);
+            font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px;
+        }
+
+        .call-btn {
+            width: 45px; height: 45px; background-color: #e6f0ff; color: var(--primary-blue);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; text-decoration: none; transition: all 0.2s ease;
+            flex-shrink: 0; margin-left: 1rem;
+        }
+
+        /* Interactivity: Call button fills with color on hover */
+        .call-btn:hover, .call-btn:active {
+            background-color: var(--primary-blue); color: white; transform: scale(1.05);
+        }
+
+        /* States (Idle, Empty, Error) */
+        .state-message { text-align: center; padding: 3rem 1rem; }
+        .state-message i { font-size: 4rem; color: #cbd5e0; margin-bottom: 1rem; display: block; }
+        .state-message h4 { color: var(--text-main); font-weight: 600; margin-bottom: 0.5rem; }
+        .state-message p { color: var(--text-muted); font-size: 0.95rem; }
+        .state-message.text-danger i { color: #e53e3e; }
+
+        /* Animations */
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .idle-icon { animation: pulse 2s infinite ease-in-out; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spin { animation: spin 1s linear infinite; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <h1><i class="bi bi-telephone-forward-fill me-2"></i>Phone Directory</h1>
+        <p>Find your contacts instantly</p>
+    </header>
+
+    <!-- Floating Search -->
+    <div class="search-container">
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchInput" placeholder="Search name, phone, or relation..." autofocus>
+            <button class="clear-btn" id="clearBtn"><i class="bi bi-x-circle-fill"></i></button>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <main class="content-area">
+        <div id="loadingState" class="state-message d-none">
+            <i class="bi bi-arrow-repeat spin"></i>
+            <h4>Loading...</h4>
+            <p>Fetching your directory</p>
+        </div>
+
+        <div id="idleState" class="state-message">
+            <i class="bi bi-search idle-icon"></i>
+            <h4>Ready to Search</h4>
+            <p>Type a name, number, or relation to find contacts.</p>
+        </div>
+
+        <div id="errorState" class="state-message text-danger d-none">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <h4>Oops! Something went wrong</h4>
+            <p>Failed to load the directory. Please check your connection.</p>
+        </div>
+
+        <div id="emptyState" class="state-message d-none">
+            <i class="bi bi-emoji-frown"></i>
+            <h4>No Results Found</h4>
+            <p>We couldn't find any contacts matching your search.</p>
+        </div>
+
+        <div id="resultsContainer"></div>
+    </main>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- App JavaScript -->
+    <script>
+        // --- CONFIGURATION ---
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTENWe1Qp3ojkeAr_bBwdujlOdFPVtNsaNYB8cQ7INXBr3kg5LuN5MkSwPuJspOmWRjy9yP3Fu22yK0/pub?output=csv';
+
+        // --- STATE ---
+        let directoryData = [];
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const loadingState = document.getElementById('loadingState');
+        const idleState = document.getElementById('idleState');
+        const errorState = document.getElementById('errorState');
+        const emptyState = document.getElementById('emptyState');
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDirectory();
+            searchInput.addEventListener('input', handleSearch);
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearBtn.style.display = 'none';
+                handleSearch();
+                searchInput.focus();
+            });
+        });
+
+        // --- DATA FETCHING ---
+        async function loadDirectory() {
+            showState('loading');
+            try {
+                const response = await fetch(SHEET_CSV_URL);
+                if (!response.ok) throw new Error('Network error');
+                
+                const csvText = await response.text();
+                const parsed = Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    transformHeader: header => header.trim()
+                });
+
+                directoryData = parsed.data;
+                showState('idle'); 
+            } catch (error) {
+                console.error('Error loading sheet:', error);
+                showState('error');
+            }
+        }
+
+        // --- SEARCH LOGIC ---
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+            clearBtn.style.display = query ? 'block' : 'none';
+
+            if (!query) {
+                showState('idle');
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            const filtered = directoryData.filter(person => {
+                return (
+                    (person.Name && person.Name.toLowerCase().includes(query)) ||
+                    (person.Phone && person.Phone.includes(query)) ||
+                    (person.Relation && person.Relation.toLowerCase().includes(query))
+                );
+            });
+
+            if (filtered.length === 0) {
+                showState('empty');
+            } else {
+                showState('results');
+                renderResults(filtered);
+            }
+        }
+
+        // --- RENDERING ---
+        function renderResults(data) {
+            resultsContainer.innerHTML = '';
+
+            data.forEach(person => {
+                const name = person.Name || 'Unknown';
+                // Generate initials for the avatar (e.g., "John Smith" -> "JS")
+                const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                
+                const card = document.createElement('div');
+                card.className = 'contact-card';
+                
+                card.innerHTML = `
+                    <div class="avatar">${initials}</div>
+                    <div class="contact-info">
+                        <h5>${name}</h5>
+                        <span class="relation-tag">${person.Relation || 'N/A'}</span>
+                    </div>
+                    <a href="tel:${person.Phone}" class="call-btn" title="Call ${name}">
+                        <i class="bi bi-telephone-fill"></i>
+                    </a>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        // --- UI STATE MANAGEMENT ---
+        function showState(state) {
+            loadingState.classList.add('d-none');
+            idleState.classList.add('d-none');
+            errorState.classList.add('d-none');
+            emptyState.classList.add('d-none');
+            resultsContainer.classList.add('d-none');
+
+            switch(state) {
+                case 'loading': loadingState.classList.remove('d-none'); break;
+                case 'idle': idleState.classList.remove('d-none'); break;
+                case 'error': errorState.classList.remove('d-none'); break;
+                case 'empty': emptyState.classList.remove('d-none'); break;
+                case 'results': resultsContainer.classList.remove('d-none'); break;
+            }
+        }
+    </script>
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW failed: ', err));
+            });
+        }
+    </script>
+</body>
+</html>
